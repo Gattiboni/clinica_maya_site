@@ -25,6 +25,11 @@ export const metadata: Metadata = {
   icons: {
     icon: "/marca/logo-vertical-verde.png",
   },
+  // TEMPORÁRIO até o go-live (plano, Fase 7): remover este campo inteiro ao apontar clinicamaya.com.
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
