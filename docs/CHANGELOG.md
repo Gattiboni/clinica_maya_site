@@ -2,6 +2,50 @@
 
 Formato: versão acima da anterior. Versões antes de v1.0.0 são fundação e desenvolvimento, sem site no ar.
 
+## v0.3.0 — 2026-10-29
+
+### Lote 2: quatro páginas internas e as camadas que a Fase 4 vai animar
+
+Fecha o Lote 2 da Fase 3 (plano v1.6). Entram Equipe (com âncoras por área), Método, Emagrecimento e Dra. Mayara, todas estáticas e transcritas de `docs/copy-site-v1.md` v1.1.1, e a estrutura de camadas por z-index global (Decisão 008) em todas as seções do site, Home e A Clínica incluídas. Site segue sem movimento, por desenho: o movimento é a Fase 4, agora antes do preview (Decisão 007).
+
+### Adicionado
+- **`lib/camadas.ts` — `CAMADA`:** `fundo` z-0, `grafismo` z-10, `conteudo` z-20, `header` z-30, única fonte dos z-index; importado por `Secao` e `Header`. Seções sem stacking context próprio; auditoria confirmou `overflow visible` e `z-index auto` nas 39 seções a 1440px.
+- **`app/(site)/equipe/` + `components/equipe/` (Abertura, SecaoArea, CardProfissional, ChamadaFinal):** abertura com fileira de chips-âncora, cinco seções com `id` (`medicina`, `nutricao`, `psicologia`, `terapia`, `capilar`) alternando creme/bege, card de profissional com foto 4:3 opcional (sem foto, sem imagem nem placeholder), nome, atende, modalidade e Instagram em nova aba. "Dr. Arthur" só com "Cardiologia." e modalidade: a anotação interna do mock não vai ao ar.
+- **`app/(site)/metodo/` + `components/metodo/` (Abertura, Pilares, Etapas, Diferenciais, ComoComeca, ChamadaFinal):** pilares em `<ol>` com quatro blocos próprios (viram `stack` na Fase 4), bloco verde com `grafismo-3`, Diferenciais em creme com o símbolo decorativo sobre fundo sólido (regra 9 do mapa), "Como tudo começa" com `home-1.jpg` e `clinica-2.jpg`.
+- **`app/(site)/emagrecimento/` + `components/emagrecimento/` (Abertura, PortaDeEntrada, QuemFazParte, OQueFazParte, Programas, Faq, ChamadaFinal):** FAQ com `<details>`/`<summary>` nativos (sem client component, conteúdo sempre no DOM), ícone "+" que vira "×"; cards de programa com nome e uma frase, sem link, preço ou duração.
+- **`app/(site)/dra-mayara-brasil/` + `components/dra-mayara/` (Abertura, Trajetoria, ComoAtende, FormacaoRegistro, ChamadaFinal):** única página com "~1h30"; "Formação e registro" mostra só a linha de registro (a anotação "a preencher" do mock não vai ao ar); chamada final com botão sólido bege e botão `contorno-bege`.
+- **`lib/conteudo/equipe.ts`, `metodo.ts`, `emagrecimento.ts`:** texto literal da copy; `pilares.ts` ganhou `textoLongo` para o Método sem mexer no texto curto da Home.
+- **`public/fotos/equipe-{arthur,bianca,talita,tania}.jpg`**, checksum igual à origem. `object-position`: Mayara `50% 12%`, Arthur `50% 18%`, Bianca `72% 30%` (mock); Tânia `50% 25%`, Talita `50% 22%` (fotos de 29/10, enquadradas pelo Codinho).
+- **`Botao` variante `contorno-bege`:** borda via `inset-ring`, não `border`, para dois botões lado a lado terem a mesma altura (54px ambos a 1440, 51px a 375).
+- **Itálicos do mock** em Equipe (H1 "você", chamada "começar"), Método ("jornada"), Emagrecimento (H1 "radicalismos", Programas "natural").
+
+### Alterado
+- **`components/ui/Secao.tsx`:** fundo como `div` absoluto em z 0 (não `background` da `<section>`), slot de grafismo absoluto em z 10 com `overflow-x: clip`, `Container` em z 20, `scroll-mt-20 menu:scroll-mt-24` para âncoras sob o header. API (`prop grafismo`) inalterada: nenhum arquivo de Home ou A Clínica precisou mudar pela estrutura.
+- **`components/ui/Grafismo.tsx`:** strip de `<metadata>` em runtime removido (SVGs limpos na fonte desde a v0.2.0); comentário atualizado.
+- **`components/layout/Header.tsx`:** z-index vindo de `CAMADA.header`.
+- **`components/home/Metodo.tsx`, `Dores.tsx` — regra 9 do mapa:** o grafismo-4 do Método foi para a base à direita (300px abaixo de `lg`, 380px acima), sem deslocamento negativo embaixo; a sangria do grafismo-4 de Dores caiu de 140px para 48px (o símbolo começa 64px abaixo do topo do bloco). Folga mínima medida: 16px em 375 e 768. TRAP: a regra 9 estava quebrada desde o Lote 1 e ninguém viu até o Alan apontar no responsivo.
+- **Sangrias entre seções** (grafismo-4 de Dores no bloco do Método; ponta do grafismo-5 do Manifesto em Espaço) ficam: são o comportamento que a estrutura existe para produzir (Decisão 008, item 4).
+- **`docs/copy-site-v1.md` v1.1.1:** atributos visuais do Lote 2 (grafismos, fundos, fotos, itálicos) corrigidos para bater com o mock seção a seção; a v1.1 tinha mapeado imagens pela lista de arquivos, não pela seção (erro do Claude, segundo ciclo seguido).
+
+### Validação (β)
+- **Codinho, 29/10 (Lote 2 e fecho):** `build` com e sem `.env.local` OK (sem env, só o `warn` da seção Blog); lint e `format:check` sem avisos; varredura em 94 arquivos com 0 ocorrências; `test:varredura` 2/2. HTML gerado: um `<h1>` por página, cinco `id` em `/equipe`, quatro `<details>` em `/emagrecimento`, zero "a confirmar/a preencher/informações", cinco `<em>` novos. Todos os `href="/equipe#…"` de Home, A Clínica e Emagrecimento resolvem para `id` existente; âncora `/equipe#psicologia` direta, vinda da Home e pelo chip chega com a seção a 80px (375) e 96px (1440) do topo. Auditoria 360 a 1920px nas seis páginas: sem rolagem horizontal, sem viúva, cards de mesma linha com mesma altura. Regra 9 medida por interseção de caixas (símbolo × grafismo) em Home e Método a 375/768/1024/1280/1440: zero interseções após o fecho. Antes/depois de Home e A Clínica pela estrutura de camadas: 0,05% a 0,11% dos pixels, só nas duas sangrias e no tom de bordas de 1px.
+- **Claude, 29/10:** texto de `/equipe` lido no DOM de `localhost:3000` e conferido com a copy.
+
+### Pendências reconhecidas
+- **Peso do HTML com SVG inline cresce com as páginas:** Equipe 278 KB, Método 250 KB, Emagrecimento 268 KB, Dra. Mayara 175 KB (mesma causa da v0.2.0). Mitigação antes da Fase 4: simplificar os paths na origem e `<symbol>`/`<use>` nas repetições; medir no Lighthouse do preview.
+- Header é `relative`; âncoras dependem de `scroll-margin-top` até o header virar sticky na Fase 4.
+- Console de desenvolvimento com erros reportados pelo Alan e ainda não lidos; build, lint e varredura limpos. Ler no Lote 3a antes de assumir que são do ambiente.
+- Dr. Arthur (sobrenome, CRM, descrição; "Cardiologia" só do mock), fotos de Alexandra, Gabriella e Beatriz, CRN/CRP, modalidade de Talita e Bianca, Folske × Folks, fatos da trajetória e formação da Dra. Mayara ("mais de 10 anos" vem do mock): pendências da clínica, na copy.
+- "Para quem não é" (Emagrecimento) e "Origem e significado" (Método) estão no esqueleto v3 e não no mock v3.1; seguimos o mock; Amanda decide no pacote da Fase 6.
+- Blog no preview sem post: estado vazio com "em breve", frase exata a entrar em `permitidos` no Lote 3a (Decisão 007, item 5).
+- Herdadas vivas: links do header/footer para rotas do Lote 3a (404 até lá); Política de privacidade fora do footer; categorias e autoras não existem no dataset; favicon; Lighthouse Best Practices no preview; CRM-SC da clínica e prova social (Fase 0); plano da Vercel até ~10/11 (Supabase Pro adiado para o 3b).
+
+### Decisões relacionadas
+- Decisão 007 — Ordem de entrega: preview completo antes do back-office; admin segue a identidade sem o luxo do front.
+- Decisão 008 — Camadas por z-index global; seções sem stacking context próprio.
+
+---
+
 ## v0.2.0 — 2026-10-29
 
 ### Lote 1: o site deixa de ser placeholder; Sanity encolhe para o blog e a copy vira código

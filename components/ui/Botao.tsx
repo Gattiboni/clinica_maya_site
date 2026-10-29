@@ -1,23 +1,34 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-type Variante = "verde" | "bege" | "contorno";
+type Variante = "verde" | "bege" | "contorno" | "contorno-bege";
 type Tamanho = "normal" | "pequeno";
 
 type BotaoProps = {
   href: string;
   children: ReactNode;
-  /** `verde`: sólido sobre fundo claro. `bege`: sólido sobre bloco verde. `contorno`: só borda. */
+  /**
+   * `verde`: sólido sobre fundo claro. `bege`: sólido sobre bloco verde.
+   * `contorno`: só borda, sobre fundo claro. `contorno-bege`: só borda, sobre
+   * bloco verde; o hover preenche de bege com texto verde (vira o `bege`).
+   */
   variante?: Variante;
   tamanho?: Tamanho;
   className?: string;
 };
 
+/**
+ * `contorno-bege` desenha a borda com `inset-ring` (box-shadow interno), não
+ * com `border`: ao lado do `bege` sólido, como na chamada final da Dra. Mayara,
+ * os dois ficam com a mesma altura (o mock compensa a borda no padding).
+ */
 const VARIANTES: Record<Variante, string> = {
   verde: "bg-verde text-bege hover:bg-marrom focus-visible:outline-verde",
   bege: "bg-bege text-verde hover:bg-creme focus-visible:outline-bege",
   contorno:
     "border-2 border-verde text-verde hover:border-marrom hover:text-marrom focus-visible:outline-verde",
+  "contorno-bege":
+    "inset-ring-2 inset-ring-bege text-bege hover:bg-bege hover:text-verde focus-visible:outline-bege",
 };
 
 const TAMANHOS: Record<Tamanho, string> = {

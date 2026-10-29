@@ -9,6 +9,13 @@ import corpoMenteEspiritoClaro from "@/public/marca/corpo-mente-espirito-claro.p
  * §Home 4 · Método e Círculo Maya. Abaixo de `lg`, título, lead e link
  * centralizam; a lista de pilares continua alinhada à esquerda (lista com
  * marcadores centralizada lê mal), só com a largura limitada e centrada.
+ *
+ * Regra 9 do mapa: nenhum grafismo na região do símbolo. O grafismo-4 fica na
+ * base, à direita (o mock o tem à esquerda, onde cruzava o símbolo), sem
+ * deslocamento negativo embaixo: para baixo ele seria bege sobre o bege de
+ * "Como começa" (invisível) e tocaria o símbolo decorativo daquela seção.
+ * Abaixo de `lg` o símbolo ocupa o topo da seção, então o grafismo encolhe
+ * para caber na base sem o alcançar (medido a 375, 768 e 1024).
  */
 export function Metodo() {
   return (
@@ -18,8 +25,8 @@ export function Metodo() {
         <Grafismo
           nome="4"
           cor="bege"
-          posicao="-bottom-40 -left-25"
-          largura="w-[380px]"
+          posicao="-right-25 bottom-0"
+          largura="w-[300px] lg:w-[380px]"
           opacidade="opacity-22"
         />
       }

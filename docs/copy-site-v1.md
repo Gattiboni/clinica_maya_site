@@ -1,10 +1,12 @@
-# Copy do site: Clínica Maya · v1.0.1 (Lote 1)
+# Copy do site: Clínica Maya · v1.1.1 (Lotes 1 e 2)
 
-**29/10/2026** (v1.0.1: correções após o relatório do Codinho; itálicos, grafismos e fundos de A Clínica alinhados ao mock). Fonte única da copy institucional que vai para os `.tsx` (Decisão 005, item 2). Origem: mock v3.1 aprovado em 29/10 (`Clinica Maya - Site Completo v20261014.html`; páginas desempacotadas em `mock-v3.1-*.html` na raiz, gitignored) e esqueleto v3. O Codinho transcreve **literal**; correção de texto é edição aqui primeiro, depois no código.
+**29/10/2026** (v1.1.1: atributos visuais do Lote 2 alinhados ao mock após o relatório do Codinho: grafismos, fundos, fotos e itálicos; v1.1: Equipe, Método, Emagrecimento e Dra. Mayara; v1.0.1: correções após o relatório do Codinho; itálicos, grafismos e fundos de A Clínica alinhados ao mock). Fonte única da copy institucional que vai para os `.tsx` (Decisão 005, item 2). Origem: mock v3.1 aprovado em 29/10 (`Clinica Maya - Site Completo v20261014.html`; páginas desempacotadas em `mock-v3.1-*.html` na raiz, gitignored) e esqueleto v3. O Codinho transcreve **literal**; correção de texto é edição aqui primeiro, depois no código.
 
 Convenções: `[PENDÊNCIA: ...]` é nota para humanos e **nunca vai para o código**. Itálico marcado com `*palavra*` é ênfase do mock e vai para o código. Links de texto terminam com seta "→" decorativa (`aria-hidden`), como no mock; botões não têm seta. Travessão não existe no site (varredura); use vírgula, dois-pontos ou ponto. Tom feminino para a paciente ("acompanhada"), neutro para a equipe.
 
-Cobertura desta versão: global, header, footer, Home, A Clínica. Lote 2 (Equipe, Método, Emagrecimento, Dra. Mayara) e Lote 3 entram como v1.1 e v1.2 neste mesmo arquivo.
+Cobertura desta versão: global, header, footer, Home, A Clínica (Lote 1); Equipe, Método, Emagrecimento, Dra. Mayara (Lote 2). Lote 3 entra como v1.2 neste mesmo arquivo.
+
+Regra geral para texto do mock que é anotação interna ("a confirmar", "a preencher", "informações a confirmar"): **não vai para o código**; o campo fica vazio e a pendência fica aqui.
 
 ---
 
@@ -187,8 +189,194 @@ Nota de varredura: "sem radicalismos ou soluções milagrosas" é a única exce�
 
 ---
 
-## Fotos necessárias para o Lote 1 (origem: `clinica_maya\revisao_mock\r20261014\web\`, destino: `public/fotos/`)
+## Equipe · `/equipe`
 
-`home-1.jpg` · `home-2.jpg` · `equipe-mayara.jpg` · `clinica-1.jpg` · `clinica-2.jpg` · `clinica-3.jpg` · `clinica-4.jpg`
+Metadata: título "Equipe"; descrição: Medicina, nutrição, psicologia, terapia e saúde capilar em Antônio Carlos/SC e on-line: conheça quem cuida de você na Clínica Maya.
+
+Seções do mock: Abertura · uma seção por área (5, com âncora) · Chamada final. Fundos alternam creme/bege por área, começando em creme; o card usa a cor oposta ao fundo.
+
+### 1. Abertura (fundo bege; grafismo `grafismo-5`; fileira de chips com os nomes das áreas, cada um âncora para a seção)
+- H1: Uma equipe, um plano, *você* no centro
+- Texto: Medicina, nutrição, psicologia, terapia e saúde capilar trabalhando de forma integrada: a equipe conversa entre si para que o seu cuidado seja um só.
+
+### 2 a 6. Áreas (H2 = nome da área; `id` = âncora; descrição; cards de profissional)
+
+Card de profissional: foto (quando existir) · nome · para quem atende / foco · modalidade · Instagram (quando existir, link em nova aba). **Sem foto: card sem imagem**, nada de silhueta ou caixa vazia. Grafismo `grafismo-3` só na seção de Psicologia, como no mock.
+
+**`#medicina` · Medicina** · Avaliação e acompanhamento médico de toda a jornada, com base em evidências científicas.
+- Dra. Mayara Brasil · Médica de família, com atuação em emagrecimento e saúde. Atende adultos. CRM SC 21112 · RQE 22484. · Presencial e on-line · @dramayarabrasilm · foto `equipe-mayara.jpg`, `object-position: 50% 12%`
+- Dr. Arthur · Cardiologia. · Presencial · sem Instagram · foto `equipe-arthur.jpg`, `object-position: 50% 18%`
+
+`[PENDÊNCIA: Dr. Arthur: sobrenome (Hank, segundo o plano), CRM, RQE e descrição. O mock traz "Descrição e registro: informações a confirmar", que é anotação interna e não vai ao ar. Até vir, o card mostra só nome, "Cardiologia." e modalidade. "Cardiologia" está no mock aprovado; confirmar com a clínica junto com o registro.]`
+
+**`#nutricao` · Nutrição** · Alimentação que cabe na sua vida, sem terrorismo nutricional.
+- Tânia Guesser · Nutrição com foco em emagrecimento, gestação e fertilidade. · Presencial e on-line · @taniagnutri · foto `equipe-tania.jpg`
+
+**`#psicologia` · Psicologia** · Espaço seguro para cuidar da relação com a comida, com o corpo e com você mesma.
+- Alexandra Invitti · Psicologia com orientação familiar. Atende homens, mulheres, jovens e crianças. · Presencial · @alexandrainvitti.psico · sem foto
+- Gabriella Sponton · Psicologia para mulheres adultas. · Presencial · @gabriellaspontonpsi · sem foto
+- Beatriz Nietsche · Psicologia com foco em infância e adolescência. · Presencial · @beatriznietchepsi · sem foto
+
+**`#terapia` · Terapia** · Cuidado voltado à saúde mental e ao bem-estar.
+- Talita Porto · Terapeuta de saúde mental. Atende homens e mulheres. · Presencial · @talitaportoterapias · foto `equipe-talita.jpg`
+
+**`#capilar` · Saúde capilar** · Cuidado com os fios e com o couro cabeludo como parte do bem-estar integral.
+- Bianca Folske · Saúde capilar, com tratamento de condições do couro cabeludo. · Presencial · sem Instagram · foto `equipe-bianca.jpg`, `object-position: 72% 30%`
+
+`[PENDÊNCIA: fotos de Alexandra, Gabriella e Beatriz (clínica). CRN/CRP das demais profissionais (clínica). Modalidade de Talita e Bianca "a confirmar" (clínica); o site mostra "Presencial" sem ressalva. Folske × Folks. object-position de Tânia e Talita: fotos novas (29/10), o Codinho define pelo enquadramento e registra.]`
+
+### 7. Chamada final (bloco verde; grafismo `grafismo-4`)
+- H2: Não sabe com quem *começar*?  ·  correção sobre o mock, que tinha espaço antes do "?"
+- Texto: Nosso atendimento ajuda a encontrar quem faz mais sentido para o seu momento.
+- Botão: Agendar consulta → `/contato#agendar`
+- Nota: Antônio Carlos/SC e on-line para todo o Brasil
+
+---
+
+## Método Maya · `/metodo`
+
+Metadata: título "Método Maya"; descrição: Humanização e ciência caminhando juntas: os quatro pilares e as quatro etapas da jornada na Clínica Maya.
+
+Seções do mock: Abertura · Pilares · Etapas · Diferenciais · Como tudo começa · Chamada final. Página conceitual, sem conteúdo comercial. É a página do momento de cena do site (mapa de movimento: `stack` nos pilares).
+
+### 1. Abertura (fundo bege; grafismo `grafismo-4`; foto `clinica-3.jpg`, alt "Detalhe do consultório")
+- H1: Método Maya
+- Texto: Humanização e ciência caminhando juntas: um jeito de cuidar que combina evidências científicas com escuta ativa, empatia e respeito pelo seu ritmo.
+
+### 2. Pilares (bloco verde; grafismo `grafismo-3`; sem símbolo)
+- H2: Os quatro pilares
+- Lead: O que sustenta cada jornada dentro da clínica.
+- 4 itens (número · nome · texto):
+  - 01 · Acolher · Escuta ativa, respeito e ausência de julgamentos: compreender a sua história antes de qualquer plano.
+  - 02 · Cuidar · Condutas individualizadas, com base em evidências científicas e atenção à saúde como um todo.
+  - 03 · Transformar · Mudanças sustentáveis de hábitos, de comportamento e da relação com a comida e com o autocuidado.
+  - 04 · Consolidar · Manutenção do que foi conquistado e prevenção de recaídas, com acompanhamento próximo.
+
+### 3. Etapas (fundo bege)
+- H2: As quatro etapas da *jornada*
+- Lead: Da primeira conversa à consolidação dos novos hábitos.
+- 4 itens (número · nome · texto):
+  - 1 · Descoberta · A primeira consulta: sua história, seus objetivos e o ponto de partida.
+  - 2 · Planejamento · O plano individual, construído com você e com a equipe.
+  - 3 · Acompanhamento · Consultas, reavaliações e suporte também entre os encontros.
+  - 4 · Consolidação · Os novos hábitos viram o seu novo jeito de viver.
+
+### 4. Diferenciais (fundo creme; símbolo `corpo-mente-espirito-escuro.png` decorativo sobre fundo sólido, sem grafismo, regra 9 do mapa; sem fotos)
+- H2: O que torna o método diferente
+- 4 cards (título · texto):
+  - Humanização e ciência · Evidências científicas aplicadas com escuta e sensibilidade.
+  - Personalização · Nenhum plano é igual ao outro, porque nenhuma história é.
+  - Corpo, mente e emoções · As três dimensões cuidadas juntas, por uma equipe integrada.
+  - Comunidade · Você caminha acompanhada, pela equipe e por quem vive a mesma jornada.
+
+### 5. Como tudo começa (fundo bege; fotos `home-1.jpg` alt "Recepção da clínica" e `clinica-2.jpg` alt "Detalhe da recepção")
+- H2: Como tudo começa
+- Parágrafo 1: Tudo começa com uma conversa, com tempo de verdade para escutar você antes de qualquer plano.
+- Parágrafo 2: É a partir dela que o caminho é desenhado, com quem faz mais sentido para o seu momento e, quando for o caso, com outras áreas da clínica trabalhando junto.
+- Subtítulo (H3): O que a gente quer entender
+- Lista: Sua história e o que você já tentou · Rotina e contexto de vida · Qualidade do sono · Ansiedade e saúde emocional · Relação com a comida
+
+### 6. Chamada final (bloco verde; grafismo `grafismo-5`)
+- H2: A sua jornada começa com uma conversa
+- Botão: Agendar a primeira consulta → `/contato#agendar`
+- Nota: Antônio Carlos/SC e on-line para todo o Brasil
+
+`[PENDÊNCIA: "Origem e significado" do nome Maya existe no esqueleto v3 como seção a validar pela cliente; o mock v3.1 não a tem. Fica fora até a cliente mandar o texto.]`
+
+---
+
+## Emagrecimento · `/emagrecimento`
+
+Metadata: título "Emagrecimento saudável"; descrição: Acompanhamento médico e nutricional, com apoio emocional quando fizer sentido. A porta de entrada é a consulta com a Dra. Mayara.
+
+Seções do mock: Abertura · Porta de entrada · Quem faz parte · O que faz parte · Programas · FAQ · Chamada final. **Proibido:** tabela ou comparativo, duração, número de consultas, preço, Maya Exclusivo, Maya Presença, "protocolo".
+
+### 1. Abertura (fundo bege; grafismo `grafismo-3`)
+- H1: Emagrecimento saudável, sem *radicalismos*
+- Texto: Acompanhamento médico e nutricional, com apoio emocional quando fizer sentido. Cada plano nasce da sua história.
+
+### 2. Porta de entrada (fundo creme; foto `equipe-mayara.jpg`, alt "Dra. Mayara Brasil")
+- H2: A porta de entrada é a consulta
+- Texto: Se você ainda não sabe qual caminho faz sentido, comece por uma consulta com a Dra. Mayara. É nela que vocês desenham juntas o próximo passo, com ou sem programa. Ninguém precisa escolher nada antes.
+- Botão: Agendar consulta → `/contato#agendar` · Link: Conhecer a Dra. Mayara → `/dra-mayara-brasil`
+
+`[PENDÊNCIA: o esqueleto v3 prevê um bloco "Para quem não é" nesta seção; o mock v3.1 não o tem. Segue o mock; registrar para a Amanda decidir no pacote da Fase 6.]`
+
+### 3. Quem faz parte (fundo bege; sem grafismo)
+- H2: Quem pode fazer parte do seu plano
+- Lead: O acompanhamento é médico e nutricional. A psicologia entra quando faz sentido para você e para a equipe.
+- 3 cards (nome · texto · link "Conhecer →"):
+  - Medicina · Avaliação, condução e reavaliações do tratamento, com a Dra. Mayara Brasil. Presencial e on-line. · `/equipe#medicina`
+  - Nutrição · Alimentação possível para a sua rotina, sem terrorismo nutricional, com Tânia Guesser. Presencial e on-line. · `/equipe#nutricao`
+  - Psicologia · Espaço seguro para cuidar da ansiedade, da autoestima e da relação com a comida. Presencial em Antônio Carlos/SC. · `/equipe#psicologia`
+
+### 4. O que faz parte (fundo creme; grafismo `grafismo-4`)
+- H2: O que costuma fazer parte do acompanhamento
+- Lead: Cada plano é individual, mas alguns cuidados aparecem em toda a jornada.
+- Lista (6): Plano de ação por escrito ao final dos encontros, para aplicar no dia a dia · Suporte próximo entre as consultas · Acolhimento emocional, sem julgamentos · Reavaliações periódicas do plano · Olhar além da balança: energia, ansiedade, sono, autoestima e comportamento · Acesso ao Círculo Maya, comunidade de pacientes ativas com dicas, receitas e motivação
+
+### 5. Programas (fundo bege; sem grafismo)
+- H2: Depois da consulta, um caminho *natural*
+- Lead: Para quem precisa de mais do que uma consulta, a clínica tem programas de acompanhamento. A Dra. Mayara indica qual faz sentido para o seu momento.
+- 3 cards (nome · uma frase), sem link, sem preço, sem duração:
+  - Maya Essencial · Uma estrutura de tratamento completa e individualizada, para começar com acompanhamento próximo.
+  - Maya Evolução · Um programa mais abrangente, para jornadas que pedem acompanhamento mais prolongado ou mais complexas.
+  - Maya Contínuo · Voltado à continuidade do cuidado, para manter o que já foi conquistado.
+
+### 6. FAQ (fundo creme; perguntas abertas por clique, uma por vez ou livres, escolha do Codinho; conteúdo sempre no DOM)
+- H2: Perguntas frequentes
+- 4 pares:
+  - Preciso escolher um programa antes de agendar? · Não. Você começa pela consulta, e a Dra. Mayara indica o caminho que faz sentido depois de conhecer a sua história.
+  - Posso fazer só a consulta? · Pode. A consulta avulsa é uma porta de entrada, e o acompanhamento em programa é uma possibilidade, sem obrigação.
+  - Posso ser acompanhada on-line? · Sim. Medicina e nutrição atendem on-line para todo o Brasil. A psicologia, por enquanto, é presencial em Antônio Carlos/SC.
+  - A psicologia faz parte do acompanhamento? · Pode fazer, conforme a sua necessidade e a indicação da equipe. Ela também pode ser procurada separadamente.
+
+### 7. Chamada final (fundo creme; grafismo `grafismo-5`; botão verde)
+- H2: O primeiro passo é sempre o mesmo: uma conversa
+- Botão: Agendar consulta → `/contato#agendar`
+- Nota: Antônio Carlos/SC e on-line para todo o Brasil
+
+---
+
+## Dra. Mayara Brasil · `/dra-mayara-brasil`
+
+Metadata: título "Dra. Mayara Brasil"; descrição: Médica de família, com atuação em emagrecimento, e fundadora da Clínica Maya, em Antônio Carlos/SC. Consultas presenciais e on-line.
+
+Seções do mock: Abertura · Trajetória · Como ela atende · Formação e registro · Chamada final. **Única página onde a duração de ~1h30 aparece.** Nunca "especialista em emagrecimento".
+
+### 1. Abertura (fundo bege; grafismo `grafismo-4`; foto `equipe-mayara.jpg`, alt "Dra. Mayara Brasil")
+- Eyebrow: Medicina · Responsável técnica
+- H1: Dra. Mayara Brasil
+- Texto: Médica de família, com atuação em emagrecimento, e fundadora da Clínica Maya. Uma trajetória guiada pela escuta.
+- Linha de registro: Médica de Família · CRM SC 21112 · RQE 22484
+- Botão: Agendar consulta → `/contato#agendar` · Link externo: @dramayarabrasilm → `https://instagram.com/dramayarabrasilm` (nova aba)
+
+### 2. Trajetória (fundo creme)
+- H2: Trajetória
+- Parágrafo 1: Médica de família e comunidade, com mais de 10 anos de experiência médica, a Dra. Mayara fundou a Clínica Maya em Antônio Carlos, na Grande Florianópolis, para cuidar de cada paciente com ciência e com tempo de escuta.
+- Parágrafo 2: Hoje, sua principal área de atuação é o tratamento médico do sobrepeso e da obesidade, sempre de forma individualizada e sem promessas fáceis. Atende adultos, presencialmente e on-line.
+
+`[PENDÊNCIA: "mais de 10 anos" e os fatos da trajetória vêm do mock aprovado, não de material da cliente; confirmar com a Dra. Mayara no pacote da Fase 6 (Apêndice B do plano: fatos da trajetória, dono cliente).]`
+
+### 3. Como ela atende (fundo bege)
+- H2: Como ela atende
+- Texto: Consultas de aproximadamente 1h30, que olham além da balança: sono, rotina, história, ansiedade e relação com a comida fazem parte da conversa. Quando faz sentido, o cuidado é integrado com nutrição, psicologia e outras áreas da clínica.
+
+### 4. Formação e registro (fundo creme)
+- H2: Formação e registro
+- Linha: Médica de Família · CRM SC 21112 · RQE 22484
+
+`[PENDÊNCIA: o mock traz "Graduação e demais formações: a preencher com a Dra. Mayara." Anotação interna; não vai ao ar. A seção mostra só a linha de registro até a cliente mandar a formação.]`
+
+### 5. Chamada final (bloco verde)
+- H2: A primeira consulta é o começo da jornada
+- Botões: Agendar presencial (sólido bege) → `/contato#agendar` · Agendar on-line (contorno bege) → `/contato#agendar`
+
+---
+
+## Fotos necessárias para o Lotes 1 e 2 (origem: `clinica_maya\revisao_mock\r20261014\web\`, destino: `public/fotos/`)
+
+Lote 1: `home-1.jpg` · `home-2.jpg` · `equipe-mayara.jpg` · `clinica-1.jpg` · `clinica-2.jpg` · `clinica-3.jpg` · `clinica-4.jpg`
+Lote 2: `equipe-arthur.jpg` · `equipe-bianca.jpg` · `equipe-talita.jpg` · `equipe-tania.jpg` (todas já em `public/fotos/`, 29/10)
 
 `[PENDÊNCIA: confirmar que os sete nomes existem na pasta de origem com essa grafia; se divergirem, renomear na cópia, não no código.]`

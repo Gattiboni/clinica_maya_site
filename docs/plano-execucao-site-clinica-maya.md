@@ -1,7 +1,17 @@
 # Plano de execução — site Clínica Maya
 
-**v1.5 · 29/10/2026** (v1.4, v1.3, v1.2, v1.1 e v1.0 anteriores) · checklist executável · repo: `github.com/Gattiboni/clinica_maya_site`
+**v1.6 · 29/10/2026** (v1.5, v1.4, v1.3, v1.2, v1.1 e v1.0 anteriores) · checklist executável · repo: `github.com/Gattiboni/clinica_maya_site`
 Responsável entre parênteses: (Alan) (Claude) (Codinho) (Amanda) (Cliente). `[x]` = concluído. Este arquivo é o estado do projeto; quem abrir sabe em que pé estamos.
+
+## Changelog v1.6
+
+- **Ordem invertida: o preview para aprovação vem antes do back-office.** Decisão do Alan (29/10): a gestora e a cliente só vão usar o blog depois de revisar o front inteiro, o que leva mais de uma semana. O `/admin/blog` com Supabase vira **Lote 3b**, enfileirado para depois da aprovação da Fase 6. Registrado na **Decisão 007**.
+- **Lote 3 dividido:** **3a (agora):** Atendimento on-line, Contato com `wa.me`, 404, Política de privacidade e Blog público (lista e post via Sanity, `@portabletext/react`). **3b (pós-aprovação):** Supabase Auth + papéis, `/admin/blog`, varredura no publicar, categorias e autoras pelo conector, `schema deploy`, webhook.
+- **Fase 4 (movimento) entra antes da Fase 6**, como a Fase 6 já exigia ("estrutura, conteúdo e movimento prontos"). Foco único até lá: terminar o preview.
+- **Supabase Pro só quando o Lote 3b começar**; a decisão de ~10/11 fica só com o plano da Vercel.
+- **Admin segue a identidade, sem o luxo do front:** tokens de cor e tipografia da marca, sem mapa de movimento, sem grafismos, sem camadas. É um admin.
+- **Blog no preview sem post:** estado vazio com "em breve" (decisão do Alan: o mais honesto por ora); a frase exata entra em `permitidos` da varredura no Lote 3a. Se a Amanda entregar os 3 posts reais, eles entram pelo conector.
+- Lote 2 construído e em fecho (relatório do Codinho em 29/10); papelada v0.3.0 após o fecho.
 
 ## Changelog v1.5
 
@@ -82,7 +92,7 @@ Dependências da Spinhardi: **Supabase (auth e papéis) e `@portabletext/react` 
 - [x] Stack v1.1 aprovada (Next + Sanity desde o dia 1 + Tailwind 4) (29/10)
 - [x] Conta técnica da clínica criada: `clinicamaya.digital@gmail.com`; Sanity, GA4 e Search Console nascem nela (29/10)
 - [ ] (Alan) **Até ~10/11:** plano do time Vercel ao fim do Pro Trial: manter Pro (US$ 20/mês, cartão de quem?) ou cair para Hobby até a Fase 7
-- [ ] (Alan) **Na mesma conversa:** Supabase Pro (US$ 25/mês, cliente) antes do primeiro login real no `/admin`; Free pausa após 7 dias sem atividade. Criar o projeto Supabase na conta `clinicamaya.digital@gmail.com` quando o Lote 3 for instruído
+- [ ] (Alan) **Adiado para o Lote 3b (pós-aprovação):** Supabase Pro (US$ 25/mês, cliente) antes do primeiro login real no `/admin`; Free pausa após 7 dias sem atividade. Criar o projeto Supabase na conta `clinicamaya.digital@gmail.com` quando o Lote 3b for instruído
 - [ ] (Amanda + Cliente) Confirmar se a ficha do Google Maps já pertence a `clinicamaya.ac@gmail.com`; se não, decidir qual conta será dona da ficha antes de qualquer convite de gestão
 - [x] Domínio verificado e resolvido: `clinicamaya.com`, Wix, sem e-mail, DNS no Wix (29/10)
 - [ ] (Amanda + Cliente) Prova social, agora com a regra conhecida (CFM 2.336/2023 permite depoimentos sóbrios, sem superioridade nem resultado): escolher (a) só nota agregada + link "ver avaliações no Google" ou (b) carrossel com avaliações selecionadas pela clínica. Recomendação: (a) agora
@@ -127,12 +137,25 @@ Dependências da Spinhardi: **Supabase (auth e papéis) e `@portabletext/react` 
 - [ ] (Claude → Codinho) **Lote 2:** Equipe com âncoras, Método, Emagrecimento, Dra. Mayara
 - [ ] (Claude) Testar lote 2; (Alan) revisar e commitar
 - [ ] (Alan) Antes do Lote 3: projeto Supabase criado na conta da clínica; `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` e `SANITY_API_WRITE_TOKEN` (token de escrita criado na conta da clínica) em `.env.local` e na Vercel
-- [ ] (Claude) Antes do Lote 3: criar pelo conector Sanity (conta da clínica) os quatro documentos `category` (Emagrecimento, Saúde mental, Saúde da mulher, Saúde capilar) e as `author` com `area`; `npx sanity schema deploy` dos três tipos
-- [ ] (Claude → Codinho) **Lote 3:** Blog público e Post via Sanity (`@portabletext/react` entra aqui); **`/admin/blog` com Supabase Auth e papéis admin/editor, write client server-only, varredura no publicar**, porte do código da Spinhardi (`lib/blog`, `lib/sanity/admin.ts`, `PostForm`) com a identidade da Maya; adaptações necessárias: `CATEGORIES` da Maya e **select de autora** no formulário; Atendimento on-line, Contato com `wa.me`, 404, Política de privacidade
+- [x] (Claude → Codinho) **Lote 2, fecho:** sangrias mantidas, regra 9 na Home, itálicos, Método conforme o mock, botão de contorno bege, `lib/camadas.ts` (29/10)
+- [ ] (Alan) Changelog v0.3.0 + commit do Lote 2
+- [ ] (Claude) Copy v1.2: Atendimento on-line, Contato, 404, Política de privacidade, Blog (lista, post, estado vazio)
+- [ ] (Claude → Codinho) **Lote 3a:** Atendimento on-line, Contato com `wa.me` (formulário que monta a mensagem, sem backend), 404, Política de privacidade, Blog público (lista com categorias e post via Sanity, `@portabletext/react` entra aqui); seção Blog da Home passa a linkar para posts reais
+- [ ] (Amanda) Se houver os 3 posts reais antes do preview, (Claude) cria categorias e autoras pelo conector e carrega os posts; senão, lista com estado vazio "em breve" (frase exata em `permitidos`)
+- [ ] (Claude) Testar lote 3a; (Alan) revisar e commitar
 - [ ] (Claude) Testar lote 3; (Alan) revisar e commitar
-- [ ] (Alan) Criar o webhook no Sanity (API → Webhooks) apontando para `/api/revalidate`, com `SANITY_REVALIDATE_SECRET` igual nos dois lados, quando a primeira página ler do Sanity
+- [ ] (Alan) Criar o webhook no Sanity (API → Webhooks) apontando para `/api/revalidate`, com `SANITY_REVALIDATE_SECRET` igual nos dois lados, quando houver publicação de post (Lote 3b)
 
-## Fase 4 · Movimento
+## Fase 3b · Back-office do blog (fila: depois da aprovação da Fase 6)
+
+- [ ] (Alan) Projeto Supabase na conta da clínica, Pro antes do primeiro login real; env vars (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`) e `SANITY_API_WRITE_TOKEN` (token de escrita criado na conta da clínica) em `.env.local` e na Vercel
+- [ ] (Claude) Criar pelo conector Sanity os quatro documentos `category` (Emagrecimento, Saúde mental, Saúde da mulher, Saúde capilar) e as `author` com `area`, se ainda não existirem; `npx sanity schema deploy` dos três tipos
+- [ ] (Claude → Codinho) **Lote 3b:** `/admin/blog` com Supabase Auth e papéis admin/editor, write client server-only, **varredura no publicar**, porte do código da Spinhardi (`lib/blog`, `lib/sanity/admin.ts`, `PostForm`); adaptações necessárias: `CATEGORIES` da Maya e **select de autora** no formulário. Identidade da marca em tokens, **sem movimento, sem grafismos, sem camadas**: é um admin
+- [ ] (Claude) Testar lote 3b; (Alan) revisar e commitar
+- [ ] (Alan) Webhook Sanity → `/api/revalidate`
+- [ ] (Claude) Handoff do admin para a gestora e para quem produzir conteúdo (papéis, convite, publicar, revogar)
+
+## Fase 4 · Movimento (antes da Fase 6; é parte do preview)
 
 - [ ] (Alan) **Antecipado para antes do Lote 2:** rodar o prompt do Apêndice A no Perplexity Pro e trazer 3 a 5 referências anotadas (o que gostou em cada uma: camadas, ritmo de scroll, tipografia)
 - [ ] (Claude) Propor abordagem (biblioteca, padrões, limites) e as regras de camadas que o Lote 1.1 e o Lote 2 já seguem; (Alan) aprovar

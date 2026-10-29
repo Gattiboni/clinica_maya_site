@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 import { Navegacao } from "@/components/layout/Navegacao";
 import { Botao } from "@/components/ui/Botao";
+import { CAMADA } from "@/lib/camadas";
 import { CLINICA } from "@/lib/conteudo/clinica";
 import { NAVEGACAO } from "@/lib/conteudo/navegacao";
 import logo from "@/public/marca/logo-vertical-verde.png";
@@ -10,11 +11,12 @@ import logo from "@/public/marca/logo-vertical-verde.png";
 /**
  * Header de todas as páginas (server component; só a navegação é client).
  * `menu:` é o breakpoint da navegação (globals.css): a partir dele o header
- * tem 96px e o logo 56px, como no mock; abaixo, 80px e 48px.
+ * tem 96px e o logo 56px, como no mock; abaixo, 80px e 48px. Fica na camada
+ * mais alta (`CAMADA.header`), acima do conteúdo e dos grafismos das seções.
  */
 export function Header() {
   return (
-    <header className="relative z-10 border-b border-marrom/18 bg-bege">
+    <header className={`relative ${CAMADA.header} border-b border-marrom/18 bg-bege`}>
       <Container className="flex h-20 items-center justify-between gap-6 menu:h-24 menu:gap-8">
         <Link
           href="/"

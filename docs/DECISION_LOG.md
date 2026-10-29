@@ -73,3 +73,27 @@ Uma decisão por regra de arquitetura ou contrato. Numeração contínua.
 **Alternativas descartadas.** Header e footer no layout raiz com o Studio escondendo-os por CSS (gambiarra; o CSS do Studio é dele); degraus de breakpoint para tipografia (foi o que quebrou); svgr para SVG como componente (dependência nova para um problema que `readFileSync` resolve); `<img src="…svg">` (não recolore via CSS, não anima `<path>`); copiar os `d` dos SVGs para um módulo TS (duas fontes de verdade); `hyphens: auto` em pt-BR (hifenização imprevisível em nomes próprios e termos clínicos).
 
 ---
+
+## Decisão 007 — Ordem de entrega: preview completo (páginas + movimento) antes do back-office; admin segue a identidade sem o luxo do front
+
+**Data:** 2026-10-29 · **Owner:** Alan
+
+**Contexto.** O plano v1.5 colocava o `/admin/blog` com Supabase no Lote 3, antes do movimento e do preview. A gestora e a cliente só vão publicar depois de revisar o front inteiro, revisão que leva mais de uma semana; até lá o admin seria código parado e o Supabase Pro, custo parado. A Fase 6 já exigia "estrutura, conteúdo e movimento prontos" para a aprovação em pacote único.
+
+**Decisão.** (1) **Lote 3 dividido em 3a e 3b:** 3a entrega o que a paciente vê (Atendimento on-line, Contato com `wa.me`, 404, Política de privacidade, Blog público); 3b entrega o back-office (Supabase Auth + papéis, `/admin/blog`, varredura no publicar, categorias e autoras, `schema deploy`, webhook) e **entra na fila depois da aprovação da Fase 6**. (2) **Fase 4 (movimento) vem antes da Fase 6**: o preview que as duas revisam já tem o movimento do mapa. (3) **Supabase Pro só quando o 3b começar** (mesma regra da Decisão 005, item 4, deslocada no tempo); a decisão de ~10/11 fica só com a Vercel. (4) **Admin usa a identidade da marca em tokens de cor e tipografia, e só isso:** sem mapa de movimento, sem grafismos, sem camadas, sem transições. Porte do código da Spinhardi com a identidade trocada. (5) **Blog no preview:** sem post publicado, a lista mostra um estado vazio com "em breve", que o Alan considera o mais honesto por ora; a frase exata entra em `permitidos` da varredura (a regra que veta "em breve" existe para não anunciar serviço futuro, não para um blog vazio). Se a gestora entregar os 3 posts reais já pendentes, o Claude cria categorias e autoras pelo conector e carrega os posts na conta da clínica.
+
+**Alternativas descartadas.** Admin antes do preview (código e custo parados por semanas); posts de exemplo inventados para o preview (conteúdo fabricado em ambiente que pode vazar e que a varredura não cobre); esconder o Blog do menu até haver post (o menu é o do briefing e a Amanda precisa revisar o blog no preview); estado vazio sem "em breve" (proposta do Claude; o Alan preferiu a frase direta).
+
+---
+
+## Decisão 008 — Camadas por z-index global: fundo 0, grafismo 10, conteúdo 20, header 30; seções sem stacking context próprio
+
+**Data:** 2026-10-29 · **Owner:** Alan (implementação: Codinho, Lote 2)
+
+**Contexto.** O mapa de movimento v0.2 descreve um "mundo" de grafismos atrás de folhas que passam por cima. Implementá-lo como plano `fixed` exigiria folhas com margens laterais, mudança visual que o mock não tem e que só faz sentido com movimento. Era preciso uma estrutura que entregasse o entrelaçamento (grafismo cruzando a fronteira entre seções) sem alterar o visual do Lote 1 e que a Fase 4 pudesse animar sem reabrir seção.
+
+**Decisão.** (1) **Quatro camadas como utilitários de z-index em `lib/camadas.ts`** (`CAMADA.fundo` z-0, `grafismo` z-10, `conteudo` z-20, `header` z-30), única fonte; `Secao` aplica as três primeiras, `Header` a última; footer e Fase 4 importam daqui. (2) **`Secao` não cria stacking context**: sem `z-index`, `transform`, `filter`, `opacity < 1`, `isolation` ou `contain: paint`; o fundo é um `div` absoluto em z 0, não `background` da `<section>`; o slot de grafismo é absoluto em z 10 com `overflow-x: clip` (deslocamento lateral negativo não gera rolagem; o vertical sangra); o `Container` leva z 20. Resultado: um grafismo sangra sobre o fundo da seção vizinha e fica sob o conteúdo dela. (3) **O z-index fica no slot, não no `Grafismo`**: o footer usa `Grafismo` fora de `Secao` e em z 10 ele passaria por cima do texto (furo pego pelo Codinho). (4) **Sangria é comportamento, não bug**: as duas que apareceram em Home e A Clínica ficam; só a regra 9 do mapa (símbolo corpo-mente-espírito sempre sobre fundo sólido) limita onde um grafismo pode chegar, resolvida por posição e deslocamento, nunca por prop que desliga a estrutura. (5) **`scroll-margin-top` igual à altura do header** em toda `Secao`, para âncoras (`/equipe#psicologia`) chegarem com o título visível; vale até o header virar sticky na Fase 4. (6) **`fixed` versus parallax e folhas com margens** são escolhas da Fase 4, com olho sobre o preview; a estrutura não as impede.
+
+**Alternativas descartadas.** Mundo `fixed` atrás de folhas com margens (muda o visual antes do movimento existir); `overflow: visible` por seção com grafismo no layout da página (mapa v0.1; mesmo resultado com mais acoplamento); z-index dentro do `Grafismo` (quebra o footer); prop `sangria` para desligar o comportamento por seção (gambiarra que esconde o problema de posição; reavaliar só se a Fase 4 pedir).
+
+---

@@ -4,7 +4,11 @@ import { Grafismo } from "@/components/ui/Grafismo";
 import { Secao } from "@/components/ui/Secao";
 import { DORES } from "@/lib/conteudo/dores";
 
-/** §Home 3 · Dores. */
+/**
+ * §Home 3 · Dores. O grafismo-4 sangra 48px sobre o bloco verde do Método
+ * (o mock desloca 140px): o símbolo corpo-mente-espírito começa 64px abaixo
+ * do topo daquela seção e a regra 9 do mapa proíbe grafismo na região dele.
+ */
 export function Dores() {
   return (
     <Secao
@@ -13,7 +17,7 @@ export function Dores() {
         <Grafismo
           nome="4"
           cor="marrom"
-          posicao="-bottom-35 -left-30"
+          posicao="-bottom-12 -left-30"
           largura="w-[340px]"
           opacidade="opacity-22"
         />
