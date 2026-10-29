@@ -1,12 +1,33 @@
 # Plano de execução — site Clínica Maya
 
-**v1.2 · 29/10/2026** (v1.1 e v1.0 anteriores) · checklist executável · repo: `github.com/Gattiboni/clinica_maya_site`
+**v1.4 · 29/10/2026** (v1.3, v1.2, v1.1 e v1.0 anteriores) · checklist executável · repo: `github.com/Gattiboni/clinica_maya_site`
 Responsável entre parênteses: (Alan) (Claude) (Codinho) (Amanda) (Cliente). `[x]` = concluído. Este arquivo é o estado do projeto; quem abrir sabe em que pé estamos.
+
+## Changelog v1.4
+
+- **Escopo do Sanity corrigido: só blog.** A v1.3 (e as Decisões 001, item 3, e 004) presumiam Sanity para toda a copy institucional. O Alan corrigiu em 29/10: o Sanity entra na Maya no mesmo papel que tem na Spinhardi (blog), e a copy institucional (áreas, equipe, dores, programas, textos de página) vive em código, como na Spinhardi. Motivo: volume de edição baixo, time pequeno, ninguém a treinar em Studio. **Decisão 005** supera a 004 e o item (3) da 001. A presunção veio de um handoff de sessão que não registrou o escopo; erro de documentação, não de arquitetura.
+- **Verificação na Spinhardi (29/10):** lá o Sanity guarda só `post`, `author`, `category`; copy institucional é hardcoded nos `.tsx` (pendência registrada e aceita); posts entram pelo `/admin/blog` (Supabase Auth, papéis admin/editor, write client server-only) ou pelo Studio; nenhum NDJSON ou seed existiu.
+- **Blog com back-office próprio, como a Spinhardi:** `/admin/blog` com Supabase Auth e papéis, write client server-only para o Sanity, identidade visual da Maya. Quem produz conteúdo (gestora, agência) loga no site da clínica com acesso delimitado; ninguém cria conta Sanity. Supabase entra no Lote 3, porque a feature que o pede é esta.
+- **Gate regulatório do blog resolvido no desenho:** a server action de publicação roda a `varredura.config.json` antes de gravar o post; fecha o item (5) da Decisão 002. Webhook pós-publicação descartado.
+- **Supabase Pro desde o primeiro login real** (US$ 25/mês, cliente), não desde o go-live: Free pausa após 7 dias sem atividade (verificado em supabase.com/pricing em 29/10; a Spinhardi registrou o mesmo na D009 dela). Não existe degrau de US$ 5. Entra na conversa de planos até ~10/11, junto com o Vercel Pro.
+- **Decisão (a)/(b) de carga inicial no Sanity morre:** não há conteúdo inicial a carregar. Conector Sanity do Claude passou para a conta da clínica (`clinicamaya.digital@gmail.com`; `whoami` confirma e vê só `04bzsv4z`). Serve para verificação, não para criar conteúdo. Fato que pesou: Sanity Free não tem papel Editor, só Administrator e Viewer.
+- **Schema corta de seis tipos para três**, espelhando `studio/schemas` da Spinhardi (inclui `alt` em imagem, `excerpt`, `seoTitle`, `seoDescription`, `ogImage`). `/studio` embutido permanece como superfície técnica do Alan e do Claude, não da operação.
+- Fase 2 encolhe para copy final em código e bios; Fase 3 Lote 1 absorve o corte de schema; Lote 3 ganha o `/admin/blog`.
+
+## Changelog v1.3
+
+- **Fase 1 fechada e no ar.** Scaffold commitado (`9bb760a`, v0.1.0), CI verde, produção em `https://clinica-maya-site.vercel.app`, Sanity ligado, Studio em `/studio` listando os seis tipos.
+- **Vercel: corrige a v1.2.** O time `clinica-maya` foi criado **sob o login do Alan** (como a Spinhardi), não na conta da clínica: Hobby não permite membros e o Alan operaria pelo login da cliente o tempo todo. Pro permite transferir depois. Nasceu em **Pro Trial de 14 dias (29/10)**; decisão de plano antes de ~10/11. Registrado na Decisão 003.
+- **Sanity na conta da clínica** (`clinicamaya.digital@gmail.com`): organização "Clínica Maya", projeto `clinica-maya-site`, id `04bzsv4z`, dataset `production`, CORS para `https://clinica-maya-site.vercel.app` e `http://localhost:3000` (e `:3333`, auto-criado, mantido). Trial de 30 dias cai para Free sozinho (~28/11); Free basta.
+- **Proteção:** a Vercel liga **Standard Protection por padrão**: URLs únicas de deploy e previews de branch exigem login; só o domínio de produção é público. Para o placeholder, em vez de fechar produção, entrou **`noindex, nofollow` temporário no layout raiz** (`2f36dae`), com comentário literal mandando remover no go-live. Deployment Protection paga descartada; Shareable Link fica para a Fase 6.
+- **Dinâmicas:** commit direto na `main`, sem PR (time de um). CI roda no push. Branch só se o Codinho for commitar com autorização prévia.
+- **Vercel MCP:** o Claude opera o time `clinica-maya` pela conexão do Alan (autorizado em 29/10): env vars, redeploy, verificação. O Codinho **não** recebe CLI, plugin nem MCP da Vercel (prompt "Set up Vercel" da Vercel ignorado de propósito: daria ao agente poder de mutação em todos os times).
+- Apêndice A: "integrative-care" trocado por "multidisciplinary" no prompt; a palavra é vetada até em material interno, para não vazar.
 
 ## Changelog v1.2
 
-- Vercel: o projeto nasce em um **time próprio da clínica** (Hobby, dono `clinicamaya.digital@gmail.com`), não no time da agência. Previews protegidos por Vercel Authentication + Shareable Links (gratuito); senha em preview descartada (add-on de US$ 20/mês por projeto no Pro). Upgrade para Pro com cartão da clínica só na Fase 7, porque produção comercial exige Pro.
-- Conta técnica criada: `clinicamaya.digital@gmail.com` (recuperação ligada a `clinicamaya.ac@gmail.com`). Dona de Vercel, Sanity, GA4 e Search Console.
+- Vercel: o projeto nasce em um time próprio da clínica (Hobby, dono `clinicamaya.digital@gmail.com`), não no time da agência. **Superado na v1.3.** Previews protegidos por Vercel Authentication + Shareable Links (gratuito); senha em preview descartada (add-on de US$ 20/mês por projeto no Pro). Upgrade para Pro com cartão da clínica só na Fase 7, porque produção comercial exige Pro.
+- Conta técnica criada: `clinicamaya.digital@gmail.com` (recuperação ligada a `clinicamaya.ac@gmail.com`). Dona de Sanity, GA4 e Search Console.
 - Projetos órfãos da Vercel apagados; stack v1.1 aprovada; scaffold instruído (`docs/instrucao_codinho_scaffold.md`).
 - CFM pesquisado na fonte primária (Resolução 2.336/2023): depoimentos permitidos com condições, preço de consulta permitido, site de clínica precisa exibir registro da clínica no CRM e Diretor(a) Técnico(a) Médico(a). Decisões derivadas na Fase 0 e Fase 2.
 
@@ -20,33 +41,38 @@ Responsável entre parênteses: (Alan) (Claude) (Codinho) (Amanda) (Cliente). `[
 
 ## Dinâmicas de trabalho
 
-- Codinho trabalha em branch; **commit é humano** (Alan revisa e commita).
+- Codinho edita o working tree; **commit é humano** (Alan revisa e commita, direto na `main`, sem PR). Branch só se o Codinho for commitar com autorização prévia.
+- Toda instrução ao Codinho sai como `docs/instrucao_codinho_<tema>.md` e entra no commit junto com o código que gerou.
 - **Testes automatizados e navegação de verificação: Claude roda no Chrome**; Alan valida e revisa, não executa teste.
 - **Menos etapas:** entregas em lotes que empilham funcionalidade testável; nada de micro-etapa que não testa nem empilha.
 - **Aprovações da Amanda e da cliente: um pacote só**, sobre o preview publicado, com estrutura, conteúdo e movimento prontos. Nada trava esperando aprovação parcial.
 - Nenhum deploy em produção sem varredura verde e sem o pacote de aprovação.
+- Releases internas fecham com changelog + decision log (`docs/CHANGELOG.md`, `docs/DECISION_LOG.md`), sem release notes.
 
-## Stack proposta (v1.1)
+## Stack (v1.3, em uso)
 
 | Decisão | Escolha | Por quê | Guarda-corpo |
 |---|---|---|---|
 | Framework | **Next.js 16, App Router, TypeScript**, mesmo padrão da Spinhardi | Um playbook só na agência: prompts do Codinho, revisão do Alan, Sanity e Vercel já conhecidos. Qualquer back mínimo (route handler, server action) nasce no lugar certo em vez de virar remendo | **Renderização estática por padrão** em todas as páginas; client components só para movimento e formulário; `next/image`; fontes self-hosted via `next/font` |
-| Conteúdo | **Sanity desde o dia 1**: equipe, áreas, dores, programas, posts, config do site. Studio embutido em `/studio` | É a conclusão da própria objeção do Alan: se o Sanity é o destino, começar com arquivos e migrar é o refactor que queremos evitar. A gestão mensal (Etapa 2) publica blog sem PR | Schemas espelham o modelo de conteúdo do esqueleto v3; **projeto Sanity em organização da cliente** (ou transferível); ISR com revalidação por webhook, sem fetch em runtime |
-| Estilo | **Tailwind 4** com tokens da marca em `@theme`, como na Spinhardi | Consistência com a agência; tokens definidos uma vez | Nada fora dos tokens; sem azul |
+| Conteúdo | **Copy institucional em código** (`.tsx`, como na Spinhardi). **Sanity só para o blog** (`post`, `author`, `category`); Studio embutido em `/studio` como superfície técnica | Volume de edição institucional é baixo e o time é pequeno; treinar gente em Studio é custo sem retorno. Blog é o que a gestão mensal (Etapa 2) publica | Schemas espelham `studio/schemas` da Spinhardi (Decisão 005); **projeto Sanity na conta da cliente** (`04bzsv4z`, dataset `production`); ISR com revalidação por webhook (rota existe, webhook ainda não) |
+| Back-office | **Supabase Auth com papéis (admin/editor) + `/admin/blog`**, mesma dinâmica da Spinhardi (`lib/blog/actions.ts`, `lib/sanity/write-client.ts`), identidade da Maya | Quem publica (gestora, agência de conteúdo) loga no site da clínica com acesso delimitado por papel; ninguém cria conta Sanity | Varredura roda no servidor antes de gravar (Decisão 002, item 5 fechado); **Supabase Pro desde o primeiro login real** (Free pausa em 7 dias); projeto Supabase na conta da clínica |
+| Estilo | **Tailwind 4** com tokens da marca em `@theme`, como na Spinhardi | Consistência com a agência; tokens definidos uma vez | Nada fora dos tokens; sem azul (varredura garante) |
 | Movimento | Decidir após referências (Apêndice A): GSAP ScrollTrigger, Motion ou CSS scroll-driven | Grafismos em camada própria com parallax; página inteira com dinâmica | `prefers-reduced-motion`; Lighthouse mobile ≥ 90 é gate |
-| Hospedagem | **Vercel, time próprio da clínica** (dono `clinicamaya.digital@gmail.com`), Hobby em desenvolvimento, Pro na publicação | A cliente é dona desde o dia 1; nada a transferir depois; DNS em 2 minutos | Previews fechados com Vercel Authentication + Shareable Links (gratuito). Pro + cartão da clínica antes do DNS (fair use: Hobby é não comercial) |
-| Agendamento | `wa.me` montado no cliente; sem backend hoje | Exigência do briefing | CRM entra como server action no formulário, sem tocar nas páginas |
+| Hospedagem | **Vercel, time `clinica-maya` sob o login do Alan** (Pro Trial até ~12/11), projeto `clinica-maya-site`, produção = `main` | Isolado por natureza; transferível no Pro; Alan opera sem usar o login da cliente | Standard Protection (padrão): previews fechados, produção aberta com `noindex` até o go-live. Pro + cartão da clínica antes do DNS (fair use: Hobby é não comercial) |
+| Agendamento | `wa.me` montado no cliente; sem backend de agenda hoje | Exigência do briefing | CRM entra como server action no formulário, sobre o mesmo Supabase do back-office, sem tocar nas páginas |
 | Analytics | GA4 via Google Tag com Consent Mode + Vercel Analytics | Ads e LGPD | Propriedade em conta da cliente |
-| Qualidade | **Varredura regulatória como script no repo, em CI** | O gate manual vira teste automático | Bloqueia merge |
+| Qualidade | **Varredura regulatória como script no repo, em CI** (`scripts/varredura.mjs` + config JSON) | O gate manual vira teste automático | Roda em push na `main`; posts do blog passam pela mesma config no servidor ao publicar (Decisão 005, item 5; implementação no Lote 3) |
 
-Dependências da Spinhardi que **não** entram agora: Supabase, Resend, Recharts. Entram quando houver feature que as peça.
+Dependências da Spinhardi: **Supabase (auth e papéis) e `@portabletext/react` entram no Lote 3**, com o `/admin/blog` e o primeiro post. Resend e Recharts ficam fora até haver feature que os peça.
 
 ---
 
 ## Fase 0 · Decisões
 
 - [x] Stack v1.1 aprovada (Next + Sanity desde o dia 1 + Tailwind 4) (29/10)
-- [x] Conta técnica da clínica criada: `clinicamaya.digital@gmail.com`; Sanity, Vercel, GA4 e Search Console nascem nela (29/10)
+- [x] Conta técnica da clínica criada: `clinicamaya.digital@gmail.com`; Sanity, GA4 e Search Console nascem nela (29/10)
+- [ ] (Alan) **Até ~10/11:** plano do time Vercel ao fim do Pro Trial: manter Pro (US$ 20/mês, cartão de quem?) ou cair para Hobby até a Fase 7
+- [ ] (Alan) **Na mesma conversa:** Supabase Pro (US$ 25/mês, cliente) antes do primeiro login real no `/admin`; Free pausa após 7 dias sem atividade. Criar o projeto Supabase na conta `clinicamaya.digital@gmail.com` quando o Lote 3 for instruído
 - [ ] (Amanda + Cliente) Confirmar se a ficha do Google Maps já pertence a `clinicamaya.ac@gmail.com`; se não, decidir qual conta será dona da ficha antes de qualquer convite de gestão
 - [x] Domínio verificado e resolvido: `clinicamaya.com`, Wix, sem e-mail, DNS no Wix (29/10)
 - [ ] (Amanda + Cliente) Prova social, agora com a regra conhecida (CFM 2.336/2023 permite depoimentos sóbrios, sem superioridade nem resultado): escolher (a) só nota agregada + link "ver avaliações no Google" ou (b) carrossel com avaliações selecionadas pela clínica. Recomendação: (a) agora
@@ -56,33 +82,40 @@ Dependências da Spinhardi que **não** entram agora: Supabase, Resend, Recharts
 - [x] Escopo da bio da Talita: somente o que manual e briefing permitem; menos é mais; ajustes depois se precisar (29/10)
 - [x] Mock v3.1 varrido e aprovado: referência visual do build (29/10)
 
-## Fase 1 · Fundação técnica
+## Fase 1 · Fundação técnica — **concluída em 29/10**
 
-- [x] (Alan) Repo `Gattiboni/clinica_maya_site` criado (vazio) (29/10)
+- [x] (Alan) Repo `Gattiboni/clinica_maya_site` criado (29/10)
 - [x] (Alan) Projetos órfãos do Claude Design apagados da Vercel (29/10)
 - [x] (Claude) Instrução de scaffold entregue: `docs/instrucao_codinho_scaffold.md` (29/10)
-- [ ] (Alan) Criar o time `clinica-maya` na Vercel logado com `clinicamaya.digital@gmail.com` (Hobby) e conectar o GitHub que tem acesso ao repo (o teu, na fase de desenvolvimento; rever no handoff)
-- [ ] (Alan) Criar a organização e o projeto no Sanity com a mesma conta; dataset `production`; anotar project id para o `.env.local`
-- [ ] (Codinho) Scaffold em branch `feat/scaffold`
-- [ ] (Claude) Testar no Chrome: build, Studio abre, varredura roda, CI verde
-- [ ] (Alan) Revisar e commitar (`docs/` entra junto; o mock `.html` fica ignorado); importar o repo no time da clínica na Vercel; produção = `main`; Deployment Protection = Vercel Authentication em preview e produção
+- [x] (Codinho) Scaffold executado; decisões reportadas e julgadas (regex `\b`, Studio fora da regra de H1, `@portabletext/react` removido, `AGENTS.md` ignorado, `alt` adiado) (29/10)
+- [x] (Claude) Changelog v0.1.0 e Decisões 001 a 004 escritos; (Alan) commit `9bb760a` na `main`, CI verde (29/10)
+- [x] (Alan) Time `clinica-maya` na Vercel sob o próprio login, Pro Trial; projeto `clinica-maya-site` importado do GitHub, produção = `main`; primeiro deploy READY (29/10)
+- [x] (Alan) Organização "Clínica Maya" e projeto `clinica-maya-site` no Sanity, conta da clínica; id `04bzsv4z`, dataset `production`; CORS cadastrado (29/10)
+- [x] (Claude) `NEXT_PUBLIC_SANITY_PROJECT_ID` e `NEXT_PUBLIC_SANITY_DATASET` na Vercel (Production + Preview + Development); redeploy; `/studio` entrega o Studio (29/10)
+- [x] (Alan) `.env.local` na raiz do repo com os dois valores públicos; `SANITY_API_READ_TOKEN` e `SANITY_REVALIDATE_SECRET` vazios até precisar (29/10)
+- [x] (Alan) Login no Studio em produção com a conta da clínica: seis tipos listados (29/10)
+- [x] (Claude → Codinho → Alan) `noindex, nofollow` temporário no layout raiz, commit `2f36dae`, confirmado no ar (29/10)
 
 ## Fase 2 · Conteúdo
 
-- [ ] (Claude) Converter a copy do mock v3.1 para documentos Sanity (áreas, profissionais, dores, programas, config), placeholders marcados
+- [x] (Alan) Como os documentos entram no Sanity: **superado em 29/10 (v1.4)**. Sanity só blog; não há carga inicial. Decisão 005
+- [ ] (Claude) Fixar a copy final das páginas a partir do mock v3.1 em `docs/copy-site-v1.md` (home, A Clínica, equipe por área, dores, programas sem detalhe, Método, atendimento on-line, contato), lacunas marcadas por página; é a fonte que o Codinho transcreve para os `.tsx` nos Lotes 1 e 2 e que a varredura passa a cobrir quando vira código
 - [ ] (Claude) Redigir as bios do Dr. Arthur Hank e da Talita Porto no tom da casa e dentro das regras, com varredura; aprovação entra no pacote da Fase 6
-- [ ] (Alan) Subir as 11 fotos de `revisao_mock/r20261014/web/` para o Sanity (ou `public/` se o scaffold preferir); faltam Alexandra, Gabriella e Beatriz
-- [ ] (Claude) Política de privacidade base (LGPD, cookies, GA4, WhatsApp) para revisão jurídica no pacote da Fase 6
+- [ ] (Alan) Levar as 11 fotos de `revisao_mock/r20261014/web/` para `public/` (copy em código, sem upload no Sanity); faltam Alexandra, Gabriella e Beatriz. `alt` de cada foto definido na copy
+- [ ] (Claude) Política de privacidade base (LGPD, cookies, GA4, WhatsApp, login do back-office) para revisão jurídica no pacote da Fase 6
 - [ ] (Amanda) Cobrar o que falta da clínica: fotos restantes, CRN/CRP, modalidade de Talita e Bianca, Folske × Folks, fatos da trajetória da Dra. Mayara, 3 posts reais
+- [x] (Claude) Gate regulatório do conteúdo do blog: **definido na Decisão 005, item 5** (varredura no servidor ao publicar); implementação no Lote 3
 
 ## Fase 3 · Páginas (três lotes)
 
-- [ ] (Claude → Codinho) **Lote 1:** header, footer, componentes base, Home, A Clínica
+- [ ] (Claude → Codinho) **Lote 1:** schema cortado para `post`, `author`, `category` espelhando a Spinhardi e queries mortas removidas de `lib/sanity` (Decisão 005); header, footer, componentes base, Home, A Clínica
 - [ ] (Claude) Testar lote 1 no Chrome; (Alan) revisar e commitar
 - [ ] (Claude → Codinho) **Lote 2:** Equipe com âncoras, Método, Emagrecimento, Dra. Mayara
 - [ ] (Claude) Testar lote 2; (Alan) revisar e commitar
-- [ ] (Claude → Codinho) **Lote 3:** Atendimento on-line, Blog e Post via Sanity, Contato com `wa.me`, 404, Política de privacidade
+- [ ] (Alan) Antes do Lote 3: projeto Supabase criado na conta da clínica; `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` e `SANITY_API_WRITE_TOKEN` (token de escrita criado na conta da clínica) em `.env.local` e na Vercel
+- [ ] (Claude → Codinho) **Lote 3:** Blog público e Post via Sanity (`@portabletext/react` entra aqui); **`/admin/blog` com Supabase Auth e papéis admin/editor, write client server-only, varredura no publicar**, mesma dinâmica da Spinhardi com a identidade da Maya; Atendimento on-line, Contato com `wa.me`, 404, Política de privacidade
 - [ ] (Claude) Testar lote 3; (Alan) revisar e commitar
+- [ ] (Alan) Criar o webhook no Sanity (API → Webhooks) apontando para `/api/revalidate`, com `SANITY_REVALIDATE_SECRET` igual nos dois lados, quando a primeira página ler do Sanity
 
 ## Fase 4 · Movimento
 
@@ -100,7 +133,7 @@ Dependências da Spinhardi que **não** entram agora: Supabase, Resend, Recharts
 
 ## Fase 6 · Pacote de aprovação (preview publicado)
 
-- [ ] (Alan) Gerar Shareable Link do deployment de preview para Amanda e Mayara (sem conta Vercel, sem senha)
+- [ ] (Alan) Gerar Shareable Link do deployment de preview para Amanda e Mayara (sem conta Vercel, sem senha; Standard Protection já fecha o preview)
 - [ ] (Claude) Varredura final + Lighthouse + acessibilidade sobre o preview de produção
 - [ ] (Amanda) Revisão completa do preview: estrutura, copy, bios, movimento, política de privacidade
 - [ ] (Cliente) Aprovação final da Dra. Mayara no mesmo preview
@@ -108,25 +141,26 @@ Dependências da Spinhardi que **não** entram agora: Supabase, Resend, Recharts
 
 ## Fase 7 · Domínio e go-live
 
-- [ ] (Cliente + Alan) Upgrade do time da clínica para Pro com o cartão da clínica (produção comercial exige Pro; 1 assento; Alan opera pela conta técnica ou como Viewer gratuito)
-- [ ] (Alan) Remover a Vercel Authentication da produção; manter nos previews
+- [ ] (Cliente + Alan) Time Vercel em Pro com o cartão da clínica (produção comercial exige Pro; 1 assento)
+- [ ] (Codinho → Alan) Remover o campo `robots` temporário de `app/layout.tsx` (comentário no código aponta este item); manter Standard Protection como está
 - [ ] (Alan) Adicionar `clinicamaya.com` e `www` no projeto Vercel
 - [ ] (Alan) No Wix, em Gerenciar registros DNS: trocar os 3 registros A da raiz pelo IP da Vercel e o CNAME de `www` para `cname.vercel-dns.com`. Nameservers continuam no Wix. Não há MX a preservar
 - [ ] (Alan) Confirmar SSL e publicar `main`
+- [ ] (Alan) Adicionar `https://clinicamaya.com` e `https://www.clinicamaya.com` nas CORS origins do Sanity
 - [ ] (Amanda) Vincular o site às fichas do Google (clínica e Dra.) e ao Instagram
 
 ## Fase 8 · Entrega e pós
 
-- [ ] (Alan) Entregar à cliente a conta técnica `clinicamaya.digital@gmail.com` (senha, 2FA, recuperação) e decidir se o repo migra para uma organização GitHub da clínica ou permanece em Gattiboni com a cliente como colaboradora
-- [ ] (Claude) Handoff: como publicar post no Studio, adicionar profissional, trocar foto, quem acessa o quê
-- [ ] (Claude) Backlog: CRM no formulário, agenda integrada, carrossel de avaliações curado (rota b), e-mail profissional no domínio, CFP e CFN para as bios da equipe
+- [ ] (Alan) Entregar à cliente a conta técnica `clinicamaya.digital@gmail.com` (senha, 2FA, recuperação); decidir se o time Vercel é transferido para a conta da clínica e se o repo migra para uma organização GitHub da clínica ou permanece em Gattiboni com a cliente como colaboradora
+- [ ] (Claude) Handoff: como publicar post no `/admin/blog`, convidar e remover editor, trocar foto de post; quem acessa o quê (Studio não entra no handoff da gestora)
+- [ ] (Claude) Backlog: CRM no formulário (sobre o Supabase existente), agenda integrada, carrossel de avaliações curado (rota b), e-mail profissional no domínio, CFP e CFN para as bios da equipe, copy institucional para CMS só se a edição virar rotina (mesma pendência que a Spinhardi registra)
 
 ---
 
 ## Apêndice A · Prompt de referências (Perplexity Pro)
 
 ```
-I'm building a website for a small Brazilian integrative-care clinic (medicine, nutrition, psychology, hair health) whose brand is warm and organic: beige background (#F7EFDF), deep green accent (#3F4F4F), earthy brown details (#755958), serif headlines (Lora) with sans body (Alegreya Sans), and a set of abstract organic line-art "grafismos" (flowing curves) that are part of the visual identity.
+I'm building a website for a small Brazilian multidisciplinary clinic (medicine, nutrition, psychology, hair health) whose brand is warm and organic: beige background (#F7EFDF), deep green accent (#3F4F4F), earthy brown details (#755958), serif headlines (Lora) with sans body (Alegreya Sans), and a set of abstract organic line-art "grafismos" (flowing curves) that are part of the visual identity.
 
 I need visual and technical references for two things:
 
@@ -140,3 +174,15 @@ Then compare the main implementation routes for a Next.js 16 App Router site in 
 ## Apêndice B · Pendências de conteúdo com dono
 
 Avaliações do Google (Amanda) · fotos e registros das demais profissionais (clínica) · modalidade de Talita e Bianca (clínica) · Folske × Folks (clínica) · fatos da trajetória da Dra. Mayara (cliente) · prova social (CFM) · política de privacidade (jurídico) · 3 posts reais (Amanda) · geografia das campanhas (Amanda) · origem do nome, fora do site (cliente).
+
+## Apêndice C · Identificadores (sem segredos)
+
+| O quê | Valor |
+|---|---|
+| Repo | `github.com/Gattiboni/clinica_maya_site`, branch `main` |
+| Vercel | time `clinica-maya` (`team_F6aOsxGwW2ppNJK6fTCGUstp`), projeto `clinica-maya-site` (`prj_6yoBgmmQQBn34fLFKMLrwgMNC6Zv`), produção `https://clinica-maya-site.vercel.app` |
+| Sanity | org "Clínica Maya", projeto `clinica-maya-site`, id `04bzsv4z`, dataset `production`, Studio em `/studio` |
+| Supabase | projeto a criar na conta `clinicamaya.digital@gmail.com` antes do Lote 3; Pro desde o primeiro login real |
+| Contas | Sanity, Supabase e futuros GA4/Search Console: `clinicamaya.digital@gmail.com` · Wix (domínio): `clinicamaya.ac@gmail.com` · Vercel e GitHub: login do Alan |
+| Domínio | `clinicamaya.com`, Wix, renova 22/10/2028, DNS no Wix (A 185.230.63.107 / .186 / .171; CNAME www → cdn3.wixdns.net; sem MX) |
+| Commits | `9bb760a` scaffold v0.1.0 · `2f36dae` noindex temporário |
