@@ -5,6 +5,7 @@ import "./globals.css";
 // Fontes self-hosted pelo Next no build: zero request ao Google em runtime.
 const lora = Lora({
   subsets: ["latin"],
+  style: ["normal", "italic"],
   display: "swap",
   variable: "--font-lora",
 });

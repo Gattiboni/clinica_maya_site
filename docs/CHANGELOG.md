@@ -2,6 +2,62 @@
 
 Formato: versão acima da anterior. Versões antes de v1.0.0 são fundação e desenvolvimento, sem site no ar.
 
+## v0.2.0 — 2026-10-29
+
+### Lote 1: o site deixa de ser placeholder; Sanity encolhe para o blog e a copy vira código
+
+Fecha o Lote 1 da Fase 3 (plano v1.5) e materializa a Decisão 005: o Sanity passa a servir só o blog (`post`, `author`, `category`, campos idênticos aos da Spinhardi) e toda a copy institucional vive em código, com `docs/copy-site-v1.md` como fonte. Entram header, footer, componentes base, Home (8 seções visíveis) e A Clínica (6 seções), mais o Lote 1.1 de responsividade e os grafismos em SVG.
+
+### Adicionado
+- **`app/(site)/` — route group do site:** `layout.tsx` com Header, `<main>` e Footer; `page.tsx` (Home) e `clinica/page.tsx` vivem aqui. `/studio` fica fora do grupo, direto sob o layout raiz, ocupando a viewport inteira. Motivo: no primeiro build o Studio renderizou com header e footer do site e o CSS dele deformava o header (achado do Codinho).
+- **`lib/conteudo/` — copy estruturada em código:** `clinica.ts` (nome, slogan, WhatsApp, Instagram, endereço, horário, responsável técnica, destino do CTA), `navegacao.ts`, `areas.ts`, `dores.ts`, `pilares.ts`, `passos.ts`, `manifesto.ts`. Arrays tipados, texto literal da copy v1.0.1. É o ponto de troca se a copy institucional um dia for para CMS: muda o módulo, não a página.
+- **`components/layout/` — Header, Footer, Navegacao:** `Navegacao.tsx` é o único client component (estado ativo + menu mobile com `aria-expanded`); botão Agendar renderizado no servidor como children. Menu desktop a partir do breakpoint `--breakpoint-menu: 50rem` (800px), menor largura em que os cinco itens e o botão cabem numa linha. Footer sem o link de Política de privacidade até o Lote 3 (comentário no código); títulos de coluna em `h2`.
+- **`components/ui/` — base compartilhada:** `Secao` (fundo bege/creme/verde, espaço normal/curto, slot de grafismo), `CabecalhoSecao`, `LinkTexto` (seta decorativa `aria-hidden`), `Grafismo`, `CardArea`, `GradeAreas` (mesmo array nas duas páginas), `CardDor`. `Botao` ganhou variantes verde/bege/contorno, tamanhos normal/pequeno e `next/link` em rota interna.
+- **`components/home/` e `components/clinica/` — uma seção por arquivo** (nove e seis), para a Fase 4 animar seção a seção. Prova social não existe no código além de um comentário apontando para a copy §Home 8.
+- **`components/blog/CardPost.tsx` + `tempoLeitura.ts`:** card de post e minutos de leitura (palavras dos blocos `block` do `body` ÷ 200, teto, mínimo 1). Seção Blog da Home lê os 3 posts mais recentes via `lib/sanity/queries.ts`; sem env, sem client ou com erro, não renderiza e registra um `console.warn` legível; sem post publicado, não renderiza. `export const revalidate = 60`, padrão do `(public)/blog/page.tsx` da Spinhardi. TRAP herdado da Spinhardi: fetch ao Sanity em build sem try/catch derruba o deploy.
+- **`sanity/schemaTypes/author.ts`, `category.ts`:** espelho de `studio/schemas` da Spinhardi (nomes de campo em inglês, títulos em português). `author` ganhou `area` (lista fechada: Medicina, Nutrição, Psicologia, Terapia, Saúde capilar; valor igual ao rótulo), única extensão sobre o espelho, porque o site exibe a área da autora.
+- **`public/fotos/` — 7 fotos do Lote 1** (`home-1`, `home-2`, `equipe-mayara`, `clinica-1` a `-4`), checksum igual à origem em `revisao_mock/r20261014/web/`.
+- **`public/marca/grafismo-{3,4,5}.svg`:** vetorização dos PNGs (vtracer, linhas engrossadas 3px antes do traçado), um `<path>` por arquivo, `viewBox` próprio, `fill="currentColor"`, `fill-rule="evenodd"`. Fonte única dos grafismos.
+- **`docs/copy-site-v1.md` (v1.0.1), `docs/mapa-movimento-v1.md` (v0.2), `docs/instrucao_codinho_lote1.md`.**
+
+### Alterado
+- **`app/globals.css` — escala tipográfica fluida:** tokens `--text-display`, `-h1`, `-h2`, `-h3`, `-lead`, `-corpo`, `-nota`, `-legenda`, `-eyebrow` em `clamp()` linear entre mobile e 1440px, cada um com `line-height`; `text-wrap: balance` em títulos e `pretty` em parágrafos; `--breakpoint-menu`. Nenhum degrau `text-4xl sm:text-5xl` sobrou nas páginas.
+- **`components/layout/Container.tsx`:** largura máxima de 1240px (valor do mock) com respiro de 16px no mobile, em vez de `max-w-6xl`.
+- **`components/ui/Grafismo.tsx` — SVG inline com fonte única:** server component lê `public/marca/grafismo-<n>.svg` no build (`readFileSync` a partir de `process.cwd()`), valida `viewBox` e `<path>`, injeta inline com classes; cor via `currentColor`; `aria-hidden`. Sem svgr, sem duplicar o `d` em TS.
+- **`app/layout.tsx`:** só html/body, fontes, metadata e o `robots` temporário; Lora com `style: ["normal", "italic"]` (o `<em>` do H1 saía em itálico sintetizado).
+- **`sanity/schemaTypes/post.ts`:** campos renomeados para o contrato da Spinhardi (`title`, `slug`, `author`, `mainImage{alt}`, `categories[]`, `publishedAt`, `excerpt`, `body`, `seoTitle`, `seoDescription`, `ogImage`); `categoria` enum da Decisão 004 (item 6) vira referência a `category`.
+- **`sanity/structure.ts`:** Posts, Autoras, Categorias. **`sanity/schemaTypes/index.ts`:** exporta três tipos; `SINGLETONS` apagado. **`sanity.config.ts`:** removidos o import de `SINGLETONS`, o filtro de templates e o filtro de ações.
+- **`lib/sanity/queries.ts`:** só o que o blog usa (lista publicada por `publishedAt desc` com `_createdAt` como reserva, post por slug, 3 mais recentes para a Home), com `author->` e `categories[]->`.
+- **Fotos:** `object-position` por foto conforme o mock (hero `50% 20%`), proporções por breakpoint, hero no mobile limitado a 60% da altura da viewport, grade do Espaço em 2/4 colunas com proporção fixa; grids que colapsam recentralizam conteúdo.
+
+### Removido
+- `sanity/schemaTypes/area.ts`, `dor.ts`, `profissional.ts`, `programa.ts`, `siteConfig.ts` e as queries correspondentes (Decisão 005 supera a 004).
+- `public/marca/grafismo-{3,4,5}-{claro,escuro}.png` (substituídos pelos SVGs; originais seguem em `docs/id_visual/`).
+- `app/page.tsx` placeholder da v0.1.0 (movido com `git mv` para `app/(site)/page.tsx` e reescrito).
+
+### Validação (β)
+- **Lote 1 + fecho (Codinho, 29/10):** `npm run build` com e sem `.env.local`: `/` e `/clinica` estáticas (`/` com revalidate 60 no `prerender-manifest`), `/studio` estática com `force-static` desde o scaffold, `/api/revalidate` dinâmica. Sem env, um único `warn` legível: "[Home · Blog] Sanity não configurado: seção Blog não renderizada". Lint, `format:check`, varredura (57 arquivos, 0 ocorrências, incluindo HTML gerado) e `test:varredura` verdes. HTML gerado: Home com 8 seções, 1 H1, 1 `main`, 1 `header`, 1 `footer`; A Clínica com 6 seções, 1 H1 e "A Clínica" com `aria-current`. Após o route group, `/studio` sem `header`/`main`/`footer` do site. Itálicos (`<em>`) e setas `aria-hidden` presentes no HTML; dois CSS do build com `font-style: italic` na `@font-face` da Lora. Menu mobile a 375px abre e fecha com `aria-expanded` alternando.
+- **Copy (Claude, 29/10):** texto da Home lido no DOM de `localhost:3000` e conferido linha a linha com `docs/copy-site-v1.md`.
+- **Sanity na nuvem (conector, 29/10):** projeto `04bzsv4z`, dataset `production`, nenhum schema deployado, nenhum documento. Nada do scaffold de seis tipos vazou para a nuvem.
+- **Lote 1.1 (Codinho, 29/10):** build com e sem `.env.local` exit 0 (sem env, só o `warn` esperado); lint e `format:check` limpos; varredura em 60 arquivos (app 8, components 29, lib 11, sanity 5, 3 SVGs, 4 HTML) com 0 ocorrências; `test:varredura` 2/2. Grep de `grafismo-[0-9]` em código: 0; grep de `text-[`, `text-xs..9xl`, `leading-[`, `tracking-[` e hex em `components/**` e `app/(site)/**`: 0. Auditoria em 360, 390, 414, 768, 834, 1024, 1180, 1280, 1440 e 1920px, antes e depois: viúvas zeradas (`balance` também em `h3`), botões e blocos recentralizados no mobile, foto do hero a 343×429 em 375px (48% da viewport) e teto de 28rem/60svh, conteúdo crescendo de 944px (1024) a 1240px (1440+), navegação em linha a partir de 834px (largura necessária medida: 755px), sem rolagem horizontal em nenhuma largura. Capturas e `auditoria-antes/depois.json` no scratch do Codinho.
+
+### Pendências reconhecidas
+- `corpo-mente-espirito-*.png` continua PNG (tem texto em Lora); vira SVG construído à mão quando o mapa de movimento pedir. Regra nova no mapa (item 9): o símbolo só fica sobre fundo sólido, nunca sobre grafismo (achado do Alan no responsivo).
+- Links do header e do footer para `/equipe`, `/metodo`, `/emagrecimento`, `/blog`, `/contato`, `/dra-mayara-brasil`, `/atendimento-online` apontam para rotas dos Lotes 2 e 3; 404 esperado até lá. Link de Política de privacidade só entra no Lote 3.
+- Categorias e autoras ainda não existem no dataset; criação única pelo conector antes do Lote 3. `npx sanity schema deploy` só no Lote 3.
+- "Dr. Arthur" sem sobrenome e sem CRM (como no mock); Folske × Folks; modalidade de Talita e Bianca: pendências da clínica, registradas na copy.
+- Herdadas da v0.1.0 ainda vivas: favicon aponta para o PNG do logo (Fase 5); Best Practices do Lighthouse medir no preview da Vercel; registro da clínica no CRM-SC e prova social seguem na Fase 0; plano do time Vercel (e agora Supabase Pro) até ~10/11.
+- `@portabletext/react` entra no Lote 3 com o primeiro corpo de post.
+- **Peso do HTML com SVG inline:** Home 389 KB (132 KB gzip) com 5 grafismos, A Clínica 267 KB (93 KB gzip); os paths traçados são densos. Mitigação antes da Fase 4: simplificar os paths na origem (re-traçar com menos pontos) e `<symbol>`/`<use>` para repetições (a Home repete o 4 e o 5). Medir no Lighthouse do preview antes de decidir.
+- Dois papéis do mock colapsaram em um token: chamada final (40px) e faixa de emagrecimento (32px) viraram `h2` = 36px; H3 de 20 a 24px viraram 22px. Escala `--text-*` padrão do Tailwind não foi zerada porque a página de fallback do Studio usa `text-3xl`/`text-lg`.
+- Movimento e camadas: nada implementado; contrato em `docs/mapa-movimento-v1.md` v0.2, estrutura entra no Lote 2.
+
+### Decisões relacionadas
+- Decisão 005 — Escopo do Sanity: só blog; copy institucional em código; back-office com Supabase Auth.
+- Decisão 006 — Sistema de layout do front: route group, copy em `lib/conteudo/`, tipografia fluida por tokens, grafismos SVG inline com fonte única.
+
+---
+
 ## v0.1.0 — 2026-10-29
 
 ### Fundação: o esqueleto técnico existe, builda sem conteúdo e já se fiscaliza sozinho

@@ -1,7 +1,17 @@
 # Plano de execução — site Clínica Maya
 
-**v1.4 · 29/10/2026** (v1.3, v1.2, v1.1 e v1.0 anteriores) · checklist executável · repo: `github.com/Gattiboni/clinica_maya_site`
+**v1.5 · 29/10/2026** (v1.4, v1.3, v1.2, v1.1 e v1.0 anteriores) · checklist executável · repo: `github.com/Gattiboni/clinica_maya_site`
 Responsável entre parênteses: (Alan) (Claude) (Codinho) (Amanda) (Cliente). `[x]` = concluído. Este arquivo é o estado do projeto; quem abrir sabe em que pé estamos.
+
+## Changelog v1.5
+
+- **Lote 1 construído e aceito, aguardando commit (v0.2.0):** schema com três tipos, `lib/conteudo/`, header, footer, componentes base, Home (8 seções visíveis; Blog oculto sem post; Prova social fora), A Clínica (6 seções). Fecho: route group `app/(site)/` com o layout do site e `/studio` fora dele; `SINGLETONS` removido do `sanity.config.ts`; Lora com itálico; itálicos e setas conforme o mock. Copy em `docs/copy-site-v1.md` v1.0.1.
+- **Papel do `/studio` esclarecido:** editor nativo do Sanity, ferramenta técnica (Alan, Claude), sem papel operacional e fora do handoff. Verificado no código da Spinhardi: o `/admin/blog` **seleciona** categoria entre quatro nomes fixos em código (`CATEGORIES`) e exige que os documentos de categoria já existam (`resolveCategoryId` lança erro se faltarem); o formulário **não escreve autor**. Consequências no Lote 3: `CATEGORIES` com as quatro da copy; categorias e autoras criadas **uma vez**, pelo conector Sanity na conta da clínica; **select de autora no formulário** é adaptação necessária (o site exibe "Por {área da autora}").
+- **Sanity na nuvem:** dataset `production` sem schema deployado e sem documentos (conector, 29/10). `npx sanity schema deploy` só no Lote 3, com os três tipos.
+- **Fotos:** sete em `public/fotos/` (checksum igual à origem). `equipe-arthur`, `equipe-bianca`, `equipe-talita`, `equipe-tania` entram no Lote 2; Alexandra, Gabriella e Beatriz seguem faltando.
+- **Dinâmica corrigida:** instrução ao Codinho sai como `.md` no chat (download), **não** no repo; versiona-se código e decisão. `docs/instrucao_codinho_lote1.md` fica como exceção já escrita.
+- **Achados visuais do Alan sobre o Lote 1:** página estática demais (sem camadas nem movimento, esperado antes da Fase 4), textos quebrando mal no responsivo, fotos e elementos sem recentralizar, tipografia que não escala. Vira **Lote 1.1** (correções nos componentes compartilhados, antes do Lote 2) e antecipa a coleta de referências da Fase 4 para agora, com regras de camadas definidas antes do Lote 2.
+- Erro registrado: o aceite do Lote 1 afirmou `/studio` dinâmico; a rota tem `force-static` desde o scaffold. Conferir o build antes de afirmar estado de rota.
 
 ## Changelog v1.4
 
@@ -42,7 +52,7 @@ Responsável entre parênteses: (Alan) (Claude) (Codinho) (Amanda) (Cliente). `[
 ## Dinâmicas de trabalho
 
 - Codinho edita o working tree; **commit é humano** (Alan revisa e commita, direto na `main`, sem PR). Branch só se o Codinho for commitar com autorização prévia.
-- Toda instrução ao Codinho sai como `docs/instrucao_codinho_<tema>.md` e entra no commit junto com o código que gerou.
+- Instrução ao Codinho sai como `.md` no chat (download), não no repo: versiona-se código e decisão, não instrução. Exceção já escrita: `docs/instrucao_codinho_lote1.md`.
 - **Testes automatizados e navegação de verificação: Claude roda no Chrome**; Alan valida e revisa, não executa teste.
 - **Menos etapas:** entregas em lotes que empilham funcionalidade testável; nada de micro-etapa que não testa nem empilha.
 - **Aprovações da Amanda e da cliente: um pacote só**, sobre o preview publicado, com estrutura, conteúdo e movimento prontos. Nada trava esperando aprovação parcial.
@@ -99,28 +109,33 @@ Dependências da Spinhardi: **Supabase (auth e papéis) e `@portabletext/react` 
 ## Fase 2 · Conteúdo
 
 - [x] (Alan) Como os documentos entram no Sanity: **superado em 29/10 (v1.4)**. Sanity só blog; não há carga inicial. Decisão 005
-- [ ] (Claude) Fixar a copy final das páginas a partir do mock v3.1 em `docs/copy-site-v1.md` (home, A Clínica, equipe por área, dores, programas sem detalhe, Método, atendimento on-line, contato), lacunas marcadas por página; é a fonte que o Codinho transcreve para os `.tsx` nos Lotes 1 e 2 e que a varredura passa a cobrir quando vira código
+- [x] (Claude) `docs/copy-site-v1.md` v1.0.1: global, header, footer, Home, A Clínica (29/10). Fonte que o Codinho transcreve; varredura cobre quando vira código
+- [ ] (Claude) Copy v1.1: Equipe, Método, Emagrecimento, Dra. Mayara (Lote 2); v1.2: Atendimento on-line, Blog, Contato, 404, Política (Lote 3)
 - [ ] (Claude) Redigir as bios do Dr. Arthur Hank e da Talita Porto no tom da casa e dentro das regras, com varredura; aprovação entra no pacote da Fase 6
-- [ ] (Alan) Levar as 11 fotos de `revisao_mock/r20261014/web/` para `public/` (copy em código, sem upload no Sanity); faltam Alexandra, Gabriella e Beatriz. `alt` de cada foto definido na copy
+- [x] (Claude) Sete fotos do Lote 1 em `public/fotos/` (29/10)
+- [ ] (Claude) Quatro fotos da Equipe (`equipe-arthur`, `-bianca`, `-talita`, `-tania`) para `public/fotos/` no Lote 2; faltam Alexandra, Gabriella e Beatriz (clínica). `alt` de cada foto definido na copy
 - [ ] (Claude) Política de privacidade base (LGPD, cookies, GA4, WhatsApp, login do back-office) para revisão jurídica no pacote da Fase 6
 - [ ] (Amanda) Cobrar o que falta da clínica: fotos restantes, CRN/CRP, modalidade de Talita e Bianca, Folske × Folks, fatos da trajetória da Dra. Mayara, 3 posts reais
 - [x] (Claude) Gate regulatório do conteúdo do blog: **definido na Decisão 005, item 5** (varredura no servidor ao publicar); implementação no Lote 3
 
 ## Fase 3 · Páginas (três lotes)
 
-- [ ] (Claude → Codinho) **Lote 1:** schema cortado para `post`, `author`, `category` espelhando a Spinhardi e queries mortas removidas de `lib/sanity` (Decisão 005); header, footer, componentes base, Home, A Clínica
-- [ ] (Claude) Testar lote 1 no Chrome; (Alan) revisar e commitar
+- [x] (Claude → Codinho) **Lote 1:** schema cortado para `post`, `author`, `category`; `lib/conteudo/`; header, footer, componentes base, Home, A Clínica; fecho com route group `app/(site)/` (29/10)
+- [x] (Claude) Copy da Home conferida no DOM; evidências de build, varredura e DOM do Codinho aceitas (29/10)
+- [ ] (Claude → Codinho) **Lote 1.1, antes do Lote 2:** correções nos componentes compartilhados a partir da lista do Alan: escala tipográfica fluida (`clamp`), quebra de texto (`text-wrap`), recentralização de fotos e elementos entre breakpoints (`object-position`, grids), breakpoint do menu (hoje 1024px), regras de camadas para grafismos (z-index, bleed entre seções) definidas com as referências da Fase 4
+- [ ] (Alan) Changelog v0.2.0 + Decisão(ões) do lote; commit do Lote 1 + 1.1
 - [ ] (Claude → Codinho) **Lote 2:** Equipe com âncoras, Método, Emagrecimento, Dra. Mayara
 - [ ] (Claude) Testar lote 2; (Alan) revisar e commitar
 - [ ] (Alan) Antes do Lote 3: projeto Supabase criado na conta da clínica; `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` e `SANITY_API_WRITE_TOKEN` (token de escrita criado na conta da clínica) em `.env.local` e na Vercel
-- [ ] (Claude → Codinho) **Lote 3:** Blog público e Post via Sanity (`@portabletext/react` entra aqui); **`/admin/blog` com Supabase Auth e papéis admin/editor, write client server-only, varredura no publicar**, mesma dinâmica da Spinhardi com a identidade da Maya; Atendimento on-line, Contato com `wa.me`, 404, Política de privacidade
+- [ ] (Claude) Antes do Lote 3: criar pelo conector Sanity (conta da clínica) os quatro documentos `category` (Emagrecimento, Saúde mental, Saúde da mulher, Saúde capilar) e as `author` com `area`; `npx sanity schema deploy` dos três tipos
+- [ ] (Claude → Codinho) **Lote 3:** Blog público e Post via Sanity (`@portabletext/react` entra aqui); **`/admin/blog` com Supabase Auth e papéis admin/editor, write client server-only, varredura no publicar**, porte do código da Spinhardi (`lib/blog`, `lib/sanity/admin.ts`, `PostForm`) com a identidade da Maya; adaptações necessárias: `CATEGORIES` da Maya e **select de autora** no formulário; Atendimento on-line, Contato com `wa.me`, 404, Política de privacidade
 - [ ] (Claude) Testar lote 3; (Alan) revisar e commitar
 - [ ] (Alan) Criar o webhook no Sanity (API → Webhooks) apontando para `/api/revalidate`, com `SANITY_REVALIDATE_SECRET` igual nos dois lados, quando a primeira página ler do Sanity
 
 ## Fase 4 · Movimento
 
-- [ ] (Alan) Rodar o prompt do Apêndice A no Perplexity Pro e trazer as referências
-- [ ] (Claude) Propor abordagem (biblioteca, padrões, limites); (Alan) aprovar
+- [ ] (Alan) **Antecipado para antes do Lote 2:** rodar o prompt do Apêndice A no Perplexity Pro e trazer 3 a 5 referências anotadas (o que gostou em cada uma: camadas, ritmo de scroll, tipografia)
+- [ ] (Claude) Propor abordagem (biblioteca, padrões, limites) e as regras de camadas que o Lote 1.1 e o Lote 2 já seguem; (Alan) aprovar
 - [ ] (Codinho) Grafismos em camada própria com parallax, reveals de seção, transições; `prefers-reduced-motion`
 - [ ] (Claude) Testar em desktop e mobile no Chrome, Lighthouse mobile ≥ 90; (Alan) revisar e commitar
 

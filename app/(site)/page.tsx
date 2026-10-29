@@ -1,28 +1,36 @@
-import Image from "next/image";
-import { Container } from "@/components/layout/Container";
-import { Botao } from "@/components/ui/Botao";
-import logo from "@/public/marca/logo-vertical-verde.png";
+import type { Metadata } from "next";
+import { Areas } from "@/components/home/Areas";
+import { Blog } from "@/components/home/Blog";
+import { ChamadaFinal } from "@/components/home/ChamadaFinal";
+import { ComoComeca } from "@/components/home/ComoComeca";
+import { Dores } from "@/components/home/Dores";
+import { DraMayara } from "@/components/home/DraMayara";
+import { FaixaEmagrecimento } from "@/components/home/FaixaEmagrecimento";
+import { Hero } from "@/components/home/Hero";
+import { Metodo } from "@/components/home/Metodo";
+import { CLINICA } from "@/lib/conteudo/clinica";
 
-const WHATSAPP_URL = "https://wa.me/5548996205000";
+// ISR: a seção Blog relê o Sanity a cada 60s (padrão da Spinhardi); a página continua estática.
+export const revalidate = 60;
+
+export const metadata: Metadata = {
+  title: { absolute: CLINICA.nome },
+  description: CLINICA.descricaoCurta,
+};
 
 export default function Home() {
   return (
-    <main className="flex flex-1 items-center py-16">
-      <Container className="flex flex-col items-center gap-8 text-center">
-        <Image
-          src={logo}
-          alt="Clínica Maya"
-          priority
-          sizes="(max-width: 640px) 160px, 220px"
-          className="h-auto w-40 sm:w-56"
-        />
-        <h1 className="font-titulo text-4xl leading-tight sm:text-5xl">Esteja bem com você</h1>
-        <p className="max-w-prose text-lg leading-relaxed sm:text-xl">
-          Clínica de saúde integral em Antônio Carlos, Santa Catarina, com atendimento presencial e
-          on-line.
-        </p>
-        <Botao href={WHATSAPP_URL}>Agendar consulta</Botao>
-      </Container>
-    </main>
+    <>
+      <Hero />
+      <Areas />
+      <Dores />
+      <Metodo />
+      <ComoComeca />
+      <FaixaEmagrecimento />
+      <DraMayara />
+      {/* §Home 8 · Prova social: não renderizada. Ver docs/copy-site-v1.md §Home 8. */}
+      <Blog />
+      <ChamadaFinal />
+    </>
   );
 }

@@ -1,12 +1,6 @@
-import { area } from "./area";
-import { dor } from "./dor";
+import { author } from "./author";
+import { category } from "./category";
 import { post } from "./post";
-import { profissional } from "./profissional";
-import { programa } from "./programa";
-import { siteConfig } from "./siteConfig";
 
-/** Os seis tipos de documento do modelo de conteúdo (esqueleto v3). */
-export const schemaTypes = [siteConfig, area, profissional, dor, programa, post];
-
-/** Tipos com um único documento: sem criar, duplicar ou apagar no Studio. */
-export const SINGLETONS = new Set(["siteConfig"]);
+/** Os três tipos do blog (Decisão 005). Toda a copy institucional vive em código. */
+export const schemaTypes = [post, author, category];
