@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+/*
+ * Tokens da marca Clínica Maya. Única fonte de cores, fontes e raios.
+ *
+ * `--color-*: initial` apaga a paleta padrão do Tailwind: só existem as
+ * quatro cores abaixo (bg-bege, text-verde, border-marrom, etc.). Qualquer
+ * cor nova entra aqui, e só aqui.
+ *
+ * Tema escuro não entra nesta fase. Quando entrar, a forma prevista é uma
+ * `@custom-variant dark (...)` e um bloco que redefine estes mesmos tokens
+ * dentro dela, sem tocar nos componentes.
+ */
+@theme {
+  --color-*: initial;
+  --color-bege: #f7efdf;
+  --color-creme: #fffdf8;
+  --color-verde: #3f4f4f;
+  --color-marrom: #755958;
+
+  --font-titulo: var(--font-lora), Georgia, "Times New Roman", serif;
+  --font-texto: var(--font-alegreya-sans), system-ui, "Segoe UI", sans-serif;
+
+  --radius-pilula: 9999px;
+  --radius-card: 1.25rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-bege font-texto text-verde antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-titulo;
+  }
+}

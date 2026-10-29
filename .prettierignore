@@ -1,0 +1,21 @@
+# Dependências e builds
+node_modules
+.next
+out
+build
+dist
+.sanity
+coverage
+
+# Lockfile
+package-lock.json
+
+# Documentação e mocks (formatação manual, fora do escopo de escrita)
+docs/
+*.html
+
+# Markdown escrito à mão
+*.md
+
+# Imagens
+public/
