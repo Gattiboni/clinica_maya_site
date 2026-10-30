@@ -37,6 +37,32 @@ export const POST_POR_SLUG_QUERY = defineQuery(
 /** Os 3 posts mais recentes (seção Blog da Home). */
 export const POSTS_HOME_QUERY = defineQuery(`${POSTS_PUBLICADOS} [0...3] ${POST_PROJECTION}`);
 
+/** Slugs de todos os posts publicados (`generateStaticParams` da página do post, Lote 3a). */
+export const SLUGS_POSTS_QUERY = defineQuery(
+  `*[_type == "post" && defined(slug.current)].slug.current`,
+);
+
+/** Categorias com título, para os chips da lista do blog (Lote 3a); a ordem final vem da copy. */
+export const CATEGORIAS_QUERY = defineQuery(
+  `*[_type == "category" && defined(title)] | order(title asc) { _id, title }`,
+);
+
+/** Até 3 posts da mesma categoria, sem o post atual (posts relacionados, Lote 3a). */
+export const POSTS_RELACIONADOS_QUERY = defineQuery(
+  `*[_type == "post" && defined(slug.current) && slug.current != $slug && $categoria in categories[]->title] | order(coalesce(publishedAt, _createdAt) desc) [0...3] ${POST_PROJECTION}`,
+);
+
+/** Até 3 posts mais recentes, sem o post atual (reserva dos relacionados quando a categoria não tem outro post). */
+export const POSTS_RECENTES_EXCETO_QUERY = defineQuery(
+  `*[_type == "post" && defined(slug.current) && slug.current != $slug] | order(coalesce(publishedAt, _createdAt) desc) [0...3] ${POST_PROJECTION}`,
+);
+
+/** Forma crua que `CATEGORIAS_QUERY` entrega. */
+export type CategoriaSanity = {
+  _id: string;
+  title: string | null;
+};
+
 /** Imagem do Sanity com o `alt` aninhado (campo `mainImage` do schema). */
 export type ImagemSanity = {
   _type?: "image";

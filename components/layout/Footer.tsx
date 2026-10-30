@@ -122,7 +122,6 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
-              {/* Política de privacidade: Lote 3. */}
             </ul>
           </div>
         </div>

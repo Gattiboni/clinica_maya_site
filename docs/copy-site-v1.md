@@ -1,10 +1,10 @@
-# Copy do site: Clínica Maya · v1.1.1 (Lotes 1 e 2)
+# Copy do site: Clínica Maya · v1.2 (Lotes 1, 2 e 3a)
 
-**29/10/2026** (v1.1.1: atributos visuais do Lote 2 alinhados ao mock após o relatório do Codinho: grafismos, fundos, fotos e itálicos; v1.1: Equipe, Método, Emagrecimento e Dra. Mayara; v1.0.1: correções após o relatório do Codinho; itálicos, grafismos e fundos de A Clínica alinhados ao mock). Fonte única da copy institucional que vai para os `.tsx` (Decisão 005, item 2). Origem: mock v3.1 aprovado em 29/10 (`Clinica Maya - Site Completo v20261014.html`; páginas desempacotadas em `mock-v3.1-*.html` na raiz, gitignored) e esqueleto v3. O Codinho transcreve **literal**; correção de texto é edição aqui primeiro, depois no código.
+**29/10/2026** (v1.2: Atendimento on-line, Blog, Contato, 404 e Política de privacidade; v1.1.1: atributos visuais do Lote 2 alinhados ao mock após o relatório do Codinho: grafismos, fundos, fotos e itálicos; v1.1: Equipe, Método, Emagrecimento e Dra. Mayara; v1.0.1: correções após o relatório do Codinho; itálicos, grafismos e fundos de A Clínica alinhados ao mock). Fonte única da copy institucional que vai para os `.tsx` (Decisão 005, item 2). Origem: mock v3.1 aprovado em 29/10 (`Clinica Maya - Site Completo v20261014.html`; páginas desempacotadas em `mock-v3.1-*.html` na raiz, gitignored) e esqueleto v3. O Codinho transcreve **literal**; correção de texto é edição aqui primeiro, depois no código.
 
 Convenções: `[PENDÊNCIA: ...]` é nota para humanos e **nunca vai para o código**. Itálico marcado com `*palavra*` é ênfase do mock e vai para o código. Links de texto terminam com seta "→" decorativa (`aria-hidden`), como no mock; botões não têm seta. Travessão não existe no site (varredura); use vírgula, dois-pontos ou ponto. Tom feminino para a paciente ("acompanhada"), neutro para a equipe.
 
-Cobertura desta versão: global, header, footer, Home, A Clínica (Lote 1); Equipe, Método, Emagrecimento, Dra. Mayara (Lote 2). Lote 3 entra como v1.2 neste mesmo arquivo.
+Cobertura desta versão: global, header, footer, Home, A Clínica (Lote 1); Equipe, Método, Emagrecimento, Dra. Mayara (Lote 2); Atendimento on-line, Blog, Contato, 404, Política de privacidade (Lote 3a).
 
 Regra geral para texto do mock que é anotação interna ("a confirmar", "a preencher", "informações a confirmar"): **não vai para o código**; o campo fica vazio e a pendência fica aqui.
 
@@ -54,7 +54,7 @@ Coluna 3 · título: Institucional
 - Dra. Mayara Brasil → `/dra-mayara-brasil`
 - Equipe → `/equipe`
 - Atendimento on-line → `/atendimento-online`
-- Política de privacidade → `/politica-de-privacidade` `[PENDÊNCIA: página é do Lote 3; no Lote 1 este link NÃO é renderizado, mesma conduta da Spinhardi. Entra no Lote 3.]`
+- Política de privacidade → `/politica-de-privacidade` (entra no footer no Lote 3a, junto com a página)
 
 Linha final
 - © 2026 Clínica Maya · Todos os direitos reservados
@@ -374,7 +374,153 @@ Seções do mock: Abertura · Trajetória · Como ela atende · Formação e reg
 
 ---
 
-## Fotos necessárias para o Lotes 1 e 2 (origem: `clinica_maya\revisao_mock\r20261014\web\`, destino: `public/fotos/`)
+## Atendimento on-line · `/atendimento-online`
+
+Metadata: título "Atendimento on-line"; descrição: Consultas on-line de medicina e nutrição para todo o Brasil, com a mesma escuta do atendimento presencial. Como funciona, passo a passo.
+
+Seções do mock: Abertura · Como funciona · O que muda / Quem atende · FAQ · Chamada final. **Sem 1h30** (só na página da Dra. Mayara).
+
+### 1. Abertura (fundo bege; grafismo `grafismo-5`)
+- H1: O mesmo cuidado, onde você *estiver*
+- Texto: Consultas on-line de medicina e nutrição para todo o Brasil, com a mesma escuta e a mesma atenção do atendimento presencial.
+
+### 2. Como funciona (fundo creme)
+- H2: Como funciona, passo a passo
+- 6 passos (número · título · texto):
+  1. Agende · Pelo WhatsApp da recepção, você escolhe data e horário.
+  2. Formulário pré-consulta · Algumas perguntas para a consulta começar mais funda.
+  3. Confirmação · O pagamento por Pix confirma o seu horário.
+  4. Link da sala · Você recebe o link da videochamada antes da consulta.
+  5. Sua consulta · Tempo de verdade para ouvir a sua história.
+  6. Receitas digitais · Prescrições e pedidos de exame chegam no seu WhatsApp.
+
+### 3. O que muda e quem atende (fundo bege; duas colunas)
+- H2: O que muda em relação ao presencial
+- Parágrafo 1: Na consulta on-line não há exame físico: peso e medidas são informados por você, e a avaliação se adapta a isso com segurança.
+- Parágrafo 2: Receitas e pedidos de exame chegam em formato digital.
+- H2: Quem atende on-line
+- Parágrafo 1: Medicina e nutrição atendem on-line para todo o Brasil.
+- Parágrafo 2: A psicologia, a terapia e a saúde capilar, por enquanto, são apenas presenciais em Antônio Carlos/SC.
+
+### 4. FAQ (fundo creme; mesmo componente `<details>` do Emagrecimento)
+- H2: Perguntas frequentes
+- 4 pares:
+  - Preciso instalar algum aplicativo? · Não. A consulta acontece pelo navegador, em um link seguro.
+  - A consulta on-line tem a mesma qualidade? · Sim, com a mesma escuta e o mesmo cuidado do atendimento presencial.
+  - Receitas digitais valem na farmácia? · Sim, prescrições digitais têm validade em todo o território nacional.
+  - E se eu preferir migrar para o presencial? · Você pode alternar entre as modalidades ao longo do acompanhamento.
+
+### 5. Chamada final (bloco verde)
+- H2: Sua consulta on-line começa com uma mensagem
+- Botão: Agendar consulta on-line → `/contato#agendar`
+
+`[PENDÊNCIA: o passo 3 (Pix) e a frase sobre validade de prescrição digital vêm do mock aprovado; confirmar com a Amanda no pacote da Fase 6 se a clínica quer o Pix explícito no site.]`
+
+---
+
+## Blog · `/blog` e `/blog/[slug]`
+
+Metadata da lista: título "Blog"; descrição: Textos da equipe da Clínica Maya sobre emagrecimento, saúde mental, saúde da mulher e saúde capilar, sem alarmismo e sem promessas. Metadata do post: `seoTitle` ou `title`; `seoDescription` ou `excerpt`.
+
+### Lista (fundo bege na abertura com `grafismo-3`; grade de cards em creme)
+- H1: Blog da Clínica *Maya*
+- Lead: Conteúdo escrito pela nossa equipe, para você entender o próprio corpo sem alarmismo e sem promessas.
+- Filtro por categoria, chips: Todos · Emagrecimento · Saúde mental · Saúde da mulher · Saúde capilar (os nomes vêm dos documentos `category`; "Todos" é fixo).
+- Card: capa · "Categoria · N min" · título · resumo (`excerpt`) · "Por {área da autora}". Mesmo `CardPost` da Home, com resumo.
+- **Estado vazio** (sem post publicado, ou categoria sem post): frase única, sem botão: Em breve, os primeiros textos da equipe.  ·  frase exata a entrar em `permitidos` da varredura (Decisão 007, item 5)
+- Os títulos de post do mock são exemplo de layout e **não vão para o código**.
+
+### Post
+- Linha superior: Blog · {Categoria} · {N} min de leitura
+- H1: {title}
+- Linha de autoria: {área da autora} · Clínica Maya
+- Data: {publishedAt} por extenso em pt-BR (ex.: 12 de agosto de 2026)
+- Capa: `mainImage` com `alt` do documento; sem imagem, sem bloco de capa
+- Corpo: Portable Text (`body`), com títulos, parágrafos, listas, negrito, itálico, links e imagens com `alt`
+- Bloco de chamada após o corpo (bloco verde, como no mock): H2: Que tal conversar sobre isso com a nossa equipe? · Texto: A primeira consulta é o espaço certo para essa conversa, sem julgamentos. · Botão: Agendar consulta → `/contato#agendar`
+- Posts relacionados: H2: Posts relacionados · até 3 cards da mesma categoria (ou os mais recentes, se não houver), sem o post atual; sem nenhum outro post, a seção não aparece
+
+---
+
+## Contato · `/contato`
+
+Metadata: título "Contato e agendamento"; descrição: Agende presencial em Antônio Carlos/SC ou on-line para todo o Brasil. Fale com a Clínica Maya pelo WhatsApp.
+
+Seções do mock: Abertura com dois cards · Onde estamos / Redes / Formulário (`id="agendar"`). **Único destino de agendamento do site:** WhatsApp (48) 99620-5000 com mensagem montada.
+
+### 1. Abertura (fundo bege; grafismo `grafismo-4`)
+- H1: Vamos *conversar*?  ·  correção sobre o mock, que tinha espaço antes do "?"
+- Card Presencial: H2: Presencial · Texto: Na clínica, em Antônio Carlos/SC, um espaço pensado para você se sentir em casa. · Botão: Agendar pelo WhatsApp → `#agendar`
+- Card On-line: H2: On-line · Texto: Por videochamada, para todo o Brasil, com medicina e nutrição. · Link: Como funciona → `/atendimento-online` · Botão: Agendar pelo WhatsApp → `#agendar`
+
+### 2. Onde estamos, Redes e Formulário (fundo creme; grafismo `grafismo-3`)
+- H2: Onde estamos
+- Av. João Antônio Besen, 265 / Centro, Antônio Carlos/SC · CEP 88180-211 / WhatsApp (48) 99620-5000 / Segunda a sexta, 8h às 18h
+- Link: Ver no Google Maps → URL de busca do Google Maps com o endereço, nova aba (sem iframe, sem chave, sem cookie de terceiro)
+- H2: Redes
+- @clinicamaya.ac → `https://instagram.com/clinicamaya.ac` · @dramayarabrasilm → `https://instagram.com/dramayarabrasilm` (nova aba)
+- H2 (`id="agendar"`): Prefere que a gente chame você?
+- Lead: Deixe seu contato e retornamos pelo WhatsApp.
+- Campos: Nome (texto) · WhatsApp (telefone) · Com quem você quer agendar? (chips: Ainda não sei · Medicina · Nutrição · Psicologia · Terapia · Saúde capilar; padrão "Ainda não sei") · Como prefere ser atendida? (chips: Presencial · On-line; padrão Presencial) · Mensagem (opcional) (textarea)
+- Botão: Enviar pelo WhatsApp → abre `https://wa.me/5548996205000?text=` com a mensagem montada
+- Mensagem montada, literal do mock: `Olá! Me chamo {nome}. Gostaria de agendar ({modalidade em minúsculas}) com: {área}.` + (se houver WhatsApp) ` Meu WhatsApp: {whatsapp}.` + (se houver mensagem) ` {mensagem}` · sem nome, o botão fica desabilitado e o campo mostra que é obrigatório
+- Nota sob o botão: Ao enviar, você concorda com a nossa política de privacidade. (link para `/politica-de-privacidade`)
+- **Nada é armazenado pelo site**: o formulário só monta o texto e abre o WhatsApp da pessoa.
+
+`[PENDÊNCIA: mapa. O mock tem um retângulo "mapa"; o esqueleto diz "Mapa → dev". Decisão desta copy: link para o Google Maps em vez de iframe (sem cookie de terceiro antes do banner de consentimento da Fase 5). Se a Amanda quiser mapa embutido, entra na Fase 5 com o consentimento.]`
+
+---
+
+## 404 · `not-found`
+
+Metadata: título "Página não encontrada".
+
+- Eyebrow: Erro 404
+- H1: Essa página não existe
+- Texto: O endereço pode ter mudado ou ter sido digitado errado. Os caminhos abaixo levam de volta.
+- Links: Página inicial → `/` · Equipe → `/equipe` · Contato → `/contato`
+- Fundo bege; grafismo `grafismo-5` em baixa opacidade.
+
+---
+
+## Política de privacidade · `/politica-de-privacidade`
+
+Metadata: título "Política de privacidade"; descrição: Como a Clínica Maya trata os dados de quem visita o site e entra em contato.
+
+Texto base para **revisão jurídica no pacote da Fase 6** (Fase 2 do plano). Tom direto, sem juridiquês onde não precisa. Fundo bege; sem grafismo; largura de prosa.
+
+- H1: Política de privacidade
+- Linha: Vigente a partir de {data do go-live}  ·  o Codinho usa um placeholder de data em `lib/conteudo/`, preenchido na Fase 7
+
+### Quem somos
+Este site é da Clínica Maya, clínica de saúde integral com sede na Av. João Antônio Besen, 265, Centro, Antônio Carlos/SC, CEP 88180-211. Responsável técnica: Dra. Mayara Brasil, CRM SC 21112. Quando esta política fala em "nós", fala da Clínica Maya.
+
+`[PENDÊNCIA jurídico: razão social e CNPJ da clínica; nome e e-mail do encarregado de dados (LGPD, art. 41). Sem e-mail no domínio hoje, o contato do encarregado fica pendente.]`
+
+### Quais dados tratamos
+O site não pede cadastro e não guarda dados pessoais em banco próprio. O que acontece em cada situação:
+- **Formulário de contato.** Os campos que você preenche (nome, WhatsApp, área, modalidade e mensagem) são usados apenas para montar uma mensagem que é enviada pelo seu próprio aplicativo de WhatsApp para a recepção da clínica. O site não armazena esses dados. A partir daí, a conversa segue pelo WhatsApp, sob a política de privacidade do WhatsApp e sob o sigilo da clínica.
+- **Navegação.** Nesta versão do site não usamos cookies de análise nem de publicidade. Se passarmos a usar ferramentas de medição de audiência ou de anúncios, isso só acontecerá com o seu consentimento, pedido por um aviso no próprio site, e esta política será atualizada antes.
+- **Hospedagem.** O site é servido por provedores de infraestrutura que registram dados técnicos de acesso (endereço IP, data e hora, navegador) pelo tempo necessário à segurança e ao funcionamento do serviço.
+
+### Prontuário e dados de saúde
+Dados de consulta, exames e prontuário não passam por este site. Eles são tratados nos sistemas da clínica, sob sigilo profissional e sob as normas do Conselho Federal de Medicina e dos demais conselhos profissionais.
+
+### Para que usamos os dados
+Para responder ao seu contato, agendar e confirmar consultas e manter o site seguro e funcionando. Não vendemos nem cedemos dados pessoais a terceiros para fins de marketing.
+
+### Com quem compartilhamos
+Com os provedores que fazem o site funcionar (hospedagem e gestão de conteúdo), com o WhatsApp quando você envia a mensagem, e com autoridades quando a lei exigir. Cada provedor trata os dados segundo a própria política e sob contrato conosco.
+
+### Seus direitos
+A Lei Geral de Proteção de Dados (Lei 13.709/2018) garante a você confirmar se tratamos seus dados, acessá-los, corrigi-los, pedir anonimização ou exclusão, revogar consentimento e obter informações sobre compartilhamentos. Para exercer qualquer direito, fale com a clínica pelo WhatsApp (48) 99620-5000 ou pessoalmente no endereço acima.
+
+### Mudanças nesta política
+Quando algo mudar, publicaremos a nova versão aqui, com a data de vigência atualizada.
+
+---
+
+## Fotos necessárias para os Lotes 1, 2 e 3a (origem: `clinica_maya\revisao_mock\r20261014\web\`, destino: `public/fotos/`)
 
 Lote 1: `home-1.jpg` · `home-2.jpg` · `equipe-mayara.jpg` · `clinica-1.jpg` · `clinica-2.jpg` · `clinica-3.jpg` · `clinica-4.jpg`
 Lote 2: `equipe-arthur.jpg` · `equipe-bianca.jpg` · `equipe-talita.jpg` · `equipe-tania.jpg` (todas já em `public/fotos/`, 29/10)

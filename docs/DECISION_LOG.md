@@ -97,3 +97,15 @@ Uma decisão por regra de arquitetura ou contrato. Numeração contínua.
 **Alternativas descartadas.** Mundo `fixed` atrás de folhas com margens (muda o visual antes do movimento existir); `overflow: visible` por seção com grafismo no layout da página (mapa v0.1; mesmo resultado com mais acoplamento); z-index dentro do `Grafismo` (quebra o footer); prop `sangria` para desligar o comportamento por seção (gambiarra que esconde o problema de posição; reavaliar só se a Fase 4 pedir).
 
 ---
+
+## Decisão 009 — Blog público e contato sem backend: filtro de categoria no cliente, 404 composto no layout do site, formulário que só monta a mensagem do WhatsApp
+
+**Data:** 2026-10-29 · **Owner:** Alan (implementação: Codinho, Lote 3a)
+
+**Contexto.** O Lote 3a precisava de três coisas que costumam puxar backend ou rota dinâmica: filtrar o blog por categoria, servir um 404 com o layout do site e receber um formulário de contato. O site é estático por desenho (Decisão 001), o back-office só existe no Lote 3b (Decisão 007) e o briefing define o WhatsApp da recepção como único destino de agendamento.
+
+**Decisão.** (1) **Filtro de categoria no cliente**, sobre a lista já carregada no servidor: `/blog` continua estática com revalidação; um módulo client (`FiltroCategoria`) com provedor de contexto e duas folhas (chips e grade), para abertura e seção continuarem server components com grafismo; a fileira de chips só aparece quando o dataset tem categoria. Reavaliar para rota estática por categoria se o blog passar de algumas dezenas de posts. (2) **404 composto:** `app/not-found.tsx` envolve Header, `<main>` e Footer em volta do conteúdo de `app/(site)/not-found.tsx`, que atende `notFound()` dentro do grupo; estático, sem catch-all, status 404 real. Limite aceito: post inexistente responde 404 correto, mas o HTML vem como erro do Next e o conteúdo renderiza via JavaScript; `loading.tsx` resolvia o HTML e quebrava o status, então não entrou. (3) **Formulário sem backend:** campos e chips (`radio` em `fieldset`) montam a mensagem literal da copy e abrem `wa.me` em nova aba; nenhum `fetch`, server action, API route ou `localStorage`; nada é armazenado pelo site, e a Política de privacidade diz exatamente isso. Quando o CRM entrar (backlog), é uma server action no mesmo formulário, sem tocar na página (Decisão 001, item "Agendamento"). (4) **Mapa por link, não iframe:** sem cookie de terceiro antes do consentimento da Fase 5. (5) **Dois client components no site público** (`Navegacao`, `FormularioContato`) mais o filtro do blog; qualquer outro passa por decisão.
+
+**Alternativas descartadas.** Filtro por `searchParams` (torna a rota dinâmica); rota estática por categoria desde já (mais arquivos para zero post); catch-all `[...slug]` para o 404 (mais uma rota para o mesmo resultado); server action no formulário agora (backend sem necessidade e dado pessoal sem política de retenção); iframe do Google Maps (cookie de terceiro sem consentimento).
+
+---

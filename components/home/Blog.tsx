@@ -1,4 +1,5 @@
 import { CardPost } from "@/components/blog/CardPost";
+import { dadosCardPost } from "@/components/blog/dadosCardPost";
 import { CabecalhoSecao } from "@/components/ui/CabecalhoSecao";
 import { LinkTexto } from "@/components/ui/LinkTexto";
 import { Secao } from "@/components/ui/Secao";
@@ -40,7 +41,7 @@ export async function Blog() {
       <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {posts.map((post) => (
           <li key={post._id} className="flex">
-            <CardPost post={post} />
+            <CardPost dados={dadosCardPost(post)} />
           </li>
         ))}
       </ul>

@@ -2,6 +2,41 @@
 
 Formato: versão acima da anterior. Versões antes de v1.0.0 são fundação e desenvolvimento, sem site no ar.
 
+## v0.4.0 — 2026-10-29
+
+### Lote 3a: o site público fica completo para o preview; blog lê do Sanity e o contato abre o WhatsApp
+
+Fecha o Lote 3a (plano v1.6, Decisão 007): Atendimento on-line, Blog público (lista e post), Contato com formulário que monta a mensagem do WhatsApp, 404 e Política de privacidade. Todas as rotas do menu e do footer agora existem. Nenhum backend, nenhum dado armazenado, nenhum post no dataset: a lista mostra o estado vazio.
+
+### Adicionado
+- **`app/(site)/atendimento-online/` + `components/atendimento/`:** cinco seções da copy v1.2; passos em `<ol>`; FAQ sobre o novo `components/ui/Faq.tsx`.
+- **`app/(site)/blog/` e `blog/[slug]/` + `components/blog/`:** lista com abertura, chips de categoria e grade de `CardPost` com resumo; `revalidate = 60`; filtro **no cliente** sobre a lista já carregada (`FiltroCategoria.tsx`, provedor de contexto com duas folhas, para as seções continuarem server components com grafismo); a fileira de chips só aparece quando o dataset tem categoria. Post com `generateStaticParams` em try/catch (zero slugs hoje), `dynamicParams`, linha superior com categoria e minutos, data por extenso (`dataExtenso.ts`, `Intl` pt-BR), capa opcional, corpo em Portable Text (`PortableTextPost.tsx`: normal, h1→h2, h2, h3, h4, blockquote, listas, strong, em, underline, strike, code, link externo com `rel` seguro e interno via `next/link`, imagem via `urlFor` com dimensões do `_ref`), bloco de chamada em verde (mock), relacionados (até 3 da mesma categoria, senão recentes). Estado vazio: "Em breve, os primeiros textos da equipe.", frase exata em `permitidos` da varredura. **Dependência nova: `@portabletext/react` 8.0.1** (prevista desde o plano v1.3).
+- **`app/(site)/contato/` + `components/contato/`:** dois cards de abertura, "Onde estamos" com link para o Google Maps (sem iframe), redes, e `FormularioContato.tsx`, segundo client component do site: chips como `<input type="radio">` em `<fieldset>`/`<legend>`, `type="tel"`, botão desabilitado sem nome (`aria-invalid` após sair do campo), mensagem literal da copy aberta em `wa.me` com `encodeURIComponent`. Nenhum `fetch`, server action ou `localStorage`.
+- **404:** `app/not-found.tsx` compõe Header, `<main>` e Footer em volta do conteúdo de `app/(site)/not-found.tsx`, que também atende `notFound()` dentro de `(site)`. Estático, sem catch-all; `/nao-existe`, `/equipe/x/y` e `/blog/nao-existe` respondem 404 no `curl -I`.
+- **`app/(site)/politica-de-privacidade/`:** texto base da copy v1.2 para revisão jurídica; linha "Vigente a partir de" só renderiza quando `politicaPrivacidade.vigenteDesde` (em `lib/conteudo/clinica.ts`, vazio) tiver data.
+- **`components/ui/Faq.tsx`:** `<details>`/`<summary>` movido do Emagrecimento para a base; `components/emagrecimento/Faq.tsx` vira seção fina sobre ele.
+- **`lib/conteudo/{atendimento,contato,politica,blog}.ts`**; `lib/sanity/queries.ts` com slugs, categorias e relacionados (só acréscimos).
+
+### Alterado
+- `components/layout/Footer.tsx`: link "Política de privacidade" na coluna Institucional (comentário "Lote 3" removido). `components/blog/CardPost.tsx`: recebe dados resolvidos, resumo e nível de título opcionais; `components/home/Blog.tsx` só mudou a chamada. `scripts/varredura.config.json`: uma frase em `permitidos`. `docs/copy-site-v1.md` v1.2 (+ bloco de chamada do post em verde, conforme o mock).
+
+### Validação (β)
+- **Codinho, 29/10:** `build` com e sem `.env.local` exit 0; `/blog` com revalidate 1m, `/blog/[slug]` SSG com zero slugs; sem env, só os `console.warn` esperados (Home · Blog, Blog · lista, categorias, post, slugs). Lint, `format:check`, varredura (126 arquivos, 0 ocorrências) e `test:varredura` OK. HTML: um `<h1>` por página; estado vazio em `/blog`; `/contato` com `id="agendar"`, 2 `<fieldset>`, 8 radios, `type="tel"`, `required`, botão `disabled`, zero iframe; política no footer de todas as páginas. `curl -I` 404 nas três rotas inexistentes. Formulário no Chrome headless: `href` decodificado = "Olá! Me chamo Maria Teste. Gostaria de agendar (on-line) com: Nutrição. Meu WhatsApp: (48) 99999-0000. Quero começar pelo acompanhamento nutricional."; só com nome = "Olá! Me chamo Ana Paula. Gostaria de agendar (presencial) com: Ainda não sei."; âncora `#agendar` a 80px (375) e 96px (1440) do topo. Auditoria 360 a 1920: sem rolagem horizontal; "viúvas" restantes são títulos de duas ou três palavras balanceados em duas linhas (não há como evitar sem `nowrap`); único ajuste, `whitespace-nowrap` em "on-line" na chamada final do Atendimento.
+- **Console de desenvolvimento, lido nas sete rotas com e sem env:** nenhuma mensagem nossa a corrigir. As demais: aviso do Next de cross-origin para `/_next/hmr` e falha de WebSocket **só quando o site é aberto por `127.0.0.1`** (por `localhost` não acontece; solução seria `allowedDevOrigins` no `next.config.ts`); aviso de LCP sobre o círculo decorativo do footer na 404 do blog (única imagem acima da dobra nessa página); 404 do próprio recurso nas rotas inexistentes. `next dev` gera `AGENTS.md` (já ignorado).
+
+### Pendências reconhecidas
+- **Imagem do corpo do post sem campo `alt` no schema** (`body` tem `image` sem `alt`; só `mainImage` tem). O Portable Text usa `alt` quando vier e `alt=""` quando não. Correção de schema no Lote 3b (`sanity/**` fora do escopo do 3a).
+- **404 de post inexistente** (`/blog/{slug}`) responde 404 com título e `noindex` certos, mas o HTML vem como `__next_error__` e o conteúdo do 404 só aparece via JavaScript; `loading.tsx` como fronteira de Suspense devolve HTML completo mas status 200. Limite do Next; mantido o 404 real.
+- Mock × copy: placeholders de campo e avatar da autora no post não estão na copy e não entraram; relacionados usam o `CardPost` completo (mock mostra só categoria e título). Grafismo-3 do Contato sangra 40px (mock: 140px) para não cruzar o footer. "Ver no Google Maps" repete as classes do `LinkTexto` em vez de usá-lo (`LinkTexto` fora do escopo); unificar quando o `LinkTexto` for tocado.
+- Mapa embutido fora (link ao Google Maps); entra na Fase 5 com consentimento, se a Amanda quiser. Pix explícito no Atendimento on-line e frase sobre prescrição digital: confirmar no pacote da Fase 6. Política de privacidade: CNPJ/razão social e encarregado de dados pendentes do jurídico.
+- Herdadas vivas: peso do HTML com SVG inline (mitigação antes da Fase 4); header `relative` até a Fase 4; Dr. Arthur, fotos e registros da equipe, Folske × Folks, trajetória e formação da Dra. Mayara (clínica); categorias e autoras não existem no dataset (3b); favicon (Fase 5); CRM-SC e prova social (Fase 0); plano da Vercel até ~10/11.
+
+### Decisões relacionadas
+- Decisão 007 — Ordem de entrega: preview completo antes do back-office.
+- Decisão 009 — Blog público e contato sem backend: filtro no cliente, 404 composto, formulário que só monta a mensagem.
+
+---
+
 ## v0.3.0 — 2026-10-29
 
 ### Lote 2: quatro páginas internas e as camadas que a Fase 4 vai animar

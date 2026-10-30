@@ -24,4 +24,11 @@ export const CLINICA = {
   responsavelTecnica: "Dra. Mayara Brasil · CRM SC 21112 · RQE 22484",
   /** Destino de todo CTA "Agendar" (página do Lote 3). */
   agendarHref: "/contato#agendar",
+  politicaPrivacidade: {
+    /**
+     * Data de vigência da política (AAAA-MM-DD), preenchida no go-live (Fase 7).
+     * Vazia, a linha "Vigente a partir de ..." não é renderizada.
+     */
+    vigenteDesde: "",
+  },
 } as const;

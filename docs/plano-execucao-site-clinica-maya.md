@@ -223,4 +223,4 @@ Avaliações do Google (Amanda) · fotos e registros das demais profissionais (c
 | Supabase | projeto a criar na conta `clinicamaya.digital@gmail.com` antes do Lote 3; Pro desde o primeiro login real |
 | Contas | Sanity, Supabase e futuros GA4/Search Console: `clinicamaya.digital@gmail.com` · Wix (domínio): `clinicamaya.ac@gmail.com` · Vercel e GitHub: login do Alan |
 | Domínio | `clinicamaya.com`, Wix, renova 22/10/2028, DNS no Wix (A 185.230.63.107 / .186 / .171; CNAME www → cdn3.wixdns.net; sem MX) |
-| Commits | `9bb760a` scaffold v0.1.0 · `2f36dae` noindex temporário |
+| Commits | `9bb760a` scaffold v0.1.0 · `2f36dae` noindex temporário · `a6ec2f4` docs plano v1.4 + Decisão 005 · **v0.2.0 em dois commits:** `0cdf846` (só a renomeação staged pelo `git mv`, com a mensagem completa) + `9d65bbe` (todo o resto, título = linha do β); histórico mantido por decisão do Alan (29/10) · v0.3.0: Lote 2 |

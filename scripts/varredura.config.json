@@ -59,7 +59,10 @@
     "em breve",
     "Folks\\b"
   ],
-  "permitidos": ["sem radicalismos ou soluções milagrosas"],
+  "permitidos": [
+    "sem radicalismos ou soluções milagrosas",
+    "Em breve, os primeiros textos da equipe."
+  ],
   "html": {
     "h1PorArquivo": 1,
     "ignorar": ["studio"]
