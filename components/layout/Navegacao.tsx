@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import type { ItemNavegacao } from "@/lib/conteudo/navegacao";
+import { MOV } from "@/lib/movimento";
 
 type NavegacaoProps = {
   itens: readonly ItemNavegacao[];
@@ -18,6 +19,11 @@ const ID_LISTA = "menu-principal";
  * atual" (usePathname) e o abre-fecha do menu mobile. A partir do breakpoint
  * `menu:` (globals.css) a lista fica sempre visível numa linha; abaixo disso
  * o botão "Menu" a mostra e esconde.
+ *
+ * Fase 4 (só CSS): o item ativo recebe o sublinhado pelo `::after` de
+ * `nav-item`, que cresce da esquerda; a borda inferior transparente continua
+ * em todos os itens para a altura não mudar. No mobile, os itens entram em
+ * sequência quando a lista passa de `hidden` a `flex` (`menu-mobile`).
  */
 export function Navegacao({ itens, children }: NavegacaoProps) {
   const pathname = usePathname();
@@ -29,7 +35,7 @@ export function Navegacao({ itens, children }: NavegacaoProps) {
     <nav aria-label="Principal" className="flex items-center gap-3 menu:gap-9">
       <ul
         id={ID_LISTA}
-        className={`${aberto ? "flex" : "hidden"} absolute inset-x-0 top-full flex-col gap-1 border-b border-marrom/18 bg-bege px-4 py-4 sm:px-6 menu:static menu:flex menu:flex-row menu:items-center menu:gap-9 menu:border-0 menu:bg-transparent menu:p-0`}
+        className={`${aberto ? "flex" : "hidden"} ${MOV.menuMobile} absolute inset-x-0 top-full flex-col gap-1 border-b border-marrom/18 bg-bege px-4 py-4 sm:px-6 menu:static menu:flex menu:flex-row menu:items-center menu:gap-9 menu:border-0 menu:bg-transparent menu:p-0`}
       >
         {itens.map((item) => {
           const atual = ehAtual(item.href);
@@ -39,8 +45,8 @@ export function Navegacao({ itens, children }: NavegacaoProps) {
                 href={item.href}
                 aria-current={atual ? "page" : undefined}
                 onClick={() => setAberto(false)}
-                className={`inline-block border-b-2 py-2 text-corpo tracking-wide whitespace-nowrap text-verde transition-colors hover:text-marrom focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-verde menu:py-1 ${
-                  atual ? "border-verde font-bold" : "border-transparent font-normal"
+                className={`${MOV.navItem} ${MOV.transicaoHover} inline-block border-b-2 border-transparent py-2 text-corpo tracking-wide whitespace-nowrap text-verde transition-colors hover:text-marrom focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-verde menu:py-1 ${
+                  atual ? "font-bold" : "font-normal"
                 }`}
               >
                 {item.rotulo}
@@ -55,7 +61,7 @@ export function Navegacao({ itens, children }: NavegacaoProps) {
         aria-expanded={aberto}
         aria-controls={ID_LISTA}
         onClick={() => setAberto((valor) => !valor)}
-        className="inline-flex h-11 items-center rounded-pilula border border-marrom/35 px-4 text-corpo font-bold text-verde transition-colors hover:border-verde focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-verde menu:hidden"
+        className={`${MOV.transicaoHover} inline-flex h-11 items-center rounded-pilula border border-marrom/35 px-4 text-corpo font-bold text-verde transition-colors hover:border-verde focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-verde menu:hidden`}
       >
         Menu
       </button>

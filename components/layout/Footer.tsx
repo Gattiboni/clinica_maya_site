@@ -1,9 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/layout/Container";
+import { CirculoMaya } from "@/components/ui/CirculoMaya";
 import { Grafismo } from "@/components/ui/Grafismo";
 import { CLINICA } from "@/lib/conteudo/clinica";
 import { LINKS_INSTITUCIONAIS } from "@/lib/conteudo/navegacao";
+import { MOV } from "@/lib/movimento";
 import logoTagline from "@/public/marca/logo-tagline-vertical-bege.png";
 
 const CLASSES_ICONE =
@@ -19,23 +21,35 @@ function TituloColuna({ children }: { children: string }) {
 /**
  * Footer de todas as páginas (server component). Abaixo de `md` as três
  * colunas viram uma, centralizada (regra de recentralização do lote).
+ * O grafismo-5 vai `inline` (sem depender do sprite da página): o footer
+ * também aparece em páginas sem sprite, como a Política de privacidade. O
+ * símbolo corpo-mente-espírito é o `CirculoMaya` estático (o PNG saiu de uso).
+ *
+ * Cortina (afinação 1, 2.8): `footer-cortina` deixa o footer `sticky` no fim
+ * da viewport, atrás do `<main>` (palco opaco com sombra); ao rolar até o fim,
+ * a última folha sobe e revela o footer que já estava ali. O grafismo ganha
+ * um parallax inverso suave na revelação (`footer-grafismo`).
  */
 export function Footer() {
   return (
-    <footer className="relative overflow-hidden border-t border-bege/25 bg-verde text-bege">
+    <footer
+      className={`${MOV.footerCortina} relative overflow-hidden border-t border-bege/25 bg-verde text-bege`}
+    >
       <Grafismo
         nome="5"
         cor="bege"
         posicao="-right-10 -bottom-30"
         largura="w-[300px]"
         opacidade="opacity-18"
+        inline
+        className={MOV.footerGrafismo}
       />
-      <Grafismo
-        nome="circulo"
+      <CirculoMaya
+        id="circulo-footer"
         cor="bege"
-        posicao="-bottom-20 -left-[70px]"
-        largura="w-[260px]"
-        opacidade="opacity-10"
+        fundo="verde"
+        animado={false}
+        className="pointer-events-none absolute -bottom-20 -left-[70px] w-[260px] opacity-10 select-none"
       />
       <Container className="relative pt-16 pb-8">
         <div className="grid gap-12 text-center md:grid-cols-[1.4fr_1fr_1fr] md:items-start md:text-left">

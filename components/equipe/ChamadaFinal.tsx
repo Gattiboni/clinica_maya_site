@@ -1,34 +1,45 @@
 import { Botao } from "@/components/ui/Botao";
 import { Grafismo } from "@/components/ui/Grafismo";
 import { Secao } from "@/components/ui/Secao";
+import { TituloDesencontrado } from "@/components/ui/TituloDesencontrado";
 import { CLINICA } from "@/lib/conteudo/clinica";
+import { MOV } from "@/lib/movimento";
 
 /**
- * §Equipe 7 · Chamada final. Última seção da página: o grafismo ancora no topo
- * (e não no rodapé, como no mock) para não sangrar sobre o footer.
+ * §Equipe 7 · Chamada final: folha cheia com o título em duas linhas (2.8). O
+ * grafismo-4 (pontas cortadas à esquerda e embaixo) ancora no canto inferior
+ * esquerdo, com as duas pontas fora da folha (2.7).
  */
 export function ChamadaFinal() {
   return (
     <Secao
       fundo="verde"
+      folha="cta"
       grafismo={
         <Grafismo
           nome="4"
           cor="bege"
-          posicao="-top-[150px] -left-[110px]"
+          posicao="-bottom-24 -left-[110px]"
           largura="w-[340px]"
           opacidade="opacity-22"
+          parallax="mundo"
         />
       }
-      className="flex flex-col items-center gap-5 text-center"
+      className={`${MOV.revealStagger} flex flex-col items-center gap-5 text-center`}
     >
-      <h2 className="max-w-3xl text-h2 font-medium">
-        Não sabe com quem <em>começar</em>?
-      </h2>
+      <TituloDesencontrado
+        linhas={[
+          "Não sabe com quem",
+          <>
+            <em>começar</em>?
+          </>,
+        ]}
+        className="max-w-3xl"
+      />
       <p className="max-w-prosa-curta text-lead">
         Nosso atendimento ajuda a encontrar quem faz mais sentido para o seu momento.
       </p>
-      <Botao href={CLINICA.agendarHref} variante="bege">
+      <Botao href={CLINICA.agendarHref} variante="bege" className={MOV.pulsar}>
         Agendar consulta
       </Botao>
       <p className="text-nota">Antônio Carlos/SC e on-line para todo o Brasil</p>

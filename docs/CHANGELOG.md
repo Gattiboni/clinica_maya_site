@@ -2,6 +2,52 @@
 
 Formato: versão acima da anterior. Versões antes de v1.0.0 são fundação e desenvolvimento, sem site no ar.
 
+## v0.5.0 — 2026-10-30
+
+### Fase 4: o site ganha camadas e movimento, CSS-first, sem biblioteca; afinação 1 incluída
+
+Fecha a Fase 4 (plano v1.6, Decisões 010 e 011) em duas rodadas no mesmo commit: a primeira ligou capa, pilhas, parallax, reveals e hover em todas as páginas; a afinação 1, após revisão visual do Alan em 30/10, pôs folha em toda fronteira de seção, Círculo Maya em SVG que se monta ao vivo, campos de linhas em deriva contínua, CTA em cortina sobre o footer, voltar ao topo e política em modal. Zero dependência nova; dois client components de movimento (`Mundo`, `AoEntrar`).
+
+### Adicionado
+- **`lib/movimento.ts` + bloco de tokens `--mov-*` em `app/globals.css`:** durações (reveal 600ms, hover 200, FAQ 250, menu 250, wipe 1200; carga 200 + 80ms), curva `cubic-bezier(0.22, 1, 0.36, 1)`, reveal 24px com janela `entry 10–45%` e stagger de 5% por filho (até 8), mask `entry 0–60%`, parallax mundo 0.3 / frente 0.6 / mídia 0.9, drift 8/14px, tilt 6°, perspectiva 900px, folhas (`--mov-folha-sobre: 14svh`, `--mov-folha-raio: 32px`, recuo 0.97/0.9), pilha (`--mov-stack-trajeto: 65svh`, folha `min(56svh, 32rem)`), capa (foto 0.94), círculo (`--mov-circulo-traco: 7.8`), campos (ciclo 100s), CTA (`--mov-cta-min: 70svh`), voltar ao topo (`--mov-topo-some: 70svh`), header (gatilho 80px, 96 → 72px). Tudo sob `@supports (animation-timeline: view())`; bloco único de `prefers-reduced-motion` no fim.
+- **`components/layout/Mundo.tsx` (client, 1,8 KB):** em `pointer: fine` e sem reduced-motion, escreve `--mx`/`--my` amortecidos por rAF; `drift` e `tilt3d` são CSS.
+- **`components/layout/AoEntrar.tsx` (client, ~1 KB):** IntersectionObserver a 20%, marca `data-entrou` uma vez; só para pops de tempo (Decisão 011, item 10).
+- **`components/ui/CirculoMaya.tsx`:** três `<circle>` em stroke e três `<textPath>` em Lora itálico, um `<svg>` por anel para o 3D; geometria calibrada sobre o PNG (97% dos pixels do traço a menos de 4px a 1000px); monta por tempo (600ms por anel, 150ms entre eles), desmonta por `exit`; sem JS ou sem suporte fica montado. Substitui `corpo-mente-espirito-*.png` em todo o site, footer incluído.
+- **`components/ui/LinhaDesenhada.tsx`, `ProximaFolha.tsx`, `TituloDesencontrado.tsx`, `SpriteGrafismos.tsx`, `components/layout/VoltarAoTopo.tsx`, `components/politica/ConteudoPolitica.tsx`.**
+- **`public/marca/campo-1.svg`, `campo-2.svg`:** campos de linhas orgânicas gerados em vetor (5,4 e 4,2 KB), linhas que nascem e morrem fora do `viewBox`; aplicados por `mask-image`, deriva ±2%/±1° em 100s, parallax 0.2.
+- **Cortina do footer:** footer `sticky; bottom: 0; z-index: -1`, `<main>` opaco com sombra, estendido por trás do header (no mobile o footer é mais alto que a viewport e vazava pela transparência). Grafismo do footer com parallax inverso nos últimos 70svh.
+- **Voltar ao topo:** aparece após 100svh e some 70svh antes do fim por `scroll(root)`; `visibility` tira o clique; `id="topo"` no header (o 404 global monta o próprio `<main>`). Textos novos: "Voltar ao topo", "Fechar", "Voltar ao formulário".
+- **Política em modal:** `popover` nativo com `role="dialog"`, aberto pelo link do formulário de contato; conteúdo compartilhado com a página; sem suporte, o link leva à página.
+
+### Alterado
+- **`components/ui/Secao.tsx`:** toda seção é folha: fundo com canto 32px e sombra para cima; a seção N fica presa pela borda inferior enquanto N+1 sobe 14svh (translação por `view()` própria, range `cover calc(100% - 100dvh)`), recua a 0.97 e o `Container` esmaece a 0.9; primeira seção de cada página não recua; padding inferior +14svh. Variante `folha="pilha" | "capa"`. TRAP: o esmaecer vai no `Container`, não na folha, senão na pilha a folha de trás vaza pela da frente. TRAP: o minificador do Turbopack imprime `exit 100%` como `exit 0%`; usar `exit 99.9%`.
+- **Hero (`components/home/Hero.tsx`):** desktop `sticky` real em `100svh` (foto limitada a `100svh − 10rem`), foto recua 0.94 e sobe 5% na máscara, texto esmaece e sobe 24px, grafismo inclina; relógio `--pos-capa` na timeline de Áreas com `timeline-scope` no `<main>`, range `cover 0% → cover 100dvh`. Mobile: translação por borda inferior com parallax da foto. LCP continua a foto, sem `maskReveal`.
+- **Pilhas (Como começa; Pilares):** trajeto 65svh por folha, folha `min(56svh, 32rem)` no desktop; grafismo-3 repetido por folha na timeline da pilha, lido como um só.
+- **`Grafismo.tsx`:** props `parallax`, `drift`, `tilt`, `scrub`, `wipe`, `recorte` (clip-path 1 a 5 para o `hoverAcende`), `acende`, `inline`; rotação lenta ±1,5° em 40s; pontas cortadas reposicionadas (grafismo-3 espelhado onde ancora à direita; grafismo-4 no canto inferior ou espelhado; grafismo-5 a 128px acima das aberturas).
+- **`Header.tsx`/`Navegacao.tsx`:** `sticky`, fundo e borda no `::before` com opacity e `scale-y`, conteúdo em `translate`, logo em `scale` (nada de altura animada); sublinhado do ativo cresce da esquerda; itens do menu mobile em stagger; `scroll-margin-top` 72px com suporte, 80/96 sem.
+- **Todas as páginas:** cards com entrada `rotateX` 8°→0 e hover `perspective(800px) rotateX(2°) translateY(-4px)` (sombra em pseudo-elemento), títulos e eyebrows com `rotateX` 10° pela base, números com pop 0.6→1.04→1 via `AoEntrar`, `hoverAcende` em Áreas, Manifesto, Diferenciais e Quem faz parte; chamadas finais como folha de 70svh com `TituloDesencontrado`; Etapas (Método) e Como funciona (Atendimento) como linha do tempo com `LinhaDesenhada`; FAQ com `grid-template-rows` + `@starting-style`; barra de progresso de leitura no post por `scroll()`; Equipe centralizada (trilhas de 22rem), cards sem affordance de clique, ponto de extensão das bios comentado; Método com padding compacto em torno da pilha e card "O que a gente quer entender" ao centro vertical da coluna; Emagrecimento recebeu folhas, profundidade e campos (as classes do mapa §3 já estavam aplicadas; faltava plano, não movimento).
+- **`.mascara`** usa `overflow: clip` (`hidden` vira scroll container e zera o `view()` da foto). Borda das seções creme passou da `<section>` para o `div` do fundo.
+- `public/marca/grafismo-{3,4,5}.svg` re-traçados com metade dos pontos: 22,6 → 7,2 KB, 50,1 → 17,0 KB, 13,5 → 4,5 KB. `docs/mapa-movimento-v1.md` v0.4.
+
+### Validação (β)
+- **Codinho, 30/10 (afinação 1):** `build` com e sem `.env.local` (sem env, só os quatro `console.warn` do Sanity), lint, `format:check`, varredura (139 arquivos, 0 ocorrências), `test:varredura` OK. Nenhuma dependência nova; clients: `Navegacao`, `FormularioContato`, filtro do blog, `Mundo`, `AoEntrar`. Reduced-motion e navegador sem suporte verificados por emulação: nenhuma animação ativa, popover e voltar ao topo funcionam, folhas empilham por fluxo. Geometria do Círculo: 97% dos pixels do traço do PNG a menos de 4px do SVG. Gravações (MP4/GIF) de Home, Método, Equipe e Emagrecimento a 1440 e 375 no build final; capturas do Círculo em quatro momentos, sobreposição SVG × PNG, CTA, popover, Equipe, "O que a gente quer entender", grafismos antes/depois.
+- **Lighthouse mobile local (Kaspersky, valores absolutos são da máquina; vale a diferença):** Home 0.78 → 0.77 (LCP 4,5 → 5,0 s), Método 0.80 → 0.77, Equipe 0.81 → 0.82, Emagrecimento 0.97 → 0.94. HTML gz: Home 45,0 → 46,9 KB, Método 39,9 → 41,9, Equipe 38,3 → 40,0, Emagrecimento 38,9 → 40,7 (campos por `mask-image`; inline custavam +10 KB gz pelo payload RSC duplicado). LCP da Home continua `img.capa-foto`. **O gate ≥ 90 só se mede no preview da Vercel** (ver pendências).
+- **Alan, 30/10:** revisão visual página a página; aprovou a rodada com "coisinhas" para uma afinação 2.
+
+### Pendências reconhecidas
+- **Lighthouse no preview da Vercel ainda não medido** (Fase 4, gate da Decisão 010); medir no domínio de produção após este push, antes do pacote da Fase 6.
+- **iOS Safari não testado** (sem dispositivo): cortina do footer, `sticky` da capa e `100svh`.
+- `app/not-found.tsx` não recebeu nada da afinação e herda header, cortina e botão pelo CSS global; conferir visualmente.
+- Afinação 2: lista do Alan após nova rolagem.
+- `corpo-mente-espirito-*.png` continuam em `public/marca/` sem uso; remover no próximo lote que tocar `public/marca/`.
+- Herdadas vivas: bios da Equipe (conteúdo da gestora, prazo era 16/10), Dr. Arthur, fotos e registros, Folske × Folks, trajetória e formação da Dra. Mayara, Pix no Atendimento, mapa embutido, jurídico da política, categorias e autoras no dataset (3b), favicon, CRM-SC e prova social, plano da Vercel até ~10/11.
+
+### Decisões relacionadas
+- Decisão 010 — Movimento CSS-first, zero biblioteca.
+- Decisão 011 — Linguagem de movimento v1 (afinação 1).
+
+---
+
 ## v0.4.0 — 2026-10-29
 
 ### Lote 3a: o site público fica completo para o preview; blog lê do Sanity e o contato abre o WhatsApp

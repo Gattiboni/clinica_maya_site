@@ -3,16 +3,19 @@ import { CardDor } from "@/components/ui/CardDor";
 import { Grafismo } from "@/components/ui/Grafismo";
 import { Secao } from "@/components/ui/Secao";
 import { DORES } from "@/lib/conteudo/dores";
+import { MOV } from "@/lib/movimento";
 
 /**
- * §Home 3 · Dores. O grafismo-4 sangra 48px sobre o bloco verde do Método
- * (o mock desloca 140px): o símbolo corpo-mente-espírito começa 64px abaixo
- * do topo daquela seção e a regra 9 do mapa proíbe grafismo na região dele.
+ * §Home 3 · Dores. O grafismo-4 tem as pontas cortadas à esquerda e embaixo:
+ * ancorado no canto inferior esquerdo, as duas ficam fora da folha (2.7). No
+ * mundo, com parallax e rotação lenta; campo-2 na camada ambiente; os cards
+ * entram em sequência com profundidade.
  */
 export function Dores() {
   return (
     <Secao
       fundo="bege"
+      campo="campo-2"
       grafismo={
         <Grafismo
           nome="4"
@@ -20,6 +23,7 @@ export function Dores() {
           posicao="-bottom-12 -left-30"
           largura="w-[340px]"
           opacidade="opacity-22"
+          parallax="mundo"
         />
       }
     >
@@ -30,9 +34,11 @@ export function Dores() {
           </>
         }
         lead="Cada uma dessas histórias pede um olhar diferente. Veja quem na clínica pode ajudar."
-        className="mb-12"
+        className={`${MOV.reveal} mb-12`}
       />
-      <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <ul
+        className={`${MOV.revealStagger} ${MOV.profundo} grid gap-5 sm:grid-cols-2 lg:grid-cols-3`}
+      >
         {DORES.map((dor) => (
           <li key={dor.titulo} className="flex">
             <CardDor dor={dor} />

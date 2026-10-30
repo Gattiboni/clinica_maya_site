@@ -1,6 +1,6 @@
-# Mapa de movimento e camadas: site Clínica Maya · v0.2 (rascunho para reação)
+# Mapa de movimento e camadas: site Clínica Maya · v0.4 (contrato da Fase 4, após a afinação 1)
 
-**29/10/2026** (v0.2: modelo "mundo + folhas", capa no hero, `stack` e `tilt3d`; pin sai da Home e vai para a página do Método). Contrato de camadas e movimento. Não é mock: diz **o que** cada elemento faz, em que camada vive e como se comporta no scroll, no cursor, no mobile e com `prefers-reduced-motion`. O Lote 2 constrói as páginas já com as camadas; a Fase 4 liga o movimento sem reabrir estrutura. Referências de gramática (não de técnica): Oryzo (oryzo.ai, Lusion) e Pradip Dhakal (awwwards, out/2026): profundidade real, objetos que respondem, navegação por descoberta. Ambas são WebGL; aqui tudo é 2D, transform e opacity, dentro do gate Lighthouse mobile ≥ 90.
+**30/10/2026** (v0.4: afinação 1 incorporada, seção 6; v0.3: todas as páginas mapeadas e técnica fechada, CSS-first sem biblioteca, Decisão 010; v0.2: modelo "mundo + folhas", capa no hero, `stack` e `tilt3d`; pin sai da Home e vai para a página do Método). Contrato de camadas e movimento. Não é mock: diz **o que** cada elemento faz, em que camada vive e como se comporta no scroll, no cursor, no mobile e com `prefers-reduced-motion`. O Lote 2 constrói as páginas já com as camadas; a Fase 4 liga o movimento sem reabrir estrutura. Referências de gramática (não de técnica): Oryzo (oryzo.ai, Lusion) e Pradip Dhakal (awwwards, out/2026): profundidade real, objetos que respondem, navegação por descoberta. Ambas são WebGL; aqui tudo é 2D, transform e opacity, dentro do gate Lighthouse mobile ≥ 90.
 
 Marca manda no tom: Sábio + Cuidador. Movimento lento, contínuo, orgânico. Nada salta, nada pisca, nada persegue o cursor. A sensação é de página viva, não de página que faz truque.
 
@@ -43,7 +43,7 @@ Regra de ouro das camadas: **C1 e C4 pertencem à página, não à seção.** O 
 4. Tudo gated por IntersectionObserver: nada roda fora da viewport.
 5. Biblioteca de movimento: ≤ 30 KB gz no bundle da Home, carregada depois da hidratação; páginas sem movimento não a carregam.
 6. `prefers-reduced-motion: reduce`: parallax, drift, scrub, pin e wipe desligados; reveal vira só opacity 300ms; header sem transição.
-7. Mobile (< 1024px): sem pin, sem drift, sem tilt, parallax reduzido, reveals mantidos; `stack` e `capa` mantidos (sticky funciona), com folhas que cabem na viewport.
+7. Touch (`pointer: coarse`) e telas < 1024px: sem drift, sem tilt, parallax reduzido, reveals mantidos; `stack` e `capa` mantidos (sticky funciona), com folhas que cabem em `100svh`.
 8. Lighthouse mobile ≥ 90 em Performance medido no preview da Vercel é o critério; se uma seção furar, ela perde movimento, não a página inteira.
 9. **O símbolo corpo-mente-espírito (C2) só fica sobre fundo sólido**, nunca sobre grafismo do mundo: as linhas finas dos dois se confundem e, no responsivo, a sobreposição vira ruído (achado do Alan no Lote 1.1). Onde o símbolo aparece, o mundo recua (opacidade 0 naquela região) ou o símbolo ganha um disco de fundo da cor da folha.
 
@@ -106,7 +106,72 @@ WebGL/Three.js e cenas 3D (custo, gate, sem objeto 3D da marca); a Home inteira 
 
 ---
 
-## 3. Perguntas abertas para o Alan (reagir aqui, não no código)
+## 3. Mapa das páginas internas
+
+Vocabulário da seção 1. Onde não dito, vale o padrão: título e lead com `reveal`, cards com `reveal` em stagger de 60ms, fotos com `maskReveal` e parallax interno 0.9, botões sem movimento próprio.
+
+### A Clínica
+- Abertura: grafismo-3 no mundo (parallax 0.3, drift, tilt3d); H1 e texto `reveal`.
+- Manifesto: três blocos `reveal` com stagger 120ms (é leitura, mais lento); grafismo-5 no mundo.
+- Espaço: quatro fotos `maskReveal` em stagger 80ms; hover: zoom 1.04 dentro da máscara.
+- Círculo Maya (verde): símbolo `maskReveal` circular e rotação lenta por `scrub` (0 → 12°); regra 9: nenhum grafismo na região. Texto e citação `reveal`.
+- Quem faz a clínica: `GradeAreas` com `hoverAcende`, idêntico à Home.
+- Chamada final: `reveal`.
+
+### Equipe
+- Abertura: grafismo-5 no mundo; chips-âncora `reveal` em stagger 40ms.
+- Seções de área: cards `reveal` em stagger 60ms; hover eleva 4px; foto zoom 1.03 dentro da máscara; grafismo-3 em Psicologia no mundo.
+- Chegada por âncora (`/equipe#psicologia`): a seção destino **não** faz `reveal` (já chega visível), para não piscar na aterrissagem.
+- Chamada final: `reveal`.
+
+### Método: o momento do site
+- Abertura: grafismo-4 no mundo; foto `maskReveal`.
+- **Pilares = `stack`:** quatro folhas verdes `sticky` no mesmo `top`, uma por pilar (número grande, nome, texto); a seguinte sobe por cima e a anterior recua 3% em escala e 10% em opacidade por `scrub`. Botão "próximo" discreto no desktop. Grafismo-3 fixo atrás da pilha, mudando de posição por `scrub` ao longo das quatro folhas (é o único grafismo que "acompanha" uma sequência). Mobile: mesma pilha; folhas cabem em `100svh`.
+- Etapas: linha 1 → 4 desenhada por `scrub` (SVG de linha nossa, `stroke-dashoffset`); itens `reveal` em stagger 120ms.
+- Diferenciais: símbolo `maskReveal` circular (regra 9: sem grafismo); cards `reveal`.
+- Como tudo começa: prosa `reveal`; fotos `maskReveal`; lista com marcador que aparece em stagger 80ms.
+- Chamada final: `reveal`; grafismo-5 no mundo.
+
+### Emagrecimento
+- Abertura: grafismo-3 no mundo.
+- Porta de entrada: foto com parallax interno 0.9 e `maskReveal`; texto `reveal`.
+- Quem faz parte: três cards com `hoverAcende` (linkam para a Equipe).
+- O que faz parte: grafismo-4 no mundo; seis itens `reveal` em stagger 80ms.
+- Programas: três cards `reveal`; sem hover de elevação (não são links).
+- FAQ: abertura do `<details>` animada (altura via `grid-template-rows` 0fr → 1fr, 250ms; ícone gira 45°); `prefers-reduced-motion` abre sem transição.
+- Chamada final: grafismo-5 no mundo.
+
+### Dra. Mayara
+- Abertura: grafismo-4 no mundo; foto `maskReveal` de baixo para cima e parallax interno.
+- Trajetória, Como ela atende, Formação: prosa `reveal`; nada mais. Página de confiança, não de espetáculo.
+- Chamada final: `reveal`.
+
+### Atendimento on-line
+- Abertura: grafismo-5 no mundo.
+- Como funciona: seis passos `reveal` em stagger 100ms; linha 1 → 6 desenhada por `scrub` (mesmo componente de linha das Etapas e de "Como começa").
+- O que muda / Quem atende: `reveal`.
+- FAQ: igual ao Emagrecimento. Chamada final: `reveal`.
+
+### Blog
+- Lista: abertura com grafismo-3; chips: o selecionado ganha fundo verde com transição 200ms; cards `reveal` em stagger 60ms; hover: capa zoom 1.04 dentro da máscara, título sublinha.
+- Post: **barra de progresso de leitura** (2px, verde) no topo, ligada ao scroll do corpo por `animation-timeline: scroll()`, zero JS; capa `maskReveal`; corpo sem animação (texto longo não anima); bloco de chamada e relacionados `reveal`.
+
+### Contato
+- Abertura: grafismo-4 no mundo; dois cards `reveal`.
+- Onde estamos / Redes: `reveal`.
+- Formulário: campos `reveal` em stagger 60ms na chegada; chip selecionado com transição de borda 200ms; botão habilitando com transição de opacidade 200ms. Nada mais: é formulário.
+
+### 404 e Política de privacidade
+- Só `reveal` na abertura. Política: nenhum movimento no corpo.
+
+### Header (todas as páginas)
+- `sticky`; transparente sobre a abertura, fundo bege com borda após 80px de rolagem e altura 96 → 72px, por `animation-timeline: scroll(root)` (zero JS). Item ativo: sublinhado cresce da esquerda em 200ms. Menu mobile: itens `reveal` em stagger 40ms ao abrir.
+
+## 4. Técnica (fechada em 29/10, Decisão 010)
+
+**CSS-first, zero biblioteca.** Tudo que é ligado ao scroll usa **CSS scroll-driven animations** (`animation-timeline: scroll()` e `view()`, `animation-range`), guardado por `@supports (animation-timeline: view())`: navegador sem suporte (Safari antigo) vê o estado final, parado, que é o site de hoje. `capa` e `stack` são `position: sticky` com `100svh`, sem `overflow: hidden` em ancestral (quebra sticky no iOS). `reveal` também é `view()` (ligado à entrada na viewport, `animation-range: entry 0% entry 40%`), não IntersectionObserver, para manter zero JS e zero flash sem JavaScript. `hoverAcende`, FAQ, chips, sublinhados: CSS puro. **Único JavaScript de movimento:** um client component `Mundo` de poucas linhas que, em `pointer: fine`, lê o cursor e escreve duas variáveis CSS (`--mx`, `--my`) que `drift` e `tilt3d` consomem; no touch não existe. `prefers-reduced-motion: reduce` desliga todas as animações num bloco único de CSS (padrão da Spinhardi). GSAP só se uma sequência não sair em CSS, como ilha com `next/dynamic`; hoje nenhuma. Lenis fora. Gate: Lighthouse mobile ≥ 90 no preview da Vercel; seção que furar perde movimento, não a página.
+
+## 5. Perguntas abertas para o Alan (histórico; respondidas em 29/10)
 
 1. **hoverAcende** nas Áreas: é a sua ideia de "pick pelos objetos" traduzida? Ou você imaginava os grafismos **sendo** o menu (clicar no grafismo leva à área), sem card?
 2. **pin** no Método: uma seção fixa de 1,5 viewport é o único momento de "cena" da Home. Quer esse peso aí, ou prefere no hero?
@@ -115,3 +180,21 @@ WebGL/Three.js e cenas 3D (custo, gate, sem objeto 3D da marca); a Home inteira 
 5. Alguma seção onde você quer **menos** do que está aqui?
 
 Próximas versões: v0.2 com A Clínica e páginas do Lote 2, depois de fechar a Home; v1.0 quando a abordagem técnica (Fase 4) estiver escolhida.
+
+## 6. Afinação 1 (30/10, revisão visual do Alan): o que mudou no contrato
+
+Vale sobre as seções anteriores; onde conflitar, esta vence.
+
+- **Folha em toda fronteira de seção (todas as páginas):** a seção N+1 entra por cima de N com canto superior de 32px e sombra para cima; N fica presa pela borda inferior durante 14svh de sobreposição, recua a 0.97 e o conteúdo esmaece a 0.9. É "peel", não pin: N nunca tem conteúdo escondido. Primeira seção de cada página não recua. Consequência: a sangria de grafismo entre seções (Decisão 008, item 4) deixa de existir por desenho.
+- **Capa (hero da Home):** desktop em `sticky` real com o hero cabendo em `100svh`; foto recua 0.94 e sobe 5% na máscara, texto esmaece e sobe 24px, grafismo inclina. Mobile: translação por borda inferior com foto em parallax. Enquanto há rolagem, há movimento na foto.
+- **Pilhas:** trajeto de 65svh por folha, folha `min(56svh, 32rem)` no desktop; a folha 2 começa a cobrir a 1 com a 1 inteira na tela.
+- **Círculo Maya em SVG próprio** (`CirculoMaya`): três círculos em stroke (traço token `--mov-circulo-traco`) e três palavras em `textPath` Lora itálico, geometria calibrada sobre o PNG (97% dos pixels a menos de 4px). Monta-se por tempo ao entrar (desenho + escala 0.7→1 + rotateX 35°→0, 600ms por anel, 150ms entre eles, palavras depois) e desmonta-se por scroll ao sair. O PNG do símbolo saiu de uso em todo o site.
+- **Profundidade padrão:** cards entram com rotateX 8°→0 e têm hover `perspective(800px) rotateX(2°) translateY(-4px)`; títulos e eyebrows entram com rotateX 10° pela base; números das pilhas e linhas do tempo fazem pop 0.6→1.04→1. `hoverAcende` também no Manifesto e nos Diferenciais.
+- **Camada ambiente: campos de linhas** (`campo-1`, `campo-2`, SVG vetorial que nasce e morre fora do quadro), via `mask-image`, em 3 a 4 folhas por página, deriva ±2%/±1° em 100s, parallax 0.2. Grafismos da marca com rotação ±1,5° em 40s. **Regra das pontas:** toda ponta cortada de um grafismo fica fora da viewport ou atrás de folha (espelhar ou ancorar no canto quando preciso).
+- **CTA em cortina:** chamada final como folha de 70svh com título em duas linhas desencontradas (`TituloDesencontrado`, texto intacto) entrando de lados opostos; footer `sticky; bottom: 0` atrás do `<main>` opaco, revelado quando a última folha sobe; grafismo do footer com parallax inverso.
+- **Voltar ao topo:** botão flutuante por `scroll(root)`, aparece após 100svh e some 70svh antes do fim; `id="topo"` no header.
+- **Política como modal:** `popover` nativo a partir do formulário de contato, com "Fechar" e "Voltar ao formulário"; a página continua existindo.
+- **`AoEntrar`:** segundo client component de movimento (IntersectionObserver, marca `data-entrou` uma vez a 20%), só para pops de tempo (Círculo, números). Exceção registrada à Decisão 010.
+- **Equipe:** área, descrição e cards centralizados; cards sem affordance de clique até existirem bios (ponto de extensão: popover por profissional).
+- **Linhas do tempo:** Etapas (Método) e Como funciona (Atendimento) com `LinhaDesenhada` por scrub e cada item revelando quando a linha o alcança.
+- Sem movimento por decisão: cards do Blog (até haver post), Círculo em Diferenciais abaixo de `md`, aberturas não recuam.

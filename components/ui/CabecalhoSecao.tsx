@@ -6,6 +6,8 @@ type CabecalhoSecaoProps = {
   lead?: ReactNode;
   /** Link ou botão alinhado à direita do cabeçalho (desktop). */
   acao?: ReactNode;
+  /** `centro`: fica centralizado também no desktop (seções de área da Equipe, afinação 1). */
+  alinhar?: "esquerda" | "centro";
   className?: string;
 };
 
@@ -13,9 +15,18 @@ type CabecalhoSecaoProps = {
  * Cabeçalho de seção: eyebrow opcional, H2 e lead opcional, com ação à direita.
  * Abaixo de `lg` vira uma coluna centralizada (regra de recentralização do lote).
  */
-export function CabecalhoSecao({ titulo, eyebrow, lead, acao, className }: CabecalhoSecaoProps) {
+export function CabecalhoSecao({
+  titulo,
+  eyebrow,
+  lead,
+  acao,
+  alinhar = "esquerda",
+  className,
+}: CabecalhoSecaoProps) {
+  const centro = alinhar === "centro";
   const classes = [
-    "flex flex-col items-center gap-6 text-center lg:flex-row lg:items-end lg:justify-between lg:gap-8 lg:text-left",
+    "flex flex-col items-center gap-6 text-center",
+    centro ? "" : "lg:flex-row lg:items-end lg:justify-between lg:gap-8 lg:text-left",
     className,
   ]
     .filter(Boolean)
@@ -23,7 +34,7 @@ export function CabecalhoSecao({ titulo, eyebrow, lead, acao, className }: Cabec
 
   return (
     <div className={classes}>
-      <div className="flex flex-col items-center gap-3 lg:items-start">
+      <div className={`flex flex-col items-center gap-3 ${centro ? "" : "lg:items-start"}`}>
         {eyebrow && <p className="text-eyebrow font-bold uppercase">{eyebrow}</p>}
         <h2 className="text-h2 font-medium">{titulo}</h2>
         {lead && <p className="max-w-prosa text-lead">{lead}</p>}

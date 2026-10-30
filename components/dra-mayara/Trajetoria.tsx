@@ -1,11 +1,13 @@
 import { Secao } from "@/components/ui/Secao";
+import { MOV } from "@/lib/movimento";
 
-/** §Dra. Mayara 2 · Trajetória. */
+/** §Dra. Mayara 2 · Trajetória. Só prosa com `reveal` e o campo-1 na camada ambiente: página de confiança, não de espetáculo. */
 export function Trajetoria() {
   return (
     <Secao
       fundo="creme"
-      className="flex flex-col items-center gap-5 text-center lg:items-start lg:text-left"
+      campo="campo-1"
+      className={`${MOV.revealStagger} flex flex-col items-center gap-5 text-center lg:items-start lg:text-left`}
     >
       <h2 className="text-h2 font-medium">Trajetória</h2>
       <p className="max-w-prosa-longa text-lead">

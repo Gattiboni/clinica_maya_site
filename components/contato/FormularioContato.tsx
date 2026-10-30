@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useId, useState, type FormEvent } from "react";
+import { ID_MODAL_POLITICA } from "@/components/politica/ModalPolitica";
 import {
   AREA_PADRAO,
   MODALIDADE_PADRAO,
@@ -12,17 +12,15 @@ import {
   type OpcaoArea,
   type OpcaoModalidade,
 } from "@/lib/conteudo/contato";
+import { MOV } from "@/lib/movimento";
 
 const CLASSES_ROTULO = "text-nota font-bold tracking-wide";
 
-const CLASSES_CAMPO =
-  "w-full rounded-xl border border-marrom/35 bg-bege px-4 py-3.5 text-corpo text-verde outline-none transition-colors focus-visible:border-verde focus-visible:ring-2 focus-visible:ring-verde/40 aria-invalid:border-marrom aria-invalid:ring-2 aria-invalid:ring-marrom/40";
+const CLASSES_CAMPO = `${MOV.transicaoHover} w-full rounded-xl border border-marrom/35 bg-bege px-4 py-3.5 text-corpo text-verde outline-none transition-colors focus-visible:border-verde focus-visible:ring-2 focus-visible:ring-verde/40 aria-invalid:border-marrom aria-invalid:ring-2 aria-invalid:ring-marrom/40`;
 
-const CLASSES_CHIP =
-  "inline-block cursor-pointer rounded-pilula border border-marrom/35 bg-creme px-4.5 py-2 text-nota font-bold tracking-wide whitespace-nowrap text-verde transition-colors hover:border-verde peer-checked:border-verde peer-checked:bg-verde peer-checked:text-bege peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 peer-focus-visible:outline-verde";
+const CLASSES_CHIP = `${MOV.transicaoHover} inline-block cursor-pointer rounded-pilula border border-marrom/35 bg-creme px-4.5 py-2 text-nota font-bold tracking-wide whitespace-nowrap text-verde transition-colors hover:border-verde peer-checked:border-verde peer-checked:bg-verde peer-checked:text-bege peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 peer-focus-visible:outline-verde`;
 
-const CLASSES_BOTAO =
-  "inline-flex items-center justify-center self-start rounded-pilula bg-verde px-9 py-4 text-botao font-bold whitespace-nowrap text-bege transition-colors hover:bg-marrom focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-verde disabled:cursor-not-allowed disabled:opacity-45 disabled:hover:bg-verde";
+const CLASSES_BOTAO = `${MOV.transicaoHover} inline-flex items-center justify-center self-start rounded-pilula bg-verde px-9 py-4 text-botao font-bold whitespace-nowrap text-bege transition-[color,background-color,opacity] hover:bg-marrom focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-verde disabled:cursor-not-allowed disabled:opacity-45 disabled:hover:bg-verde`;
 
 type GrupoChipsProps<T extends string> = {
   legenda: string;
@@ -68,6 +66,13 @@ function GrupoChips<T extends string>({
  * copy e abre o WhatsApp da pessoa em nova aba: nenhum `fetch`, server action
  * ou armazenamento. Sem nome, o botão fica desabilitado e o campo, marcado
  * obrigatório (`required`; `aria-invalid` depois que a pessoa sai do campo vazio).
+ *
+ * Movimento (Fase 4), só por classes: campos entram em sequência de 60ms na
+ * chegada; chips e botão com transições de 200ms. O botão habilitado é outro
+ * elemento (`<a>` no lugar do `<button disabled>`), então a troca não transiciona.
+ * O link "política de privacidade" é um `<button popovertarget>` (afinação 1,
+ * 2.10): abre a política num modal nativo, sem JavaScript, sem sair do
+ * formulário; a página da política continua no footer.
  */
 export function FormularioContato() {
   const id = useId();
@@ -87,7 +92,11 @@ export function FormularioContato() {
   const impedirEnvio = (evento: FormEvent<HTMLFormElement>) => evento.preventDefault();
 
   return (
-    <form onSubmit={impedirEnvio} noValidate className="mt-5 flex max-w-lg flex-col gap-5">
+    <form
+      onSubmit={impedirEnvio}
+      noValidate
+      className={`${MOV.revealStagger} mt-5 flex max-w-lg flex-col gap-5`}
+    >
       <div className="flex flex-col gap-1.5">
         <label htmlFor={`${id}-nome`} className={CLASSES_ROTULO}>
           Nome
@@ -164,12 +173,13 @@ export function FormularioContato() {
 
       <p className="text-legenda">
         Ao enviar, você concorda com a nossa{" "}
-        <Link
-          href="/politica-de-privacidade"
-          className="underline underline-offset-3 transition-colors hover:text-marrom focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-verde"
+        <button
+          type="button"
+          popoverTarget={ID_MODAL_POLITICA}
+          className="cursor-pointer underline underline-offset-3 transition-colors hover:text-marrom focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-verde"
         >
           política de privacidade
-        </Link>
+        </button>
         .
       </p>
     </form>

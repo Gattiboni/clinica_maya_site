@@ -1,7 +1,12 @@
 # Plano de execução — site Clínica Maya
 
-**v1.6 · 29/10/2026** (v1.5, v1.4, v1.3, v1.2, v1.1 e v1.0 anteriores) · checklist executável · repo: `github.com/Gattiboni/clinica_maya_site`
+**v1.7 · 30/10/2026** (v1.6 a v1.0 anteriores) · checklist executável · repo: `github.com/Gattiboni/clinica_maya_site`
 Responsável entre parênteses: (Alan) (Claude) (Codinho) (Amanda) (Cliente). `[x]` = concluído. Este arquivo é o estado do projeto; quem abrir sabe em que pé estamos.
+
+## Changelog v1.7
+
+- **Lote 3a commitado (v0.4.0) e Fase 4 construída em duas rodadas** (movimento + afinação 1 após revisão visual do Alan), commit v0.5.0 com as Decisões 010 e 011 e o mapa v0.4.
+- **Falta para o preview:** medir Lighthouse mobile no domínio da Vercel (gate), afinação 2 com a lista do Alan, conferir iOS Safari e o 404 global, pacote da Fase 6. Como a produção é pública com `noindex`, o preview a compartilhar é `https://clinica-maya-site.vercel.app`; Shareable Link só se quisermos um deployment congelado.
 
 ## Changelog v1.6
 
@@ -77,7 +82,7 @@ Responsável entre parênteses: (Alan) (Claude) (Codinho) (Amanda) (Cliente). `[
 | Conteúdo | **Copy institucional em código** (`.tsx`, como na Spinhardi). **Sanity só para o blog** (`post`, `author`, `category`); Studio embutido em `/studio` como superfície técnica | Volume de edição institucional é baixo e o time é pequeno; treinar gente em Studio é custo sem retorno. Blog é o que a gestão mensal (Etapa 2) publica | Schemas espelham `studio/schemas` da Spinhardi (Decisão 005); **projeto Sanity na conta da cliente** (`04bzsv4z`, dataset `production`); ISR com revalidação por webhook (rota existe, webhook ainda não) |
 | Back-office | **Supabase Auth com papéis (admin/editor) + `/admin/blog`**, mesma dinâmica da Spinhardi (`lib/blog/actions.ts`, `lib/sanity/write-client.ts`), identidade da Maya | Quem publica (gestora, agência de conteúdo) loga no site da clínica com acesso delimitado por papel; ninguém cria conta Sanity | Varredura roda no servidor antes de gravar (Decisão 002, item 5 fechado); **Supabase Pro desde o primeiro login real** (Free pausa em 7 dias); projeto Supabase na conta da clínica |
 | Estilo | **Tailwind 4** com tokens da marca em `@theme`, como na Spinhardi | Consistência com a agência; tokens definidos uma vez | Nada fora dos tokens; sem azul (varredura garante) |
-| Movimento | Decidir após referências (Apêndice A): GSAP ScrollTrigger, Motion ou CSS scroll-driven | Grafismos em camada própria com parallax; página inteira com dinâmica | `prefers-reduced-motion`; Lighthouse mobile ≥ 90 é gate |
+| Movimento | **CSS scroll-driven + `sticky`, zero biblioteca** (Decisão 010); linguagem v1 na Decisão 011 e no mapa v0.4 | Performance e um playbook só; Spinhardi também não usa lib de animação | Só `transform`/`opacity`; `prefers-reduced-motion` em bloco único; Lighthouse mobile ≥ 90 no preview da Vercel é gate; dois clients de movimento (`Mundo`, `AoEntrar`) |
 | Hospedagem | **Vercel, time `clinica-maya` sob o login do Alan** (Pro Trial até ~12/11), projeto `clinica-maya-site`, produção = `main` | Isolado por natureza; transferível no Pro; Alan opera sem usar o login da cliente | Standard Protection (padrão): previews fechados, produção aberta com `noindex` até o go-live. Pro + cartão da clínica antes do DNS (fair use: Hobby é não comercial) |
 | Agendamento | `wa.me` montado no cliente; sem backend de agenda hoje | Exigência do briefing | CRM entra como server action no formulário, sobre o mesmo Supabase do back-office, sem tocar nas páginas |
 | Analytics | GA4 via Google Tag com Consent Mode + Vercel Analytics | Ads e LGPD | Propriedade em conta da cliente |
@@ -157,10 +162,11 @@ Dependências da Spinhardi: **Supabase (auth e papéis) e `@portabletext/react` 
 
 ## Fase 4 · Movimento (antes da Fase 6; é parte do preview)
 
-- [ ] (Alan) **Antecipado para antes do Lote 2:** rodar o prompt do Apêndice A no Perplexity Pro e trazer 3 a 5 referências anotadas (o que gostou em cada uma: camadas, ritmo de scroll, tipografia)
-- [ ] (Claude) Propor abordagem (biblioteca, padrões, limites) e as regras de camadas que o Lote 1.1 e o Lote 2 já seguem; (Alan) aprovar
-- [ ] (Codinho) Grafismos em camada própria com parallax, reveals de seção, transições; `prefers-reduced-motion`
-- [ ] (Claude) Testar em desktop e mobile no Chrome, Lighthouse mobile ≥ 90; (Alan) revisar e commitar
+- [x] (Alan) Prompt do Apêndice A rodado; referências visuais do Perplexity descartadas; referências aprovadas: Oryzo, Pradip Dhakal, Komunique, Peter Tarka, 8bit.ai, ujjwalagarwal.com (29 e 30/10)
+- [x] (Claude) Abordagem CSS-first sem biblioteca aprovada (Decisão 010, 29/10); regras de camadas na Decisão 008
+- [x] (Codinho) Fase 4 + afinação 1: folhas, capa, pilhas, parallax, campos, Círculo em SVG, cortina, voltar ao topo, política em modal (30/10)
+- [ ] (Claude → Codinho) Afinação 2 com a lista do Alan
+- [ ] (Claude) Lighthouse mobile no domínio da Vercel após o push da v0.5.0; iOS Safari (Alan, no celular); (Alan) revisar e commitar
 
 ## Fase 5 · SEO, Ads, analytics
 

@@ -1,4 +1,5 @@
 import { Secao } from "@/components/ui/Secao";
+import { MOV } from "@/lib/movimento";
 
 /** §Dra. Mayara 3 · Como ela atende. Única página onde a duração aproximada da consulta aparece. */
 export function ComoAtende() {
@@ -6,7 +7,7 @@ export function ComoAtende() {
     <Secao
       fundo="bege"
       espaco="curto"
-      className="flex flex-col items-center gap-5 text-center lg:items-start lg:text-left"
+      className={`${MOV.revealStagger} flex flex-col items-center gap-5 text-center lg:items-start lg:text-left`}
     >
       <h2 className="text-h2 font-medium">Como ela atende</h2>
       <p className="max-w-prosa-longa text-lead">

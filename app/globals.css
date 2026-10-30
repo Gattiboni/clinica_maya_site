@@ -80,6 +80,12 @@
     scroll-behavior: smooth;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
   body {
     @apply bg-bege font-texto text-verde antialiased;
   }
@@ -100,5 +106,1768 @@
 
   p {
     text-wrap: pretty;
+  }
+}
+
+/* =========================================================================
+ * Movimento e camadas (Fase 4 · mapa de movimento v0.3 · Decisão 010 ·
+ * afinação 1 de 30/10)
+ *
+ * CSS-first, zero biblioteca. Tudo que é ligado ao scroll usa scroll-driven
+ * animations (`animation-timeline: view()` / `scroll()`), dentro de
+ * `@supports (animation-timeline: view())`: navegador sem suporte vê o
+ * estado final, parado (folhas empilham por fluxo, cortina do footer e
+ * popover funcionam, campos parados). Só `transform` (translate, scale,
+ * rotate) e `opacity` animam; as exceções previstas no mapa são `clip-path`
+ * (maskReveal e wipe), `stroke-dashoffset` (linha desenhada e Círculo Maya,
+ * SVGs pequenos nossos) e `grid-template-rows` (FAQ). `will-change` só em
+ * parallax, campos e grafismos do mundo, nunca em texto.
+ *
+ * Duas animações de tempo dependem do `AoEntrar` (IntersectionObserver,
+ * exceção da Decisão 010): o pop dos números e a montagem do Círculo Maya,
+ * ligadas a `[data-entrou]`. Antes dele, o estado-base é o montado (sem
+ * JavaScript nada fica escondido); uma guarda por `view()` (`entry 0% a 25%`)
+ * esconde o elemento só enquanto ele entra, para o pop não "saltar".
+ *
+ * Afinação é edição de valor: todos os parâmetros estão nos tokens `--mov-*`
+ * abaixo. Os nomes de classe estão espelhados em `lib/movimento.ts`.
+ * Estas regras ficam fora das camadas do Tailwind de propósito: regra sem
+ * camada vence utilitário (ex.: `.folha` sticky sobre `relative`).
+ * ========================================================================= */
+
+/* --- 1. Tokens de movimento ------------------------------------------- */
+:root {
+  /* Durações (as animações ligadas ao scroll não têm duração: o scroll é o tempo). */
+  --mov-dur-reveal: 600ms;
+  --mov-dur-hover: 200ms;
+  --mov-dur-faq: 250ms;
+  --mov-dur-header: 250ms; /* usada nos itens do menu mobile */
+  --mov-dur-wipe: 1200ms;
+  --mov-dur-pop: 500ms;
+  --mov-dur-circulo: 600ms;
+  --mov-dur-palavra: 400ms;
+  --mov-curva: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Reveal na carga (hero e aberturas): começa após o primeiro paint, filhos em sequência. */
+  --mov-carga-atraso: 200ms;
+  --mov-carga-passo: 80ms;
+  --mov-menu-passo: 40ms;
+
+  /* Reveal por `view()`: deslocamento e janela de entrada (percentuais do range `entry`). */
+  --mov-reveal-desloc: 24px;
+  --mov-reveal-inicio: 10%;
+  --mov-reveal-fim: 45%;
+  /* Stagger entre filhos, em % do range por filho: 5% ≈ "60ms" do mapa (ver .stagger-*). */
+  --mov-stagger-passo: 5%;
+  /* maskReveal por `view()`. */
+  --mov-mask-inicio: 0%;
+  --mov-mask-fim: 60%;
+
+  /* Profundidade (2.6): ângulos de entrada de cards e títulos, hover 3D e pop dos números. */
+  --mov-perspectiva: 900px;
+  --mov-perspectiva-hover: 800px;
+  --mov-3d-card: 8deg;
+  --mov-3d-titulo: 10deg;
+  --mov-3d-hover: 2deg;
+  --mov-pop-min: 0.6;
+  --mov-pop-excesso: 1.04;
+
+  /* Parallax: fatores por camada (mapa §1.1) e amplitude base do deslocamento. */
+  --mov-parallax-mundo: 0.3;
+  --mov-parallax-frente: 0.6;
+  --mov-parallax-campo: 0.2;
+  --mov-parallax-midia: 0.9;
+  --mov-parallax-base: 24svh;
+  /* Foto dentro da máscara: zoom constante e amplitude (em % da própria altura). */
+  --mov-midia-escala: 1.06;
+  --mov-midia-amp: 3%;
+
+  /* Drift e tilt pelo cursor (só pointer: fine). 6° é teto, não meta. */
+  --mov-drift-mundo: 8px;
+  --mov-drift-frente: 14px;
+  --mov-tilt: 6deg;
+
+  /* Mundo: faixa de opacidade dos grafismos, rotação lenta contínua e o fragmento que acende atrás dos cards. */
+  --mov-mundo-opacidade-min: 0.12;
+  --mov-mundo-opacidade-max: 0.35;
+  --mov-grafismo-rotacao: 1.5deg;
+  --mov-grafismo-ciclo: 40s;
+  --mov-acende-hover: 0.25;
+  --mov-acende-touch: 0.1;
+  --mov-acende-desloc: 6px;
+
+  /* Campo (camada ambiente, 2.7): opacidade por fundo, deriva ±2% / ±1° num ciclo de 100s, escala de folga. */
+  --mov-campo-claro: 0.1;
+  --mov-campo-verde: 0.12;
+  --mov-campo-deriva: 2%;
+  --mov-campo-rotacao: 1deg;
+  --mov-campo-ciclo: 100s;
+  --mov-campo-escala: 1.08;
+
+  /* Folhas (2.1): toda fronteira de seção. Raio do canto, sobreposição curta ("peel"), recuo da anterior, sombra. */
+  --mov-folha-raio: 32px;
+  --mov-folha-sobre: 14svh;
+  --mov-folha-escala: 0.97;
+  --mov-folha-opacidade: 0.9;
+  --mov-folha-sombra: 0 -22px 44px -18px rgb(63 79 79 / 0.24);
+
+  /* Capa (hero): recuo e subida da foto, subida do texto e inclinação do grafismo enquanto a folha sobe. */
+  --mov-capa-foto-escala: 0.94;
+  --mov-capa-foto-sobe: -5%;
+  --mov-capa-foto-zoom: 1.1;
+  --mov-capa-texto-sobe: 24px;
+  --mov-capa-inclinar: 6deg;
+
+  /* Pilha de folhas (2.3): topo sob o header compacto; folha com conteúdo + respiro no mobile; trajeto curto no desktop. */
+  --mov-stack-top: 72px;
+  --mov-stack-trajeto: 65svh;
+  --mov-folha-min: auto;
+  --mov-folha-gap: 0px;
+
+  /* Scrub ao longo da seção ou da pilha. */
+  --mov-scrub-rotacao: 12deg;
+  --mov-scrub-desloc: 20svh;
+  --mov-pilha-desloc-x: -12vw;
+  --mov-pilha-desloc-y: 45vh;
+
+  /* Linha desenhada no trilho (`--linha`, range `cover`) e janela de reveal de cada item que ela alcança. */
+  --mov-linha-inicio: 20%;
+  --mov-linha-fim: 55%;
+  --mov-linha-janela: 10%;
+
+  /* Círculo Maya (2.4): traço em unidades do viewBox (≈ 2px a 400px), montagem e desmontagem. */
+  --mov-circulo-traco: 7.8;
+  --mov-circulo-escala: 0.7;
+  --mov-circulo-rotacao: 35deg;
+  --mov-circulo-passo: 150ms;
+  --mov-circulo-saida: 15%; /* defasagem entre anéis na desmontagem (range `exit`) */
+  --mov-circulo-saida-janela: 40%;
+
+  /* Chamada final (2.8): folha cheia, recuo da segunda linha e entrada lateral das linhas. */
+  --mov-cta-min: 70svh;
+  --mov-cta-recuo: clamp(1.5rem, 12vw, 10rem);
+  --mov-cta-entrada: 40px;
+
+  /* Cortina do footer e voltar ao topo (2.8, 2.9), em `scroll(root)`. */
+  --mov-footer-parallax: 28px;
+  --mov-footer-faixa: 70svh;
+  --mov-topo-aparece: 100svh;
+  --mov-topo-fade: 20svh;
+  --mov-topo-some: 70svh;
+
+  /* Hover. */
+  --mov-eleva: 4px;
+  --mov-zoom-capa: 1.04;
+  --mov-zoom-foto: 1.03;
+  --mov-pulso-escala: 1.03;
+
+  /* Header: gatilho de rolagem, alturas (alto = em fluxo; compacto = banda visível após o gatilho). */
+  --mov-header-gatilho: 80px;
+  --mov-header-alto: 80px;
+  --mov-header-compacto: 72px;
+  --mov-header-escala: 1; /* 80 → 80px no mobile: a banda não encolhe */
+  --mov-header-desloc: 0px;
+  --mov-header-logo-escala: 1;
+
+  /* Barra de progresso de leitura. */
+  --mov-progresso-espessura: 2px;
+}
+
+@media (min-width: 50rem) {
+  :root {
+    --mov-header-alto: 96px;
+    --mov-header-escala: 0.75; /* 96 → 72px */
+    --mov-header-desloc: -12px; /* centro de 96 → centro de 72 */
+    --mov-header-logo-escala: 0.857; /* 56 → 48px */
+  }
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --mov-folha-min: min(56svh, 32rem);
+    --mov-folha-gap: max(0px, calc(var(--mov-stack-trajeto) - var(--mov-folha-min)));
+  }
+}
+
+/* --- 2. Estrutura que vale em todo navegador (estado final) ------------ */
+
+/* Fundo e borda do header vivem num pseudo-elemento, para animar só opacity e scale. */
+.header-fixo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--color-bege);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-marrom) 18%, transparent);
+  transform-origin: top;
+}
+
+/* Sublinhado do item ativo da navegação (sobre a borda transparente que mantém a altura). */
+.nav-item {
+  position: relative;
+}
+
+.nav-item[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 -2px 0;
+  height: 2px;
+  background: var(--color-verde);
+  transform-origin: left;
+}
+
+/* Só existem com scroll-driven animations. */
+.progresso-leitura,
+.indicador-rolagem,
+.folha-proximo,
+.voltar-topo {
+  display: none;
+}
+
+/* Máscara da foto com parallax interno: recorta o zoom e o deslocamento. `clip`, não
+   `hidden`: overflow hidden cria um scroll container e o `view()` da foto passaria a medir
+   a posição dentro da máscara (progresso fixo em 50%, parallax nulo). */
+.mascara {
+  overflow: clip;
+}
+
+.mascara > img {
+  display: block;
+}
+
+/* Camadas internas do Grafismo (parallax → scrub → gira → drift → tilt). */
+.grafismo-raiz {
+  perspective: var(--mov-perspectiva);
+}
+
+.grafismo-camada {
+  display: block;
+}
+
+/* Respiro vertical da seção, por token (`Secao` aplica `secao-normal|curto|compacto`): com
+   folhas, o padding de baixo ganha a sobreposição, para a faixa que a folha seguinte cobre
+   ser sempre respiro, nunca conteúdo. */
+.secao {
+  padding-block: var(--secao-py);
+}
+
+.secao-normal {
+  --secao-py: 4rem;
+}
+
+.secao-curto {
+  --secao-py: 3rem;
+}
+
+.secao-compacto {
+  --secao-py: 2rem;
+}
+
+@media (min-width: 64rem) {
+  .secao-normal {
+    --secao-py: 6rem;
+  }
+
+  .secao-curto {
+    --secao-py: 4rem;
+  }
+
+  .secao-compacto {
+    --secao-py: 3rem;
+  }
+}
+
+/* Folhas (2.1), estado final: toda seção que não é a primeira do `<main>` (e toda folha de
+   pilha) tem o canto superior arredondado e a sombra para cima no próprio fundo. Sem
+   scroll-driven animations as seções só empilham por fluxo, com esse acabamento. */
+:is(body > main > .secao:not(:first-of-type), .stack > .secao) > .secao-fundo {
+  border-top-left-radius: var(--mov-folha-raio);
+  border-top-right-radius: var(--mov-folha-raio);
+  box-shadow: var(--mov-folha-sombra);
+}
+
+/* Chamada final como folha cheia: 70svh no desktop, conteúdo centralizado. */
+@media (min-width: 64rem) {
+  .cta-folha {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: var(--mov-cta-min);
+  }
+}
+
+/* Título em duas linhas desencontradas: cada linha é um bloco; a segunda recua à direita. */
+.titulo-desencontrado {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: fit-content;
+  text-wrap: balance;
+}
+
+.titulo-desencontrado > span:nth-child(2) {
+  margin-inline-start: var(--mov-cta-recuo);
+}
+
+/* Campo (camada ambiente): preenche a folha como máscara do SVG (`--campo` vem da `Secao`)
+   sobre a cor corrente; as linhas nascem e morrem fora da caixa. */
+.campo {
+  position: absolute;
+  inset: 0;
+}
+
+.campo-deriva {
+  display: block;
+  height: 100%;
+  scale: var(--mov-campo-escala);
+  background-color: currentColor;
+  mask-image: var(--campo);
+  mask-size: cover;
+  mask-position: center;
+  mask-repeat: no-repeat;
+}
+
+/* Cortina do footer (2.8): o `<main>` é o palco opaco com sombra na borda inferior; o footer
+   fica `sticky` no fim da viewport, atrás dele (z negativo, acima só do fundo do body), e
+   aparece quando a última folha sobe. Layout, não movimento: vale em todo navegador. */
+body > main {
+  position: relative;
+  /* O palco avança por trás do header (sticky, transparente no topo): no mobile o footer é
+     mais alto que a viewport e, preso ao fim dela, apareceria pela transparência do header
+     antes de qualquer rolagem. Posições do conteúdo não mudam (margem e padding se anulam). */
+  margin-top: calc(-1 * var(--mov-header-alto));
+  padding-top: var(--mov-header-alto);
+  background: var(--color-bege);
+  box-shadow: 0 26px 48px -18px rgb(63 79 79 / 0.35);
+}
+
+.footer-cortina {
+  position: sticky;
+  bottom: 0;
+  z-index: -1;
+}
+
+/* Círculo Maya (2.4): três anéis SVG empilhados num quadro com perspectiva; o primeiro dá o tamanho. */
+/* Posição padrão em camada (`components`): as utilities (`absolute` no slot de grafismo) vencem. */
+@layer components {
+  .circulo-maya {
+    position: relative;
+  }
+}
+
+.circulo-maya {
+  display: block;
+  aspect-ratio: 1569 / 1583;
+  perspective: var(--mov-perspectiva);
+}
+
+.circulo-anel {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.circulo-anel + .circulo-anel {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+
+.circulo-traco {
+  stroke-width: var(--mov-circulo-traco);
+}
+
+.circulo-palavra {
+  font-family: var(--font-titulo);
+  font-style: italic;
+}
+
+/* Modal de prosa (política de privacidade a partir do formulário): `popover` nativo. */
+.modal-prosa {
+  inset: 0;
+  margin: auto;
+  width: min(100% - 2rem, 48rem);
+  max-height: min(100svh - 2rem, 56rem);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-card);
+  background: var(--color-bege);
+  color: var(--color-verde);
+  overflow: auto;
+  overscroll-behavior: contain;
+  box-shadow: 0 32px 64px -24px rgb(63 79 79 / 0.5);
+}
+
+.modal-prosa::backdrop {
+  background: rgb(63 79 79 / 0.55);
+}
+
+@supports not selector(:popover-open) {
+  .modal-prosa {
+    display: none;
+  }
+}
+
+/* --- 3. Primitivas do mapa, só com scroll-driven animations ------------ */
+@supports (animation-timeline: view()) {
+  /* Toda seção publica uma timeline `--secao` (scrub de filhos) e ancora sob o header compacto. */
+  .secao {
+    view-timeline: --secao block;
+    scroll-margin-top: var(--mov-header-compacto);
+  }
+
+  /* O `<main>` dá escopo à timeline da folha que cobre a capa (publicada por `.capa + .secao`). */
+  body > main {
+    timeline-scope: --pos-capa;
+  }
+
+  /* Índice do filho (0 a 7; 8 em diante travam em 8) para stagger por nth-child. */
+  :is(.stagger, .reveal-stagger, .reveal-carga, .menu-mobile) > :nth-child(1) {
+    --mov-i: 0;
+  }
+  :is(.stagger, .reveal-stagger, .reveal-carga, .menu-mobile) > :nth-child(2) {
+    --mov-i: 1;
+  }
+  :is(.stagger, .reveal-stagger, .reveal-carga, .menu-mobile) > :nth-child(3) {
+    --mov-i: 2;
+  }
+  :is(.stagger, .reveal-stagger, .reveal-carga, .menu-mobile) > :nth-child(4) {
+    --mov-i: 3;
+  }
+  :is(.stagger, .reveal-stagger, .reveal-carga, .menu-mobile) > :nth-child(5) {
+    --mov-i: 4;
+  }
+  :is(.stagger, .reveal-stagger, .reveal-carga, .menu-mobile) > :nth-child(6) {
+    --mov-i: 5;
+  }
+  :is(.stagger, .reveal-stagger, .reveal-carga, .menu-mobile) > :nth-child(7) {
+    --mov-i: 6;
+  }
+  :is(.stagger, .reveal-stagger, .reveal-carga, .menu-mobile) > :nth-child(8) {
+    --mov-i: 7;
+  }
+  :is(.stagger, .reveal-stagger, .reveal-carga, .menu-mobile) > :nth-child(n + 9) {
+    --mov-i: 8;
+  }
+
+  /* Passo do stagger: equivalentes dos "ms" do mapa em % do range (60ms é o padrão, 5%). */
+  .stagger-40 {
+    --mov-stagger-passo: 3%;
+  }
+  .stagger-80 {
+    --mov-stagger-passo: 7%;
+  }
+  .stagger-100 {
+    --mov-stagger-passo: 8%;
+  }
+  .stagger-120 {
+    --mov-stagger-passo: 10%;
+  }
+
+  /* reveal: opacity 0 → 1 e translateY 24 → 0 ao entrar na viewport. */
+  @keyframes mov-reveal {
+    from {
+      opacity: 0;
+      translate: 0 var(--mov-reveal-desloc);
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  /* reveal com profundidade (cards): o mesmo, mais rotateX 8° → 0 na perspectiva do pai. */
+  @keyframes mov-reveal-3d {
+    from {
+      opacity: 0;
+      translate: 0 var(--mov-reveal-desloc);
+      rotate: x var(--mov-3d-card);
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+      rotate: x 0deg;
+    }
+  }
+
+  /* Títulos e eyebrows: rotateX 10° a partir da base, com perspectiva própria (só `transform`,
+     que nenhum hover usa; o reveal do pai cuida de opacity e translate). */
+  @keyframes mov-titulo-3d {
+    from {
+      transform: perspective(var(--mov-perspectiva)) rotateX(var(--mov-3d-titulo));
+    }
+    to {
+      transform: none;
+    }
+  }
+
+  .reveal,
+  .reveal-stagger > * {
+    --mov-range-inicio: entry
+      calc(var(--mov-reveal-inicio) + var(--mov-i, 0) * var(--mov-stagger-passo));
+    --mov-range-fim: entry calc(var(--mov-reveal-fim) + var(--mov-i, 0) * var(--mov-stagger-passo));
+    animation: mov-reveal var(--mov-dur-reveal) var(--mov-curva) both;
+    animation-timeline: view();
+    animation-range: var(--mov-range-inicio) var(--mov-range-fim);
+  }
+
+  .profundo {
+    perspective: var(--mov-perspectiva);
+  }
+
+  .profundo > * {
+    animation-name: mov-reveal-3d;
+  }
+
+  /* Título aninhado num contexto de reveal (ex.: o H2 dentro do CabecalhoSecao): só o 3D,
+     pela própria passagem; o pai cuida do reveal. Vem antes das regras de filho direto,
+     que têm a mesma especificidade e devem vencer. */
+  :is(.reveal, .reveal-stagger > *, .reveal-carga > *) :is(h1, h2, .text-eyebrow) {
+    animation: mov-titulo-3d var(--mov-dur-reveal) var(--mov-curva) both;
+    animation-timeline: view();
+    animation-range: entry var(--mov-reveal-inicio) entry var(--mov-reveal-fim);
+    transform-origin: 50% 100%;
+  }
+
+  /* Título que é ele mesmo o elemento revelado (`.reveal` ou filho direto do stagger): reveal + 3D. */
+  :is(.reveal, .reveal-stagger > *):is(h1, h2, .text-eyebrow) {
+    animation-name: mov-reveal, mov-titulo-3d;
+    animation-timeline: view(), view();
+    animation-range:
+      var(--mov-range-inicio) var(--mov-range-fim),
+      var(--mov-range-inicio) var(--mov-range-fim);
+    transform-origin: 50% 100%;
+  }
+
+  /* Chegada por âncora (/equipe#psicologia, /contato#agendar): a seção alvo não pisca. */
+  .secao:target .reveal,
+  .secao:target .reveal-stagger > *,
+  .secao:target .reveal-linha > *,
+  .secao:target :is(h1, h2, .text-eyebrow) {
+    animation: none;
+  }
+
+  /* reveal na carga (hero e aberturas): tempo, não scroll; filhos em sequência. */
+  .reveal-carga > * {
+    animation: mov-reveal var(--mov-dur-reveal) var(--mov-curva) both;
+    animation-delay: calc(var(--mov-carga-atraso) + var(--mov-i, 0) * var(--mov-carga-passo));
+  }
+
+  .reveal-carga.profundo > * {
+    animation-name: mov-reveal-3d;
+  }
+
+  .reveal-carga > :is(h1, h2, .text-eyebrow) {
+    animation:
+      mov-reveal var(--mov-dur-reveal) var(--mov-curva) both,
+      mov-titulo-3d var(--mov-dur-reveal) var(--mov-curva) both;
+    animation-delay:
+      calc(var(--mov-carga-atraso) + var(--mov-i, 0) * var(--mov-carga-passo)),
+      calc(var(--mov-carga-atraso) + var(--mov-i, 0) * var(--mov-carga-passo));
+    transform-origin: 50% 100%;
+  }
+
+  /* Variantes da carga: passo de 40ms (chips) e início depois do N-ésimo irmão do pai. */
+  .carga-40 {
+    --mov-carga-passo: 40ms;
+  }
+  .carga-apos-1 {
+    --mov-carga-atraso: 280ms;
+  }
+  .carga-apos-2 {
+    --mov-carga-atraso: 360ms;
+  }
+  .carga-apos-3 {
+    --mov-carga-atraso: 440ms;
+  }
+
+  /* Menu mobile: itens entram em sequência ao abrir (display none → flex reinicia a animação). */
+  @media (width < 50rem) {
+    .menu-mobile > * {
+      animation: mov-reveal var(--mov-dur-header) var(--mov-curva) both;
+      animation-delay: calc(var(--mov-i, 0) * var(--mov-menu-passo));
+    }
+  }
+
+  /* Pop de tempo dos números (escala 0.6 → 1.04 → 1), só depois que o AoEntrar marca o elemento. */
+  @keyframes mov-pop {
+    from {
+      scale: var(--mov-pop-min);
+      opacity: 0;
+    }
+    70% {
+      scale: var(--mov-pop-excesso);
+      opacity: 1;
+    }
+    to {
+      scale: 1;
+      opacity: 1;
+    }
+  }
+
+  .pop[data-entrou] {
+    animation: mov-pop var(--mov-dur-pop) var(--mov-curva) both;
+  }
+
+  /* parallax: translateY ligado ao scroll ao longo da passagem do elemento (range `cover`).
+     Mundo (fator < 1, sentido +1) fica para trás; frente (sentido -1) corre à frente da página. */
+  @keyframes mov-parallax {
+    from {
+      translate: 0 calc((1 - var(--mov-fator)) * var(--mov-parallax-base) * var(--mov-sentido));
+    }
+    to {
+      translate: 0 calc((1 - var(--mov-fator)) * var(--mov-parallax-base) * var(--mov-sentido) * -1);
+    }
+  }
+
+  .parallax-mundo,
+  .parallax-frente,
+  .parallax-campo {
+    animation: mov-parallax linear both;
+    animation-timeline: view();
+    animation-range: cover 0% cover 100%;
+    will-change: transform;
+  }
+
+  .parallax-mundo {
+    --mov-fator: var(--mov-parallax-mundo);
+    --mov-sentido: 1;
+  }
+
+  .parallax-frente {
+    --mov-fator: var(--mov-parallax-frente);
+    --mov-sentido: -1;
+  }
+
+  .parallax-campo {
+    --mov-fator: var(--mov-parallax-campo);
+    --mov-sentido: 1;
+  }
+
+  /* Foto dentro da máscara (fator 0.9): zoom constante e deslocamento curto. */
+  @keyframes mov-parallax-midia {
+    from {
+      translate: 0 var(--mov-midia-amp);
+    }
+    to {
+      translate: 0 calc(var(--mov-midia-amp) * -1);
+    }
+  }
+
+  .parallax-midia {
+    scale: var(--mov-midia-escala);
+    animation: mov-parallax-midia linear both;
+    animation-timeline: view();
+    animation-range: cover 0% cover 100%;
+    will-change: transform;
+  }
+
+  /* drift e tilt3d: consomem --mx/--my escritas pelo Mundo; em touch as variáveis não existem. */
+  @media (pointer: fine) {
+    .drift-mundo,
+    .drift-frente {
+      translate: calc(var(--mx, 0) * var(--mov-drift)) calc(var(--my, 0) * var(--mov-drift));
+      will-change: transform;
+    }
+
+    .drift-mundo {
+      --mov-drift: var(--mov-drift-mundo);
+    }
+
+    .drift-frente {
+      --mov-drift: var(--mov-drift-frente);
+    }
+
+    .tilt3d {
+      transform: perspective(var(--mov-perspectiva))
+        rotateX(calc(var(--my, 0) * var(--mov-tilt) * -1))
+        rotateY(calc(var(--mx, 0) * var(--mov-tilt)));
+      will-change: transform;
+    }
+  }
+
+  /* Rotação lenta contínua dos grafismos do mundo (±1,5° em 40s). */
+  @keyframes mov-girar-lento {
+    0%,
+    100% {
+      rotate: calc(var(--mov-grafismo-rotacao) * -1);
+    }
+    50% {
+      rotate: var(--mov-grafismo-rotacao);
+    }
+  }
+
+  .gira-lento {
+    animation: mov-girar-lento var(--mov-grafismo-ciclo) ease-in-out infinite;
+  }
+
+  /* Campo: deriva de ±2% e ±1° num ciclo lento (o fundo "vivo", a 20 a 30% das referências). */
+  @keyframes mov-campo-deriva {
+    0%,
+    100% {
+      translate: 0 0;
+      rotate: 0deg;
+    }
+    25% {
+      translate: var(--mov-campo-deriva) calc(var(--mov-campo-deriva) * -0.5);
+      rotate: var(--mov-campo-rotacao);
+    }
+    50% {
+      translate: 0 var(--mov-campo-deriva);
+      rotate: 0deg;
+    }
+    75% {
+      translate: calc(var(--mov-campo-deriva) * -1) calc(var(--mov-campo-deriva) * 0.5);
+      rotate: calc(var(--mov-campo-rotacao) * -1);
+    }
+  }
+
+  .campo-deriva {
+    animation: mov-campo-deriva var(--mov-campo-ciclo) ease-in-out infinite;
+    will-change: transform;
+  }
+
+  /* maskReveal: clip-path abrindo ao entrar na viewport (fotos que não são LCP). */
+  @keyframes mov-mask-cima {
+    from {
+      clip-path: inset(100% 0 0 0);
+    }
+    to {
+      clip-path: inset(0);
+    }
+  }
+
+  @keyframes mov-mask-direita {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0);
+    }
+  }
+
+  @keyframes mov-mask-circular {
+    from {
+      clip-path: circle(0% at 50% 50%);
+    }
+    to {
+      clip-path: circle(75% at 50% 50%);
+    }
+  }
+
+  .mask-reveal-cima,
+  .mask-reveal-direita,
+  .mask-reveal-circular {
+    animation: linear both;
+    animation-timeline: view();
+    animation-range: entry calc(var(--mov-mask-inicio) + var(--mov-i, 0) * var(--mov-stagger-passo))
+      entry calc(var(--mov-mask-fim) + var(--mov-i, 0) * var(--mov-stagger-passo));
+  }
+
+  .mask-reveal-cima {
+    animation-name: mov-mask-cima;
+  }
+
+  .mask-reveal-direita {
+    animation-name: mov-mask-direita;
+  }
+
+  .mask-reveal-circular {
+    animation-name: mov-mask-circular;
+  }
+
+  /* scrub: propriedade ligada ao progresso da seção (`--secao`) ou da pilha (`--pilha`). */
+  @keyframes mov-girar {
+    to {
+      rotate: var(--mov-scrub-rotacao);
+    }
+  }
+
+  .scrub-rotacao {
+    animation: mov-girar linear both;
+    animation-timeline: --secao;
+    animation-range: cover 0% cover 100%;
+  }
+
+  @keyframes mov-deslocar {
+    to {
+      translate: 0 var(--mov-scrub-desloc);
+    }
+  }
+
+  .scrub-deslocamento {
+    animation: mov-deslocar linear both;
+    animation-timeline: --secao;
+    animation-range: cover 0% cover 100%;
+    will-change: transform;
+  }
+
+  @keyframes mov-deslocar-pilha {
+    to {
+      translate: var(--mov-pilha-desloc-x) var(--mov-pilha-desloc-y);
+    }
+  }
+
+  .scrub-pilha {
+    animation: mov-deslocar-pilha linear both;
+    animation-timeline: --pilha;
+    animation-range: cover 0% cover 100%;
+    will-change: transform;
+  }
+
+  /* wipe na carga: o grafismo aparece como traço desenhado (clip-path progressivo). */
+  @keyframes mov-wipe {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0);
+    }
+  }
+
+  .wipe-carga {
+    animation: mov-wipe var(--mov-dur-wipe) var(--mov-curva) both;
+  }
+
+  /* Folhas (2.1): a seção N fica presa pela borda inferior enquanto a seção N+1 sobe os
+     primeiros `--mov-folha-sobre` sobre ela, e recua (escala 0.97, opacidade 0.9). O range
+     usa a própria timeline de N: `cover calc(100% - 100dvh)` é "borda inferior de N no fim
+     da viewport" (= topo de N+1 entrando), qualquer que seja a altura de N. É peel, não pin:
+     a translação é curta, e N nunca esconde conteúdo (a faixa coberta é o seu padding).
+     Com `fill: both` toda seção vira stacking context; a sangria de grafismo entre seções
+     (Decisão 008, item 4) deixa de existir por desenho: a folha é uma camada inteira. */
+  @keyframes mov-folha-peel {
+    from {
+      translate: 0 0;
+      scale: 1;
+    }
+    to {
+      translate: 0 var(--mov-folha-sobre);
+      scale: var(--mov-folha-escala);
+    }
+  }
+
+  /* O recuo em opacidade vai no conteúdo (o Container, último filho), não na folha: a folha
+     opaca continua tapando a anterior; na pilha, a folha coberta vazaria pela da frente. */
+  @keyframes mov-folha-esmaecer {
+    to {
+      opacity: var(--mov-folha-opacidade);
+    }
+  }
+
+  body > main > .secao:not(:last-of-type):not(.capa) {
+    padding-bottom: calc(var(--secao-py) + var(--mov-folha-sobre));
+    animation: mov-folha-peel linear both;
+    animation-timeline: view();
+    animation-range: cover calc(100% - 100dvh) cover calc(100% - 100dvh + var(--mov-folha-sobre));
+  }
+
+  body > main > .secao:not(:last-of-type):not(.capa) > :last-child {
+    animation: mov-folha-esmaecer linear both;
+    animation-timeline: --secao;
+    animation-range: cover calc(100% - 100dvh) cover calc(100% - 100dvh + var(--mov-folha-sobre));
+  }
+
+  /* A primeira seção da página (abertura) costuma caber acima da dobra: a folha seguinte já
+     "entrou" no carregamento, e o peel a deixaria recuada e deslocada antes de qualquer
+     rolagem. Ela fica parada, com a sobreposição estática (margem negativa; o padding extra
+     compensa) e stacking context próprio, para a folha seguinte pintar por cima dela. */
+  body > main > .secao:first-of-type:not(:last-of-type):not(.capa) {
+    margin-bottom: calc(-1 * var(--mov-folha-sobre));
+    isolation: isolate;
+    animation: none;
+  }
+
+  body > main > .secao:first-of-type:not(:last-of-type):not(.capa) > :last-child {
+    animation: none;
+  }
+
+  /* A pilha não é folha: ganha respiro embaixo e a seção seguinte a sobrepõe estaticamente,
+     para não sobrar vão quando essa seção recuar. */
+  .stack {
+    padding-bottom: var(--mov-folha-sobre);
+  }
+
+  .stack + .secao {
+    margin-top: calc(-1 * var(--mov-folha-sobre));
+  }
+
+  /* O slot de grafismo das folhas recorta nos dois eixos: o desenho nunca escapa da folha
+     sobre a vizinha. A primeira seção continua só com recorte horizontal (sangra sob o header). */
+  :is(body > main > .secao:not(:first-of-type), .stack > .secao) > .secao-grafismo {
+    overflow: clip;
+  }
+
+  /* capa (2.2): o hero é coberto pela primeira folha. A folha seguinte publica `--pos-capa`
+     (escopo no `<main>`); o trajeto do topo dela do fim ao topo da viewport (`cover 0% →
+     cover 100dvh`, uma viewport de scroll qualquer que seja a altura da folha) é o relógio de
+     tudo o que acontece no hero. */
+  .capa + .secao {
+    view-timeline-name: --secao, --pos-capa;
+    view-timeline-axis: block, block;
+  }
+
+  /* Mobile: o hero é mais alto que a viewport, então fica preso pela borda inferior por
+     translação (o scroll da cobertura é anulado) e, no fim, vai a opacity 0 para não aparecer
+     na emenda subpixel entre dois fundos nem nas frestas das folhas recuadas. */
+  @keyframes mov-capa-fixar {
+    from {
+      translate: 0 0;
+    }
+    95% {
+      opacity: 1;
+    }
+    to {
+      translate: 0 100dvh;
+      opacity: 0;
+    }
+  }
+
+  .capa {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100svh;
+    animation: mov-capa-fixar linear both;
+    animation-timeline: --pos-capa;
+    animation-range: cover 0% cover 100dvh;
+  }
+
+  /* Desktop: o hero cabe em 100svh e é `sticky` de verdade em `top: 0`; só esmaece no fim. */
+  @keyframes mov-capa-sumir {
+    to {
+      opacity: 0;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .capa {
+      position: sticky;
+      top: 0;
+      height: 100svh;
+      min-height: auto;
+      animation: mov-capa-sumir linear both;
+      animation-timeline: --pos-capa;
+      animation-range: cover calc(100dvh * 0.92) cover 100dvh;
+    }
+  }
+
+  /* Texto do hero: esmaece e sobe 24px durante a cobertura (desktop); no mobile só esmaece
+     nos últimos 30% (a foto fica embaixo do texto e é coberta primeiro). */
+  @keyframes mov-capa-texto {
+    to {
+      opacity: 0;
+      translate: 0 calc(var(--mov-capa-texto-sobe) * -1);
+    }
+  }
+
+  @keyframes mov-esmaecer-fim {
+    0%,
+    70% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  .capa-esmaece {
+    animation: mov-esmaecer-fim linear both;
+    animation-timeline: --pos-capa;
+    animation-range: cover 0% cover 100dvh;
+  }
+
+  /* Foto do hero: a máscara recua (desktop) e a foto sobe dentro dela (todas as larguras),
+     para nunca parecer presa enquanto há rolagem. */
+  @keyframes mov-recuar {
+    to {
+      scale: var(--mov-capa-foto-escala);
+    }
+  }
+
+  @keyframes mov-capa-foto {
+    to {
+      translate: 0 var(--mov-capa-foto-sobe);
+    }
+  }
+
+  .capa-foto {
+    scale: var(--mov-capa-foto-zoom);
+    animation: mov-capa-foto linear both;
+    animation-timeline: --pos-capa;
+    animation-range: cover 0% cover 100dvh;
+    will-change: transform;
+  }
+
+  @media (min-width: 64rem) {
+    .capa-esmaece {
+      animation-name: mov-capa-texto;
+    }
+
+    .capa-recua {
+      animation: mov-recuar linear both;
+      animation-timeline: --pos-capa;
+      animation-range: cover 0% cover 100dvh;
+    }
+  }
+
+  @keyframes mov-inclinar {
+    to {
+      rotate: y var(--mov-capa-inclinar);
+    }
+  }
+
+  .capa-inclina {
+    animation: mov-inclinar linear both;
+    animation-timeline: --pos-capa;
+    animation-range: cover 0% cover 100dvh;
+  }
+
+  /* Indicador de rolagem: balança devagar e some nos primeiros 80px de scroll. */
+  @keyframes mov-balancar {
+    0%,
+    100% {
+      translate: 0 0;
+    }
+    50% {
+      translate: 0 6px;
+    }
+  }
+
+  @keyframes mov-sumir {
+    to {
+      opacity: 0;
+    }
+  }
+
+  .indicador-rolagem {
+    display: block;
+    animation:
+      mov-balancar 1800ms ease-in-out infinite,
+      mov-sumir linear both;
+    animation-timeline: auto, scroll(root);
+    animation-range:
+      normal,
+      0 var(--mov-header-gatilho);
+  }
+
+  /* stack (2.3): folhas sticky no mesmo topo; a seguinte começa a cobrir a anterior enquanto
+     ela ainda está inteira na tela. O trajeto por folha é folha + gap (65svh no desktop; no
+     mobile, a própria altura da folha, sem gap). O fundo da pilha é o da folha, então o gap
+     é folha contínua, e a seguinte se anuncia pelo canto arredondado e pela sombra. A folha N
+     recua ao longo da entrada da folha N+1 (timeline nomeada, visível entre irmãs pelo
+     timeline-scope). */
+  .stack {
+    position: relative;
+    display: grid;
+    gap: var(--mov-folha-gap);
+    view-timeline: --pilha block;
+    timeline-scope:
+      --folha-1, --folha-2, --folha-3, --folha-4, --folha-5, --folha-6, --folha-7, --folha-8;
+  }
+
+  .folha {
+    position: sticky;
+    top: var(--mov-stack-top);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: var(--mov-folha-min);
+  }
+
+  @keyframes mov-folha-recuar {
+    to {
+      scale: var(--mov-folha-escala);
+    }
+  }
+
+  .stack > .folha:not(:last-child) {
+    animation: mov-folha-recuar linear both;
+    animation-range: entry 0% entry 100%;
+  }
+
+  .stack > .folha:not(:last-child) > :last-child {
+    animation: mov-folha-esmaecer linear both;
+    animation-range: entry 0% entry 100%;
+  }
+
+  .stack > .folha:nth-child(1) {
+    view-timeline-name: --folha-1;
+    animation-timeline: --folha-2;
+  }
+  .stack > .folha:nth-child(1) > :last-child {
+    animation-timeline: --folha-2;
+  }
+  .stack > .folha:nth-child(2) {
+    view-timeline-name: --folha-2;
+    animation-timeline: --folha-3;
+  }
+  .stack > .folha:nth-child(2) > :last-child {
+    animation-timeline: --folha-3;
+  }
+  .stack > .folha:nth-child(3) {
+    view-timeline-name: --folha-3;
+    animation-timeline: --folha-4;
+  }
+  .stack > .folha:nth-child(3) > :last-child {
+    animation-timeline: --folha-4;
+  }
+  .stack > .folha:nth-child(4) {
+    view-timeline-name: --folha-4;
+    animation-timeline: --folha-5;
+  }
+  .stack > .folha:nth-child(4) > :last-child {
+    animation-timeline: --folha-5;
+  }
+  .stack > .folha:nth-child(5) {
+    view-timeline-name: --folha-5;
+    animation-timeline: --folha-6;
+  }
+  .stack > .folha:nth-child(5) > :last-child {
+    animation-timeline: --folha-6;
+  }
+  .stack > .folha:nth-child(6) {
+    view-timeline-name: --folha-6;
+    animation-timeline: --folha-7;
+  }
+  .stack > .folha:nth-child(6) > :last-child {
+    animation-timeline: --folha-7;
+  }
+  .stack > .folha:nth-child(7) {
+    view-timeline-name: --folha-7;
+    animation-timeline: --folha-8;
+  }
+  .stack > .folha:nth-child(7) > :last-child {
+    animation-timeline: --folha-8;
+  }
+  .stack > .folha:nth-child(8) {
+    view-timeline-name: --folha-8;
+  }
+
+  /* Botão "próximo" discreto da folha: só existe com pilha, só no desktop. */
+  @media (min-width: 64rem) {
+    .folha-proximo {
+      display: flex;
+    }
+  }
+
+  /* linha desenhada: stroke-dashoffset 1 → 0 (pathLength="1") pelo progresso da seção, da
+     pilha ou do trilho que a envolve (`--linha`); neste último, os itens de `.reveal-linha`
+     revelam quando a linha alcança o centro deles. */
+  @keyframes mov-desenhar {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  .linha-desenhada :is(path, line) {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: mov-desenhar linear both;
+    animation-timeline: --secao;
+    animation-range: cover 10% cover 60%;
+  }
+
+  .linha-desenhada-pilha :is(path, line) {
+    animation-timeline: --pilha;
+    animation-range: cover 0% cover 90%;
+  }
+
+  .linha-trilho {
+    view-timeline: --linha block;
+    --mov-linha-passo: calc(
+      (var(--mov-linha-fim) - var(--mov-linha-inicio)) / var(--mov-pontos, 4)
+    );
+  }
+
+  .linha-desenhada-trilho :is(path, line) {
+    animation-timeline: --linha;
+    animation-range: cover var(--mov-linha-inicio) cover var(--mov-linha-fim);
+  }
+
+  /* O invólucro `.reveal-linha` recebe `--mov-i` inline (índice do item no trilho); os filhos herdam. */
+  .reveal-linha > * {
+    animation: mov-reveal var(--mov-dur-reveal) var(--mov-curva) both;
+    animation-timeline: --linha;
+    animation-range: cover
+      calc(
+        var(--mov-linha-inicio) + var(--mov-linha-passo) * (var(--mov-i, 0) + 0.5) -
+          var(--mov-linha-janela) / 2
+      )
+      cover
+      calc(
+        var(--mov-linha-inicio) + var(--mov-linha-passo) * (var(--mov-i, 0) + 0.5) +
+          var(--mov-linha-janela) / 2
+      );
+  }
+
+  /* Círculo Maya (2.4). Estado-base: montado. Três animações por anel, nesta ordem (a
+     última ativa vence): a guarda `oculto` (esconde até 25% da entrada, por `view()`, para o
+     pop não saltar), a montagem `montar` (tempo; só existe com `data-entrou`, espírito,
+     mente, corpo com 150ms entre eles) e a desmontagem `desmontar` (scrub no `exit`, no
+     sentido inverso; volta a montar ao rolar de volta). O traço e as palavras seguem o mesmo
+     esquema com as próprias propriedades. */
+  @keyframes mov-circulo-oculto {
+    from,
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes mov-circulo-montar {
+    from {
+      opacity: 0;
+      transform: rotateX(var(--mov-circulo-rotacao)) scale(var(--mov-circulo-escala));
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes mov-circulo-desmontar {
+    from {
+      opacity: 1;
+      transform: none;
+    }
+    to {
+      opacity: 0;
+      transform: rotateX(var(--mov-circulo-rotacao)) scale(var(--mov-circulo-escala));
+    }
+  }
+
+  @keyframes mov-circulo-tracar {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes mov-circulo-destracar {
+    from {
+      stroke-dashoffset: 0;
+    }
+    to {
+      stroke-dashoffset: 1;
+    }
+  }
+
+  @keyframes mov-palavra-surgir {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes mov-palavra-sumir {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  .circulo-maya[data-ao-entrar] .circulo-anel {
+    --mov-circulo-saida-de: calc((2 - var(--mov-anel)) * var(--mov-circulo-saida));
+    transform-origin: 50% 50%;
+    animation-name: mov-circulo-oculto, none, mov-circulo-desmontar;
+    animation-duration: auto, var(--mov-dur-circulo), auto;
+    animation-timing-function: linear, var(--mov-curva), linear;
+    animation-delay: 0s, calc(var(--mov-anel) * var(--mov-circulo-passo)), 0s;
+    animation-fill-mode: backwards, both, forwards;
+    animation-timeline: view(), auto, view();
+    animation-range:
+      entry 0% entry 25%,
+      normal,
+      exit var(--mov-circulo-saida-de) exit
+        calc(var(--mov-circulo-saida-de) + var(--mov-circulo-saida-janela));
+  }
+
+  .circulo-maya[data-ao-entrar] .circulo-traco {
+    stroke-dasharray: 1;
+    animation-name: none, mov-circulo-destracar;
+    animation-duration: var(--mov-dur-circulo), auto;
+    animation-timing-function: var(--mov-curva), linear;
+    animation-delay: calc(var(--mov-anel) * var(--mov-circulo-passo)), 0s;
+    animation-fill-mode: both, forwards;
+    animation-timeline: auto, view();
+    animation-range:
+      normal,
+      exit var(--mov-circulo-saida-de) exit
+        calc(var(--mov-circulo-saida-de) + var(--mov-circulo-saida-janela));
+  }
+
+  .circulo-maya[data-ao-entrar] .circulo-palavra {
+    animation-name: none, mov-palavra-sumir;
+    animation-duration: var(--mov-dur-palavra), auto;
+    animation-timing-function: var(--mov-curva), linear;
+    animation-delay: calc(3 * var(--mov-circulo-passo) + var(--mov-dur-circulo) * 0.6), 0s;
+    animation-fill-mode: both, forwards;
+    animation-timeline: auto, view();
+    animation-range:
+      normal,
+      exit 0% exit var(--mov-circulo-saida);
+  }
+
+  .circulo-maya[data-entrou] .circulo-anel {
+    animation-name: mov-circulo-oculto, mov-circulo-montar, mov-circulo-desmontar;
+  }
+
+  .circulo-maya[data-entrou] .circulo-traco {
+    animation-name: mov-circulo-tracar, mov-circulo-destracar;
+  }
+
+  .circulo-maya[data-entrou] .circulo-palavra {
+    animation-name: mov-palavra-surgir, mov-palavra-sumir;
+  }
+
+  /* hover (2.6): levanta 4px com rotateX 2° em perspectiva, tudo em `transform` (as entradas
+     usam translate/rotate/opacity, então não brigam), sombra via pseudo-elemento (só opacity). */
+  .hover-eleva {
+    position: relative;
+    transition-property: transform, color, background-color, border-color;
+    transition-duration: var(--mov-dur-hover);
+    transition-timing-function: var(--mov-curva);
+  }
+
+  .hover-eleva::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: 0 18px 32px -18px rgb(63 79 79 / 0.4);
+    opacity: 0;
+    transition: opacity var(--mov-dur-hover) var(--mov-curva);
+    pointer-events: none;
+  }
+
+  .hover-eleva:hover {
+    transform: perspective(var(--mov-perspectiva-hover)) rotateX(var(--mov-3d-hover))
+      translateY(calc(var(--mov-eleva) * -1));
+  }
+
+  .hover-eleva:hover::after {
+    opacity: 1;
+  }
+
+  /* FAQ aberto não levanta: é leitura. */
+  details[open].hover-eleva:hover {
+    transform: none;
+  }
+
+  details[open].hover-eleva:hover::after {
+    opacity: 0;
+  }
+
+  /* hoverAcende: fragmento de grafismo atrás do card acende e sobe 6px; no touch fica fixo. */
+  .hover-acende {
+    position: relative;
+    overflow: clip;
+    isolation: isolate;
+  }
+
+  .acende {
+    z-index: -1;
+    opacity: 0;
+    transition:
+      opacity var(--mov-dur-hover) var(--mov-curva),
+      translate var(--mov-dur-hover) var(--mov-curva);
+  }
+
+  .hover-acende:hover .acende {
+    opacity: var(--mov-acende-hover);
+    translate: 0 calc(var(--mov-acende-desloc) * -1);
+  }
+
+  @media (hover: none) {
+    .acende {
+      opacity: var(--mov-acende-touch);
+    }
+  }
+
+  /* Recortes dos SVGs da marca (sem asset novo): top right bottom left. */
+  .recorte-1 {
+    clip-path: inset(0 40% 45% 0);
+  }
+  .recorte-2 {
+    clip-path: inset(35% 0 0 40%);
+  }
+  .recorte-3 {
+    clip-path: inset(0 0 50% 35%);
+  }
+  .recorte-4 {
+    clip-path: inset(45% 35% 0 0);
+  }
+  .recorte-5 {
+    clip-path: inset(20%);
+  }
+
+  /* zoom dentro da máscara (capa de post 1.04, foto de profissional 1.03). */
+  .hover-zoom .zoom-capa,
+  .hover-zoom .zoom-foto {
+    transition: scale var(--mov-dur-hover) var(--mov-curva);
+  }
+
+  .hover-zoom:hover .zoom-capa {
+    scale: var(--mov-zoom-capa);
+  }
+
+  .hover-zoom:hover .zoom-foto {
+    scale: var(--mov-zoom-foto);
+  }
+
+  /* Sublinhado que cresce da esquerda no hover do card. */
+  .sublinha-hover {
+    position: relative;
+  }
+
+  .sublinha-hover::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 -2px 0;
+    height: 1px;
+    background: currentColor;
+    transform-origin: left;
+    scale: 0 1;
+    transition: scale var(--mov-dur-hover) var(--mov-curva);
+  }
+
+  :is(.hover-eleva, .hover-zoom):hover .sublinha-hover::after {
+    scale: 1 1;
+  }
+
+  /* Chips e botões: mesma duração de hover do site. */
+  .transicao-hover {
+    transition-duration: var(--mov-dur-hover);
+  }
+
+  /* Pulsação única do botão da chamada final, ao entrar na viewport. */
+  @keyframes mov-pulsar {
+    0%,
+    100% {
+      scale: 1;
+    }
+    50% {
+      scale: var(--mov-pulso-escala);
+    }
+  }
+
+  .pulsar {
+    animation: mov-pulsar linear both;
+    animation-timeline: view();
+    animation-range: cover 15% cover 40%;
+  }
+
+  /* Chamada final (2.8): as duas linhas do título entram cada uma de um lado. */
+  @keyframes mov-entrar-esquerda {
+    from {
+      opacity: 0;
+      translate: calc(var(--mov-cta-entrada) * -1) 0;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  @keyframes mov-entrar-direita {
+    from {
+      opacity: 0;
+      translate: var(--mov-cta-entrada) 0;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  .titulo-desencontrado > span {
+    animation: mov-entrar-esquerda var(--mov-dur-reveal) var(--mov-curva) both;
+    animation-timeline: view();
+    animation-range: entry 10% entry 60%;
+  }
+
+  .titulo-desencontrado > span:nth-child(2) {
+    animation-name: mov-entrar-direita;
+    animation-range: entry 20% entry 70%;
+  }
+
+  /* Cortina do footer: o grafismo do footer desce de leve enquanto a última folha sobe
+     (parallax inverso), nos últimos 70svh de rolagem da página. */
+  @keyframes mov-footer-grafismo {
+    from {
+      translate: 0 calc(var(--mov-footer-parallax) * -1);
+    }
+    to {
+      translate: 0 0;
+    }
+  }
+
+  .footer-grafismo {
+    animation: mov-footer-grafismo linear both;
+    animation-timeline: scroll(root);
+    animation-range: calc(100% - var(--mov-footer-faixa)) 99.9%;
+    will-change: transform;
+  }
+
+  /* Voltar ao topo (2.9): aparece depois de 100svh de rolagem e some 70svh antes do fim
+     (antes de cobrir o footer). Dois elementos, uma animação cada; `visibility` tira o
+     clique quando está invisível. */
+  @keyframes mov-topo-aparecer {
+    from {
+      opacity: 0;
+      visibility: hidden;
+      translate: 0 12px;
+    }
+    to {
+      opacity: 1;
+      visibility: visible;
+      translate: 0 0;
+    }
+  }
+
+  @keyframes mov-topo-sumir {
+    from {
+      opacity: 1;
+      visibility: visible;
+    }
+    to {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
+  .voltar-topo {
+    display: flex;
+    position: fixed;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    z-index: 1;
+    animation: mov-topo-aparecer linear both;
+    animation-timeline: scroll(root);
+    animation-range: var(--mov-topo-aparece) calc(var(--mov-topo-aparece) + var(--mov-topo-fade));
+  }
+
+  .voltar-topo-some {
+    animation: mov-topo-sumir linear both;
+    animation-timeline: scroll(root);
+    animation-range: calc(100% - var(--mov-topo-some))
+      calc(100% - var(--mov-topo-some) + var(--mov-topo-fade));
+  }
+
+  /* Header: sticky; transparente no topo, banda bege com borda e 72px após o gatilho. */
+  .header-fixo {
+    position: sticky;
+    top: 0;
+  }
+
+  @keyframes mov-header-aparecer {
+    from {
+      opacity: 0;
+      scale: 1 1;
+    }
+    to {
+      opacity: 1;
+      scale: 1 var(--mov-header-escala);
+    }
+  }
+
+  .header-fixo::before {
+    animation: mov-header-aparecer linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 var(--mov-header-gatilho);
+  }
+
+  @keyframes mov-header-subir {
+    to {
+      translate: 0 var(--mov-header-desloc);
+    }
+  }
+
+  .header-conteudo {
+    animation: mov-header-subir linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 var(--mov-header-gatilho);
+  }
+
+  @keyframes mov-header-logo {
+    to {
+      scale: var(--mov-header-logo-escala);
+    }
+  }
+
+  .header-logo {
+    animation: mov-header-logo linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 var(--mov-header-gatilho);
+  }
+
+  @keyframes mov-sublinhar {
+    from {
+      scale: 0 1;
+    }
+    to {
+      scale: 1 1;
+    }
+  }
+
+  .nav-item[aria-current="page"]::after {
+    animation: mov-sublinhar var(--mov-dur-hover) var(--mov-curva) both;
+  }
+
+  /* FAQ: abertura por grid-template-rows 0fr → 1fr; ícone gira 45°. */
+  .faq-corpo {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--mov-dur-faq) var(--mov-curva);
+  }
+
+  .faq-corpo > * {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  details[open] > .faq-corpo {
+    grid-template-rows: 1fr;
+  }
+
+  @starting-style {
+    details[open] > .faq-corpo {
+      grid-template-rows: 0fr;
+    }
+  }
+
+  .faq-icone {
+    transition: rotate var(--mov-dur-faq) var(--mov-curva);
+  }
+
+  details[open] .faq-icone {
+    rotate: 45deg;
+  }
+
+  /* Barra de progresso de leitura do post: scale-x pelo scroll da página. */
+  @keyframes mov-progresso {
+    from {
+      scale: 0 1;
+    }
+    to {
+      scale: 1 1;
+    }
+  }
+
+  .progresso-leitura {
+    display: block;
+    position: fixed;
+    inset: 0 auto auto 0;
+    width: 100%;
+    height: var(--mov-progresso-espessura);
+    background: var(--color-verde);
+    transform-origin: left;
+    animation: mov-progresso linear both;
+    animation-timeline: scroll(root);
+  }
+}
+
+/* --- 4. prefers-reduced-motion: bloco único que desliga todo o movimento -------
+ * Capa, pilha e cortina continuam onde estão (sticky é layout, não movimento); o que sai é o
+ * scrub de escala/opacidade, reveals, parallax, drift, tilt, wipe, deriva dos campos, rotação
+ * dos grafismos, montagem do círculo, hover e transições. Popover e voltar ao topo funcionam
+ * sem animação (o botão fica visível depois do gatilho, sem fade). */
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal-stagger > *,
+  .reveal-carga > *,
+  .reveal-linha > *,
+  .menu-mobile > *,
+  :is(h1, h2, .text-eyebrow),
+  .titulo-desencontrado > span,
+  .pop[data-entrou],
+  .parallax-mundo,
+  .parallax-frente,
+  .parallax-campo,
+  .parallax-midia,
+  .gira-lento,
+  .campo-deriva,
+  .mask-reveal-cima,
+  .mask-reveal-direita,
+  .mask-reveal-circular,
+  .scrub-rotacao,
+  .scrub-deslocamento,
+  .scrub-pilha,
+  .wipe-carga,
+  body > main > .secao,
+  body > main > .secao > :last-child,
+  .stack > .folha > :last-child,
+  .capa,
+  .capa-esmaece,
+  .capa-recua,
+  .capa-foto,
+  .capa-inclina,
+  .indicador-rolagem,
+  .stack > .folha,
+  .linha-desenhada :is(path, line),
+  .circulo-maya .circulo-anel,
+  .circulo-maya .circulo-traco,
+  .circulo-maya .circulo-palavra,
+  .pulsar,
+  .footer-grafismo,
+  .header-fixo::before,
+  .header-conteudo,
+  .header-logo,
+  .nav-item[aria-current="page"]::after,
+  .progresso-leitura {
+    animation: none !important;
+  }
+
+  /* O botão só precisa existir depois do gatilho e sumir antes do footer: degraus, sem fade. */
+  .voltar-topo,
+  .voltar-topo-some {
+    animation-duration: 0s !important;
+    animation-timing-function: steps(1, end) !important;
+  }
+
+  .hover-eleva,
+  .hover-eleva::after,
+  .acende,
+  .zoom-capa,
+  .zoom-foto,
+  .sublinha-hover::after,
+  .faq-corpo,
+  .faq-icone,
+  .transicao-hover {
+    transition: none !important;
+  }
+
+  .drift-mundo,
+  .drift-frente,
+  .tilt3d,
+  .parallax-midia,
+  .capa-foto,
+  .campo-deriva {
+    translate: none;
+    transform: none;
+    scale: none;
+    rotate: none;
+  }
+
+  .indicador-rolagem,
+  .progresso-leitura {
+    display: none;
+  }
+
+  .linha-desenhada :is(path, line),
+  .circulo-maya .circulo-traco {
+    stroke-dashoffset: 0;
+  }
+
+  /* Sem o header encolher, a âncora volta a ancorar sob a altura em fluxo. */
+  .secao {
+    scroll-margin-top: var(--mov-header-alto);
   }
 }

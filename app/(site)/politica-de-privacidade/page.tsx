@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import { dataExtenso } from "@/components/blog/dataExtenso";
+import { ConteudoPolitica } from "@/components/politica/ConteudoPolitica";
 import { Secao } from "@/components/ui/Secao";
-import { CLINICA } from "@/lib/conteudo/clinica";
-import { SECOES_POLITICA } from "@/lib/conteudo/politica";
 
 export const metadata: Metadata = {
   title: "Política de privacidade",
@@ -11,39 +9,15 @@ export const metadata: Metadata = {
 
 /**
  * §Política de privacidade: texto literal da copy em largura de prosa, fundo
- * bege, sem grafismo. A linha de vigência só aparece quando
- * `CLINICA.politicaPrivacidade.vigenteDesde` tiver data (Fase 7).
+ * bege, sem grafismo. O conteúdo vive em `components/politica/ConteudoPolitica`,
+ * compartilhado com o modal do formulário de contato (afinação 1, 2.10); esta
+ * página continua existindo (link do footer, SEO, jurídico).
+ * Movimento: só o cabeçalho entra na carga; nenhum movimento no corpo.
  */
 export default function PoliticaDePrivacidade() {
-  const vigencia = dataExtenso(CLINICA.politicaPrivacidade.vigenteDesde);
-
   return (
     <Secao fundo="bege">
-      <article className="mx-auto flex max-w-prosa-longa flex-col gap-10 text-verde">
-        <header className="flex flex-col gap-3">
-          <h1 className="text-h1 font-normal">Política de privacidade</h1>
-          {vigencia && <p className="text-nota text-marrom">Vigente a partir de {vigencia}</p>}
-        </header>
-        {SECOES_POLITICA.map((secao) => (
-          <div key={secao.titulo} className="flex flex-col gap-4">
-            <h2 className="text-h2 font-medium">{secao.titulo}</h2>
-            {secao.paragrafos.map((paragrafo) => (
-              <p key={paragrafo} className="text-corpo">
-                {paragrafo}
-              </p>
-            ))}
-            {secao.itens && (
-              <ul className="flex list-disc flex-col gap-3 pl-6 text-corpo marker:text-marrom">
-                {secao.itens.map((item) => (
-                  <li key={item.destaque}>
-                    <strong className="font-bold">{item.destaque}</strong> {item.texto}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        ))}
-      </article>
+      <ConteudoPolitica contexto="pagina" />
     </Secao>
   );
 }

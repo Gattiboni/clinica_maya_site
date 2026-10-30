@@ -3,6 +3,7 @@ import { dadosCardPost } from "@/components/blog/dadosCardPost";
 import { CabecalhoSecao } from "@/components/ui/CabecalhoSecao";
 import { LinkTexto } from "@/components/ui/LinkTexto";
 import { Secao } from "@/components/ui/Secao";
+import { MOV } from "@/lib/movimento";
 import { client } from "@/lib/sanity/client";
 import { POSTS_HOME_QUERY, type PostSanity } from "@/lib/sanity/queries";
 
@@ -26,7 +27,7 @@ async function buscarPostsRecentes(): Promise<PostSanity[]> {
   }
 }
 
-/** §Home 9 · Blog. Sem post publicado, a seção inteira não é renderizada. */
+/** §Home 9 · Blog. Sem post publicado, a seção inteira não é renderizada. Cards em sequência; hover no `CardPost`. */
 export async function Blog() {
   const posts = await buscarPostsRecentes();
   if (posts.length === 0) return null;
@@ -36,9 +37,9 @@ export async function Blog() {
       <CabecalhoSecao
         titulo="Para ler com calma"
         acao={<LinkTexto href="/blog">Ver o blog</LinkTexto>}
-        className="mb-12"
+        className={`${MOV.reveal} mb-12`}
       />
-      <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className={`${MOV.revealStagger} grid gap-6 sm:grid-cols-2 lg:grid-cols-3`}>
         {posts.map((post) => (
           <li key={post._id} className="flex">
             <CardPost dados={dadosCardPost(post)} />
