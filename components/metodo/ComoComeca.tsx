@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { O_QUE_ENTENDER } from "@/lib/conteudo/metodo";
 import { MOV } from "@/lib/movimento";
@@ -12,19 +13,15 @@ import home1 from "@/public/fotos/home-1.jpg";
  * sobrava vazio embaixo dele; agora a grade alinha as duas colunas pelo centro
  * vertical (`lg:items-center`). Diagramação: o card fica ao lado do centro de
  * massa da coluna (entre o fim da prosa e as fotos), que é onde o olho está
- * quando termina de ler; levar as fotos para baixo do card alongaria a seção
- * e deixaria a prosa sozinha com uma coluna vazia ao lado. Campo-2 na camada
- * ambiente. Fase 4: prosa entra em sequência; fotos abrem de baixo para cima
- * em sequência; itens da lista entram em sequência de 80ms.
+ * quando termina de ler; levar as fotos para baixo do card alongaria a seção e
+ * deixaria a prosa sozinha com uma coluna vazia ao lado. Fase 4: prosa entra
+ * em sequência; fotos abrem de baixo para cima em sequência; itens da lista
+ * entram em sequência de 80ms.
  */
 export function ComoComeca() {
   return (
-    <Secao
-      fundo="bege"
-      campo="campo-2"
-      className="grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-16"
-    >
-      <div
+    <Secao fundo="bege" className="grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-16">
+      <Nevoa
         className={`${MOV.revealStagger} flex flex-col items-center gap-4 text-center lg:items-start lg:text-left`}
       >
         <h2 className="text-h2 font-medium">Como tudo começa</h2>
@@ -52,7 +49,7 @@ export function ComoComeca() {
             className={`${MOV.maskCima} aspect-square w-full rounded-card object-cover object-[50%_60%]`}
           />
         </div>
-      </div>
+      </Nevoa>
       <div className={`${MOV.reveal} rounded-card border border-marrom/18 bg-creme px-8 py-9`}>
         <h3 className="mb-5 text-h3 font-semibold">O que a gente quer entender</h3>
         <ul className={`${MOV.revealStagger} ${MOV.stagger80} flex flex-col gap-3.5`}>

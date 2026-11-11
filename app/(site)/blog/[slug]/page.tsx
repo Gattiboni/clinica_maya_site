@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CamadaGrafismos } from "@/components/layout/CamadaGrafismos";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import { buscarPost, buscarRelacionados, buscarSlugs } from "@/components/blog/dados";
@@ -54,6 +55,7 @@ export default async function PaginaPost({ params }: Props) {
 
   return (
     <>
+      <CamadaGrafismos pagina="post" />
       <Post post={post} />
       <Relacionados posts={relacionados} />
     </>

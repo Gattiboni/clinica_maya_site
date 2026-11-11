@@ -17,12 +17,11 @@ function Coluna({ bloco }: { bloco: BlocoTextoOnline }) {
   );
 }
 
-/** §Atendimento on-line 3 · O que muda em relação ao presencial e quem atende on-line, em duas colunas a partir de `lg`; cards com profundidade e hover (2.6); campo-2 na camada ambiente. */
+/** §Atendimento on-line 3 · O que muda em relação ao presencial e quem atende on-line, em duas colunas a partir de `lg`; cards com profundidade e hover (2.6). */
 export function OQueMuda() {
   return (
     <Secao
       fundo="bege"
-      campo="campo-2"
       className={`${MOV.revealStagger} ${MOV.profundo} grid gap-6 lg:grid-cols-2 lg:gap-12`}
     >
       <Coluna bloco={O_QUE_MUDA} />

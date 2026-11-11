@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CamadaGrafismos } from "@/components/layout/CamadaGrafismos";
 import { Abertura } from "@/components/blog/Abertura";
 import { buscarNomesCategorias, buscarPosts } from "@/components/blog/dados";
 import { dadosCardPost } from "@/components/blog/dadosCardPost";
@@ -26,11 +27,14 @@ export default async function Blog() {
   const cards = posts.filter((post) => post.slug).map(dadosCardPost);
 
   return (
-    <FiltroCategoria>
-      <Abertura>{categorias.length > 0 && <ChipsCategoria categorias={categorias} />}</Abertura>
-      <Secao fundo="creme">
-        <GradePosts posts={cards} />
-      </Secao>
-    </FiltroCategoria>
+    <>
+      <CamadaGrafismos pagina="blog" />
+      <FiltroCategoria>
+        <Abertura>{categorias.length > 0 && <ChipsCategoria categorias={categorias} />}</Abertura>
+        <Secao fundo="creme">
+          <GradePosts posts={cards} />
+        </Secao>
+      </FiltroCategoria>
+    </>
   );
 }

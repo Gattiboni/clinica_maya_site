@@ -1,6 +1,5 @@
-import { Grafismo } from "@/components/ui/Grafismo";
+import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
-import { SpriteGrafismos } from "@/components/ui/SpriteGrafismos";
 import { AREAS_EQUIPE } from "@/lib/conteudo/equipe";
 import { MOV } from "@/lib/movimento";
 
@@ -8,29 +7,13 @@ const CLASSES_CHIP = `${MOV.transicaoHover} inline-block rounded-pilula border b
 
 /**
  * §Equipe 1 · Abertura. A fileira de âncoras para as cinco áreas vem do mock
- * (rótulos = nomes das áreas da copy). Abaixo de `lg` tudo centraliza.
- * Fase 4: título, lead e fileira entram na carga; os chips, em sequência de 40ms.
- * O grafismo-5 tem as pontas cortadas em cima: a 128px acima da seção elas
- * ficam acima da viewport mesmo sob o header transparente (2.7; antes, a 70px,
- * o corte aparecia solto no topo da tela).
+ * (rótulos = nomes das áreas da copy). Abaixo de `lg` tudo centraliza. Fase 4:
+ * título, lead e fileira entram na carga; os chips, em sequência de 40ms.
  */
 export function Abertura() {
   return (
-    <>
-      <SpriteGrafismos />
-      <Secao
-        fundo="bege"
-        grafismo={
-          <Grafismo
-            nome="5"
-            cor="marrom"
-            posicao="-top-32 -right-15"
-            largura="w-72 lg:w-[380px]"
-            opacidade="opacity-35"
-            parallax="mundo"
-            drift="mundo"
-          />
-        }
+    <Secao fundo="bege" className="flex flex-col items-center lg:items-start">
+      <Nevoa
         className={`${MOV.revealCarga} flex flex-col items-center gap-5 text-center lg:items-start lg:text-left`}
       >
         <h1 className="max-w-3xl text-h1 font-normal">
@@ -51,7 +34,7 @@ export function Abertura() {
             </li>
           ))}
         </ul>
-      </Secao>
-    </>
+      </Nevoa>
+    </Secao>
   );
 }

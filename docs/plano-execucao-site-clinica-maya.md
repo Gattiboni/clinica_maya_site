@@ -1,7 +1,14 @@
 # Plano de execução — site Clínica Maya
 
-**v1.7 · 30/10/2026** (v1.6 a v1.0 anteriores) · checklist executável · repo: `github.com/Gattiboni/clinica_maya_site`
+**v1.8 · 11/11/2026** (v1.7 a v1.0 anteriores) · checklist executável · repo: `github.com/Gattiboni/clinica_maya_site`
 Responsável entre parênteses: (Alan) (Claude) (Codinho) (Amanda) (Cliente). `[x]` = concluído. Este arquivo é o estado do projeto; quem abrir sabe em que pé estamos.
+
+## Changelog v1.8
+
+- **Revisão v2 da cliente e afinação 2 commitadas (v0.6.0):** conteúdo do `REVISÕES SITE V2.docx` e `CV_EQUIPE.docx`, grafismos originais em camada global com névoa em balão (Decisão 012), pop-ups da Equipe (Decisão 013), coreografia por tempo com estado inicial em CSS (Decisão 014), mapa v0.5, copy v1.3.2. Quatro rodadas do Codinho em 10 e 11/11, teste A/B decidido pelo Alan.
+- **Fase 6 reaberta com a versão nova:** a gestora e a cliente revisam o preview de produção (`https://clinica-maya-site.vercel.app`) com dois PDFs de apoio (um para cada), e o pacote de ajustes vira um lote só. Depois da aprovação vem a Fase 7 (Vercel Pro, domínio, `noindex` fora) e o Lote 3b.
+- **Falta antes de apresentar:** Lighthouse mobile na Vercel (o local ficou inconclusivo; suspeito é o LCP da foto do hero), iOS Safari no celular do Alan.
+- Pendências de conteúdo atualizadas no Apêndice B; o item "Shareable Link" da Fase 6 sai (a produção pública com `noindex` já é o preview, decisão da v1.7).
 
 ## Changelog v1.7
 
@@ -165,8 +172,8 @@ Dependências da Spinhardi: **Supabase (auth e papéis) e `@portabletext/react` 
 - [x] (Alan) Prompt do Apêndice A rodado; referências visuais do Perplexity descartadas; referências aprovadas: Oryzo, Pradip Dhakal, Komunique, Peter Tarka, 8bit.ai, ujjwalagarwal.com (29 e 30/10)
 - [x] (Claude) Abordagem CSS-first sem biblioteca aprovada (Decisão 010, 29/10); regras de camadas na Decisão 008
 - [x] (Codinho) Fase 4 + afinação 1: folhas, capa, pilhas, parallax, campos, Círculo em SVG, cortina, voltar ao topo, política em modal (30/10)
-- [ ] (Claude → Codinho) Afinação 2 com a lista do Alan
-- [ ] (Claude) Lighthouse mobile no domínio da Vercel após o push da v0.5.0; iOS Safari (Alan, no celular); (Alan) revisar e commitar
+- [x] (Claude → Codinho) Afinação 2 com a lista do Alan + Revisão v2 da cliente: camada global de grafismos, névoa em balão, pilhas concisas, Etapas por tempo, pop-ups da Equipe (10 e 11/11, v0.6.0, Decisões 012 a 014)
+- [ ] (Claude) Lighthouse mobile no domínio da Vercel após o push da v0.6.0 (local inconclusivo: LCP da foto do hero 1,2 a 2,0 s em todas as variantes); iOS Safari (Alan, no celular)
 
 ## Fase 5 · SEO, Ads, analytics
 
@@ -177,9 +184,10 @@ Dependências da Spinhardi: **Supabase (auth e papéis) e `@portabletext/react` 
 
 ## Fase 6 · Pacote de aprovação (preview publicado)
 
-- [ ] (Alan) Gerar Shareable Link do deployment de preview para Amanda e Mayara (sem conta Vercel, sem senha; Standard Protection já fecha o preview)
+- [x] (Claude) Prévia 1 apresentada em 30/10 com dois PDFs (Mayara e Amanda); retorno em 09 e 10/11 virou a Revisão v2 (v0.6.0)
+- [ ] (Claude) Prévia 2: dois PDFs novos (cliente e gestora) com o que mudou, o que falta decidir e o que vem depois da aprovação (go-live); preview é `https://clinica-maya-site.vercel.app`
 - [ ] (Claude) Varredura final + Lighthouse + acessibilidade sobre o preview de produção
-- [ ] (Amanda) Revisão completa do preview: estrutura, copy, bios, movimento, política de privacidade
+- [ ] (Amanda) Revisão completa do preview: estrutura, copy, bios e pop-ups, movimento, política de privacidade; decidir as pendências da Talita, da Bianca e da Beatriz Nietsche (copy v1.3.2)
 - [ ] (Cliente) Aprovação final da Dra. Mayara no mesmo preview
 - [ ] (Claude) Aplicar os ajustes do pacote em um lote; (Alan) revisar e commitar
 
@@ -217,7 +225,7 @@ Then compare the main implementation routes for a Next.js 16 App Router site in 
 
 ## Apêndice B · Pendências de conteúdo com dono
 
-Avaliações do Google (Amanda) · fotos e registros das demais profissionais (clínica) · modalidade de Talita e Bianca (clínica) · Folske × Folks (clínica) · fatos da trajetória da Dra. Mayara (cliente) · prova social (CFM) · política de privacidade (jurídico) · 3 posts reais (Amanda) · geografia das campanhas (Amanda) · origem do nome, fora do site (cliente).
+Resolvidas na v0.6.0: avaliações do Google, fotos e registros (menos Dra. Beatriz Dalssasso), Folzke, trajetória e formação da Dra. Mayara, prova social (rota a, CFM 2.336/2023), inscrição CRM-SC PJ. **Abertas:** bio longa da Beatriz Nietsche (clínica) · decisões sobre a Talita na copy v1.3.2 (Amanda + cliente) · história da Bianca com ou sem nomes (clínica) · Dra. Beatriz Dalssasso, dados e foto (clínica) · ficha do Google "Saúde Integrativa" (Amanda) · encarregado de dados e revisão jurídica da política (jurídico) · 3 posts reais (Amanda) · geografia das campanhas (Amanda) · favicon (Amanda) · origem do nome, fora do site (cliente).
 
 ## Apêndice C · Identificadores (sem segredos)
 

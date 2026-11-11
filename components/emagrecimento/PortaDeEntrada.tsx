@@ -1,37 +1,32 @@
 import Image from "next/image";
 import { Botao } from "@/components/ui/Botao";
 import { LinkTexto } from "@/components/ui/LinkTexto";
+import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { CLINICA } from "@/lib/conteudo/clinica";
 import { MOV } from "@/lib/movimento";
 import equipeMayara from "@/public/fotos/equipe-mayara.jpg";
 
 /**
- * §Emagrecimento 2 · Porta de entrada. Abaixo de `lg` texto, botões e foto centralizam.
- * Fase 4 (mapa §3): texto em sequência; foto abre de baixo para cima e se move
- * dentro da máscara (parallax 0.9). Campo-1 na camada ambiente (afinação 1).
+ * §Emagrecimento 2 · Porta de entrada. Abaixo de `lg` texto, botões e foto
+ * centralizam. Fase 4 (mapa §3): texto em sequência; foto abre de baixo para
+ * cima e se move dentro da máscara (parallax 0.9).
  */
 export function PortaDeEntrada() {
   return (
-    <Secao
-      fundo="creme"
-      campo="campo-1"
-      className="grid items-center gap-12 lg:grid-cols-[1.2fr_0.8fr] lg:gap-16"
-    >
-      <div
+    <Secao fundo="creme" className="grid items-center gap-12 lg:grid-cols-[1.2fr_0.8fr] lg:gap-16">
+      <Nevoa
         className={`${MOV.revealStagger} flex flex-col items-center gap-5 text-center lg:items-start lg:text-left`}
       >
         <h2 className="text-h2 font-medium">A porta de entrada é a consulta</h2>
         <p className="max-w-prosa-longa text-lead">
-          Se você ainda não sabe qual caminho faz sentido, comece por uma consulta com a Dra.
-          Mayara. É nela que vocês desenham juntas o próximo passo, com ou sem programa. Ninguém
-          precisa escolher nada antes.
+          É nela que vocês decidem como será o seu tratamento e sua jornada de emagrecimento.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-5 lg:justify-start">
           <Botao href={CLINICA.agendarHref}>Agendar consulta</Botao>
           <LinkTexto href="/dra-mayara-brasil">Conhecer a Dra. Mayara</LinkTexto>
         </div>
-      </div>
+      </Nevoa>
       <div
         className={`${MOV.mascara} ${MOV.maskCima} aspect-[4/5] w-full max-w-md justify-self-center rounded-t-[160px] rounded-b-3xl lg:max-w-[400px] lg:justify-self-end`}
       >

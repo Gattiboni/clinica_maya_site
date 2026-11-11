@@ -23,7 +23,7 @@ type CirculoMayaProps = {
 };
 
 /**
- * Geometria em pixels do PNG original (`corpo-mente-espirito-*.png`, 1569 ×
+ * Geometria em pixels do PNG original do símbolo (fora do repo desde a Revisão v2; 1569 ×
  * 1583), medida pelo canal alfa e conferida por sobreposição a 50% até casar
  * (30/10: 97% dos pixels do traço do PNG a menos de 4px do SVG a 1000px de
  * largura; o resto é diferença de glifo). Cada anel: centro, raio, ângulo em

@@ -1,23 +1,25 @@
 import { Botao } from "@/components/ui/Botao";
+import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { MOV } from "@/lib/movimento";
 
-/** §Home 6 · Faixa emagrecimento. Abaixo de `lg` texto e botão centralizam. Só `reveal` e o campo-1 na camada ambiente: é respiro. */
+/** §Home 6 · Faixa emagrecimento (texto da Revisão v2). Abaixo de `lg` texto e botão centralizam. Só `reveal`: é respiro. */
 export function FaixaEmagrecimento() {
   return (
     <Secao
       fundo="creme"
       espaco="curto"
-      campo="campo-1"
       className={`${MOV.revealStagger} grid items-center gap-8 text-center lg:grid-cols-[1fr_auto] lg:gap-12 lg:text-left`}
     >
-      <div className="flex flex-col items-center gap-3 lg:items-start">
+      <Nevoa className="flex flex-col items-center gap-3 lg:items-start">
         <h2 className="text-h2 font-medium">Emagrecimento saudável, sem radicalismos</h2>
         <p className="max-w-prosa-longa text-lead">
-          Acompanhamento médico e nutricional, com apoio emocional quando fizer sentido. A Dra.
-          Mayara indica o caminho depois da primeira consulta.
+          Na primeira consulta, a Dra. Mayara conhece a sua história e indica o programa de
+          acompanhamento que faz mais sentido para você. Além das consultas médicas, pode contar com
+          o apoio de nutrição, psicologia e outras áreas da clínica. A decisão é sempre
+          compartilhada: nada é imposto ou obrigatório.
         </p>
-      </div>
+      </Nevoa>
       <Botao
         href="/emagrecimento"
         variante="contorno"

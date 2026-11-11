@@ -4,8 +4,8 @@ import { dataExtenso } from "@/components/blog/dataExtenso";
 import { PortableTextPost } from "@/components/blog/PortableTextPost";
 import { tempoLeitura } from "@/components/blog/tempoLeitura";
 import { Botao } from "@/components/ui/Botao";
+import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
-import { SpriteGrafismos } from "@/components/ui/SpriteGrafismos";
 import { CAMADA } from "@/lib/camadas";
 import { CHAMADA_POST } from "@/lib/conteudo/blog";
 import { CLINICA } from "@/lib/conteudo/clinica";
@@ -40,10 +40,9 @@ export function Post({ post }: { post: PostSanity }) {
 
   return (
     <>
-      <SpriteGrafismos />
       <div aria-hidden="true" className={`${MOV.progressoLeitura} ${CAMADA.header}`} />
       <Secao fundo="bege">
-        <article className="mx-auto flex max-w-3xl flex-col gap-10 text-verde">
+        <Nevoa elemento="article" className="mx-auto flex max-w-3xl flex-col gap-10 text-verde">
           <header className={`${MOV.revealCarga} flex flex-col gap-5`}>
             <p className="text-legenda font-bold tracking-rotulo uppercase">
               <Link
@@ -88,7 +87,7 @@ export function Post({ post }: { post: PostSanity }) {
               {CHAMADA_POST.botao}
             </Botao>
           </aside>
-        </article>
+        </Nevoa>
       </Secao>
     </>
   );

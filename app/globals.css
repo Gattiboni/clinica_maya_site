@@ -110,21 +110,27 @@
 }
 
 /* =========================================================================
- * Movimento e camadas (Fase 4 · mapa de movimento v0.3 · Decisão 010 ·
- * afinação 1 de 30/10)
+ * Movimento e camadas (Fase 4 · mapa de movimento v0.4 · Decisões 010 e 011 ·
+ * afinação 2 e camada global de grafismos da Revisão v2, 10/11)
  *
  * CSS-first, zero biblioteca. Tudo que é ligado ao scroll usa scroll-driven
  * animations (`animation-timeline: view()` / `scroll()`), dentro de
  * `@supports (animation-timeline: view())`: navegador sem suporte vê o
  * estado final, parado (folhas empilham por fluxo, cortina do footer e
- * popover funcionam, campos parados). Só `transform` (translate, scale,
+ * popover funcionam, um grafismo parado por página). Só `transform` (translate, scale,
  * rotate) e `opacity` animam; as exceções previstas no mapa são `clip-path`
- * (maskReveal e wipe), `stroke-dashoffset` (linha desenhada e Círculo Maya,
+ * (maskReveal), `stroke-dashoffset` (linha desenhada e Círculo Maya,
  * SVGs pequenos nossos) e `grid-template-rows` (FAQ). `will-change` só em
- * parallax, campos e grafismos do mundo, nunca em texto.
+ * parallax e grafismos da camada global, nunca em texto.
  *
- * Duas animações de tempo dependem do `AoEntrar` (IntersectionObserver,
- * exceção da Decisão 010): o pop dos números e a montagem do Círculo Maya,
+ * Revisão v2 (3.2): nenhuma `<section>` é transformada nem esmaecida. O recuo
+ * das folhas e a fixação da capa animam o fundo e o Container da seção, com a
+ * mesma animação e a mesma timeline, para a seção não virar stacking context e
+ * a camada global de grafismos ficar entre os fundos e os conteúdos.
+ *
+ * Três animações de tempo dependem do `AoEntrar` (IntersectionObserver,
+ * exceção da Decisão 010): o pop dos números, o trilho numerado (linha, pops
+ * e cards em sequência, afinação 2) e a montagem do Círculo Maya,
  * ligadas a `[data-entrou]`. Antes dele, o estado-base é o montado (sem
  * JavaScript nada fica escondido); uma guarda por `view()` (`entry 0% a 25%`)
  * esconde o elemento só enquanto ele entra, para o pop não "saltar".
@@ -142,10 +148,11 @@
   --mov-dur-hover: 200ms;
   --mov-dur-faq: 250ms;
   --mov-dur-header: 250ms; /* usada nos itens do menu mobile */
-  --mov-dur-wipe: 1200ms;
   --mov-dur-pop: 500ms;
   --mov-dur-circulo: 600ms;
   --mov-dur-palavra: 400ms;
+  --mov-dur-popup: 250ms;
+  --mov-dur-card: 450ms;
   --mov-curva: cubic-bezier(0.22, 1, 0.36, 1);
 
   /* Reveal na carga (hero e aberturas): começa após o primeiro paint, filhos em sequência. */
@@ -172,37 +179,36 @@
   --mov-pop-min: 0.6;
   --mov-pop-excesso: 1.04;
 
-  /* Parallax: fatores por camada (mapa §1.1) e amplitude base do deslocamento. */
+  /* Parallax local (símbolo decorativo e foto na máscara): fator e amplitude base do deslocamento. */
   --mov-parallax-mundo: 0.3;
-  --mov-parallax-frente: 0.6;
-  --mov-parallax-campo: 0.2;
   --mov-parallax-midia: 0.9;
   --mov-parallax-base: 24svh;
   /* Foto dentro da máscara: zoom constante e amplitude (em % da própria altura). */
   --mov-midia-escala: 1.06;
   --mov-midia-amp: 3%;
 
-  /* Drift e tilt pelo cursor (só pointer: fine). 6° é teto, não meta. */
+  /* Drift e tilt pelo cursor (só pointer: fine). 6° é o teto em repouso. */
   --mov-drift-mundo: 8px;
-  --mov-drift-frente: 14px;
   --mov-tilt: 6deg;
 
-  /* Mundo: faixa de opacidade dos grafismos, rotação lenta contínua e o fragmento que acende atrás dos cards. */
-  --mov-mundo-opacidade-min: 0.12;
-  --mov-mundo-opacidade-max: 0.35;
+  /* Camada global de grafismos (Revisão v2, 3.2). Parallax: fração da rolagem que o grafismo
+     acompanha (0.15 no toque e abaixo de `lg`); curso: quanto ele viaja na tela para cada lado
+     da posição-base antes de parar, fora da viewport. Tilt por scrub: soma ao do cursor, 6° + 4°
+     = 10° no máximo. Opacidade por cópia: a marrom em `multiply` equivale a marrom ≈ 0.25 sobre
+     bege e creme; a bege em `screen`, a bege ≈ 0.20 sobre verde. */
+  --mov-global-parallax: 0.3;
+  --mov-global-curso: 160svh;
+  --mov-global-inclinar: 4deg;
+  --mov-global-perspectiva: 1400px;
+  --mov-global-marrom: 0.34;
+  --mov-global-bege: 0.27;
+
+  /* Rotação lenta contínua dos grafismos e o fragmento que acende atrás dos cards. */
   --mov-grafismo-rotacao: 1.5deg;
   --mov-grafismo-ciclo: 40s;
   --mov-acende-hover: 0.25;
   --mov-acende-touch: 0.1;
   --mov-acende-desloc: 6px;
-
-  /* Campo (camada ambiente, 2.7): opacidade por fundo, deriva ±2% / ±1° num ciclo de 100s, escala de folga. */
-  --mov-campo-claro: 0.1;
-  --mov-campo-verde: 0.12;
-  --mov-campo-deriva: 2%;
-  --mov-campo-rotacao: 1deg;
-  --mov-campo-ciclo: 100s;
-  --mov-campo-escala: 1.08;
 
   /* Folhas (2.1): toda fronteira de seção. Raio do canto, sobreposição curta ("peel"), recuo da anterior, sombra. */
   --mov-folha-raio: 32px;
@@ -211,12 +217,11 @@
   --mov-folha-opacidade: 0.9;
   --mov-folha-sombra: 0 -22px 44px -18px rgb(63 79 79 / 0.24);
 
-  /* Capa (hero): recuo e subida da foto, subida do texto e inclinação do grafismo enquanto a folha sobe. */
+  /* Capa (hero): recuo e subida da foto e subida do texto enquanto a folha sobe. */
   --mov-capa-foto-escala: 0.94;
   --mov-capa-foto-sobe: -5%;
   --mov-capa-foto-zoom: 1.1;
   --mov-capa-texto-sobe: 24px;
-  --mov-capa-inclinar: 6deg;
 
   /* Pilha de folhas (2.3): topo sob o header compacto; folha com conteúdo + respiro no mobile; trajeto curto no desktop. */
   --mov-stack-top: 72px;
@@ -224,16 +229,47 @@
   --mov-folha-min: auto;
   --mov-folha-gap: 0px;
 
-  /* Scrub ao longo da seção ou da pilha. */
-  --mov-scrub-rotacao: 12deg;
-  --mov-scrub-desloc: 20svh;
-  --mov-pilha-desloc-x: -12vw;
-  --mov-pilha-desloc-y: 45vh;
+  /* Afinação 2, por pilha. "Como começa" (Home): concisa, o passo 3 chega em uma viewport de
+     rolagem. Pilares (Método): quatro cartas, recuo mais visível e sombra mais forte. */
+  --mov-passos-trajeto: 50svh;
+  --mov-passos-folha: min(50svh, 30rem);
+  --mov-pilar-trajeto: 55svh;
+  --mov-pilar-folha: min(55svh, 32rem);
+  --mov-pilar-escala: 0.95;
+  --mov-pilar-opacidade: 0.85;
+  --mov-pilar-sombra: 0 -30px 56px -14px rgb(0 0 0 / 0.5);
 
-  /* Linha desenhada no trilho (`--linha`, range `cover`) e janela de reveal de cada item que ela alcança. */
-  --mov-linha-inicio: 20%;
-  --mov-linha-fim: 55%;
-  --mov-linha-janela: 10%;
+  /* Trilho numerado (Etapas, Como funciona): duração do traço da linha, atraso e deslocamento do
+     card depois do pop do número. */
+  --mov-linha-dur: 1400ms;
+  --mov-linha-card-atraso: 160ms;
+  --mov-linha-card-desloc: 24px;
+
+  /* Névoa (Decisão 012, `components/ui/Nevoa`): quanto a lâmina da cor do fundo passa da caixa
+     do texto e que fração dessa margem continua opaca antes de esmaecer. Rodada final: 30% mais
+     discreta que o teste (2rem/4rem → 1.4rem/2.8rem; núcleo 0.55 → 0.5). Com o núcleo menor, o
+     opaco além da caixa cai de 0.55·E para 0.5·0.7·E (−36%) e o ponto de 50% da rampa, a borda
+     que o olho lê, de 0.775·E para 0.525·E (−32%).
+     Rodada do balão: a névoa atenua, não esconde. `--nevoa-opacidade` é a opacidade do balão
+     inteiro no repouso (o grafismo passa atrás das letras a no máximo metade da intensidade);
+     o recuo da folha, quando houver, multiplica por cima (0.9 × 0.5). */
+  --nevoa-extravaso: 1.4rem;
+  --nevoa-nucleo: 0.5;
+  --nevoa-opacidade: 0.5;
+  /* Extravaso lateral: o de cima, limitado ao espaço entre o texto e a borda da folha (padding
+     do Container, `--nevoa-folga`, ou a margem lateral quando o Container é mais estreito que a
+     tela). Com o Container na largura toda (< 640px e de 1024 a 1320px), o extravaso passava da
+     borda da tela, onde a folha tem a quina arredondada: o balão pintava sobre a seção anterior,
+     vista pelo recorte da quina. Valores efetivos: 1rem (< 640px), 1.4rem (640 a 1023px), 2.5rem
+     (1024 a 1320px), 2.8rem (≥ ~1330px). Reverter: `--nevoa-lateral: var(--nevoa-extravaso)`. */
+  --nevoa-folga: 1rem;
+  --nevoa-lateral: min(
+    var(--nevoa-extravaso),
+    max(var(--nevoa-folga), (100vw - var(--container-site)) / 2)
+  );
+
+  /* Pop-up da profissional: deslocamento da entrada. */
+  --mov-popup-desloc: 12px;
 
   /* Círculo Maya (2.4): traço em unidades do viewBox (≈ 2px a 400px), montagem e desmontagem. */
   --mov-circulo-traco: 7.8;
@@ -282,8 +318,25 @@
   }
 }
 
+/* Toque e telas estreitas: a camada global acompanha menos a rolagem (sem drift e tilt, que já
+   dependem de `pointer: fine`). */
+@media (max-width: 63.99rem), (pointer: coarse) {
+  :root {
+    --mov-global-parallax: 0.15;
+  }
+}
+
+/* Padding lateral do Container (`px-4 sm:px-6 lg:px-10`), para o extravaso lateral da névoa. */
+@media (min-width: 40rem) {
+  :root {
+    --nevoa-folga: 1.5rem;
+  }
+}
+
 @media (min-width: 64rem) {
   :root {
+    --nevoa-extravaso: 2.8rem;
+    --nevoa-folga: 2.5rem;
     --mov-folha-min: min(56svh, 32rem);
     --mov-folha-gap: max(0px, calc(var(--mov-stack-trajeto) - var(--mov-folha-min)));
   }
@@ -335,13 +388,359 @@
   display: block;
 }
 
-/* Camadas internas do Grafismo (parallax → scrub → gira → drift → tilt). */
-.grafismo-raiz {
-  perspective: var(--mov-perspectiva);
+/* Camada global de grafismos (Revisão v2, 3.2). O invólucro (`camada-global`, absolute inset 0
+   com overflow clip, pelas utilities) recorta ao palco; cada janela é `sticky` de uma viewport
+   (a segunda volta por margem negativa e fica sobre a primeira) e é ela o stacking context que
+   mistura com a página: marrom em `multiply` (aparece nos fundos claros), bege em `screen`
+   (aparece no verde). Os itens ancoram na borda esquerda, com a ponta cortada da arte fora da
+   tela. Sem scroll-driven animations só o primeiro item existe, parado na posição-base. */
+.camada-janela {
+  position: sticky;
+  top: 0;
+  height: 100lvh;
 }
 
-.grafismo-camada {
+.camada-janela + .camada-janela {
+  margin-top: -100lvh;
+}
+
+.camada-marrom {
+  mix-blend-mode: multiply;
+  opacity: var(--mov-global-marrom);
+}
+
+.camada-bege {
+  mix-blend-mode: screen;
+  opacity: var(--mov-global-bege);
+}
+
+.gg {
+  --mov-perspectiva: var(--mov-global-perspectiva);
+  position: absolute;
+  top: var(--gg-topo);
+  left: calc(var(--gg-sangria) * -1);
+  height: var(--gg-altura-m);
+  perspective: var(--mov-global-perspectiva);
+}
+
+.gg:not(:first-child) {
+  display: none;
+}
+
+@media (min-width: 64rem) {
+  .gg {
+    height: var(--gg-altura);
+  }
+}
+
+.gg-camada {
   display: block;
+  height: 100%;
+}
+
+/* Névoa (Decisão 012, `components/ui/Nevoa`), rodada do balão: todo bloco de texto corrido
+   diretamente sobre a folha recebe uma névoa meio transparente da cor do fundo, que atenua o
+   grafismo à metade; cards, fotos, símbolo, header, footer e política não.
+
+   Forma: não é um retângulo ao redor do bloco, é um balão escalonado que segue a diagramação.
+   Cada filho de texto do bloco (eyebrow, título, parágrafo, linha de botões, nota, lista) pinta
+   o próprio `::before`, na largura da própria caixa (`fit-content`, com o `max-width` que o
+   filho já tem). Nenhum filho direto usava `::before`/`::after`, então o pseudo é livre em
+   todos.
+   - Folha × grupo: `div`/`header` cujos filhos são blocos de texto (o cabeçalho de seção e o
+     seu miolo, os grupos do Contato, o cabeçalho e o corpo do post) é grupo: não pinta, e os
+     filhos dele viram balões (até três níveis). Os demais filhos são folhas e pintam.
+   - Fora do balão: `[aria-hidden]` (seta do hero, gatilho e linha do trilho), imagem, `svg`,
+     grade de fotos (`div` com `img` filho) e card (`.rounded-card`). O que está fora do fluxo
+     (`absolute`) também não conta como vizinho.
+   - Sem sobreposição: com 50%, dois balões sobrepostos somariam 75% e virariam faixa. Vizinhos
+     se encostam: cada um estende para cima e para baixo metade do vão que o separa do vizinho
+     (`gap` do pai + `margin-top` de quem está embaixo), com emenda reta. Rampa suave só em borda
+     externa: laterais sempre; topo do primeiro e base do último (e de quem encosta em imagem,
+     card ou elemento fora do balão), com extravaso `--nevoa-extravaso` (topo e base) e
+     `--nevoa-lateral` (laterais, nunca além da borda da folha). Os grupos repassam por
+     herança: o primeiro filho herda o topo do grupo, o último, a base.
+   - CSS não lê o `gap` de um elemento: o vão vem da classe do Tailwind no pai (`gap-*`, tabela
+     abaixo) e do `mt-*` do filho. Gap ou margem novos dentro de uma névoa entram na tabela.
+   - Cabeçalho com ação à direita (`lg:flex-row`): título e ação lado a lado, cada um com topo e
+     base externos (herdam do cabeçalho).
+   - Blocos de névoa empilhados (cabeçalho com `mb-*` seguido de outra névoa) também se encostam
+     na metade da margem.
+   Pintura: as nove camadas de `background` de antes (miolo, quatro rampas, quatro cantos em
+   `radial-gradient`), agora com altura de rampa por borda (`--n-tf`/`--n-bf`: 1 externa, 0
+   emenda). A cor é `--fundo-atual` opaca e o pseudo inteiro tem `opacity: --nevoa-opacidade`:
+   as camadas se sobrepõem 1px dentro do balão sem somar, e o texto continua 100% opaco. Sem
+   máscara (custava ~4 pontos no Lighthouse mobile), sem filtro, sem sombra, zero JavaScript.
+   `z-index: -1`: sem stacking context na folha, o balão desce ao fundo do Container (acima da
+   camada de grafismos, abaixo de todo conteúdo); com a folha animada, fica atrás do texto dentro
+   dela. Por isso folha com fundo próprio (botão sólido) não pode ser filho direto: vai num
+   invólucro `div.flex` (as chamadas finais). */
+@layer components {
+  .nevoa {
+    --n-t: var(--nevoa-extravaso);
+    --n-b: var(--nevoa-extravaso);
+    --n-tf: 1;
+    --n-bf: 1;
+  }
+
+  /* Névoas empilhadas: a de cima encosta na de baixo na metade da margem. */
+  .nevoa:is(.mb-8, .mb-10, .mb-11, .mb-12, .mb-14):has(+ .nevoa) {
+    --n-bf: 0;
+  }
+  .nevoa:is(.mb-8, .mb-10, .mb-11, .mb-12, .mb-14) + .nevoa {
+    --n-tf: 0;
+  }
+  .nevoa.mb-8:has(+ .nevoa),
+  .nevoa.mb-8 + .nevoa {
+    --n-meia-margem: calc(var(--spacing) * 4);
+  }
+  .nevoa.mb-10:has(+ .nevoa),
+  .nevoa.mb-10 + .nevoa {
+    --n-meia-margem: calc(var(--spacing) * 5);
+  }
+  .nevoa.mb-11:has(+ .nevoa),
+  .nevoa.mb-11 + .nevoa {
+    --n-meia-margem: calc(var(--spacing) * 5.5);
+  }
+  .nevoa.mb-12:has(+ .nevoa),
+  .nevoa.mb-12 + .nevoa {
+    --n-meia-margem: calc(var(--spacing) * 6);
+  }
+  .nevoa.mb-14:has(+ .nevoa),
+  .nevoa.mb-14 + .nevoa {
+    --n-meia-margem: calc(var(--spacing) * 7);
+  }
+  .nevoa:is(.mb-8, .mb-10, .mb-11, .mb-12, .mb-14):has(+ .nevoa) {
+    --n-b: var(--n-meia-margem);
+  }
+  .nevoa:is(.mb-8, .mb-10, .mb-11, .mb-12, .mb-14) + .nevoa {
+    --n-t: var(--n-meia-margem);
+  }
+
+  /* Filhos do bloco e dos grupos (até três níveis): vão até o vizinho e tipo de cada borda. */
+  :where(
+    .nevoa-bloco,
+    .nevoa-bloco
+      > :is(div, header):not([aria-hidden="true"], .rounded-card, :has(> img, > picture)):has(
+        > :is(h1, h2, h3, h4, p, ul, ol, div, blockquote)
+      ),
+    .nevoa-bloco
+      > :is(div, header):not([aria-hidden="true"], .rounded-card, :has(> img, > picture)):has(
+        > :is(h1, h2, h3, h4, p, ul, ol, div, blockquote)
+      )
+      > :is(div, header):not([aria-hidden="true"], .rounded-card, :has(> img, > picture)):has(
+        > :is(h1, h2, h3, h4, p, ul, ol, div, blockquote)
+      )
+  ) {
+    & > * {
+      --n-pv: 0px;
+      --n-mt: 0px;
+      --n-mts: 0px;
+    }
+
+    /* Vão do pai (classe do Tailwind). */
+    &:where(.gap-0\.5) > * {
+      --n-pv: calc(var(--spacing) * 0.5);
+    }
+    &:where(.gap-2) > * {
+      --n-pv: calc(var(--spacing) * 2);
+    }
+    &:where(.gap-2\.5) > * {
+      --n-pv: calc(var(--spacing) * 2.5);
+    }
+    &:where(.gap-3) > * {
+      --n-pv: calc(var(--spacing) * 3);
+    }
+    &:where(.gap-4) > * {
+      --n-pv: calc(var(--spacing) * 4);
+    }
+    &:where(.gap-5) > * {
+      --n-pv: calc(var(--spacing) * 5);
+    }
+    &:where(.gap-6) > * {
+      --n-pv: calc(var(--spacing) * 6);
+    }
+    &:where(.gap-7) > * {
+      --n-pv: calc(var(--spacing) * 7);
+    }
+    &:where(.gap-8) > * {
+      --n-pv: calc(var(--spacing) * 8);
+    }
+    &:where(.gap-10) > * {
+      --n-pv: calc(var(--spacing) * 10);
+    }
+    &:where(.gap-12) > * {
+      --n-pv: calc(var(--spacing) * 12);
+    }
+
+    /* Margem de cima do próprio filho (`--n-mt`) e do vizinho de baixo (`--n-mts`). */
+    & > :where(.mt-2) {
+      --n-mt: calc(var(--spacing) * 2);
+    }
+    & > :where(.mt-3) {
+      --n-mt: calc(var(--spacing) * 3);
+    }
+    & > :where(.mt-4) {
+      --n-mt: calc(var(--spacing) * 4);
+    }
+    & > :where(:has(+ .mt-2)) {
+      --n-mts: calc(var(--spacing) * 2);
+    }
+    & > :where(:has(+ .mt-3)) {
+      --n-mts: calc(var(--spacing) * 3);
+    }
+    & > :where(:has(+ .mt-4)) {
+      --n-mts: calc(var(--spacing) * 4);
+    }
+
+    /* Topo: emenda com o vizinho de cima, ou externo se ele está fora do balão. Sem vizinho,
+       herda do pai. Elemento fora do fluxo (`absolute`: gatilho e linha do trilho) não é
+       vizinho: quem vem depois dele herda. */
+    &
+      > :where(
+        :not(
+            [aria-hidden="true"],
+            img,
+            picture,
+            svg,
+            .rounded-card,
+            :has(> img, > picture),
+            .absolute,
+            .linha-gatilho
+          )
+          + *
+      ) {
+      --n-t: calc((var(--n-pv) + var(--n-mt)) / 2);
+      --n-tf: 0;
+    }
+    &
+      > :where(
+        :is([aria-hidden="true"], img, picture, svg, .rounded-card, :has(> img, > picture)):not(
+            .absolute,
+            .linha-gatilho
+          )
+          + *
+      ) {
+      --n-t: var(--nevoa-extravaso);
+      --n-tf: 1;
+    }
+
+    /* Base: idem com o vizinho de baixo. */
+    & > :where(:has(+ :not(.absolute, .linha-gatilho))) {
+      --n-b: calc((var(--n-pv) + var(--n-mts)) / 2);
+      --n-bf: 0;
+    }
+    &
+      > :where(
+        :has(
+          + :is([aria-hidden="true"], img, picture, svg, .rounded-card):not(
+              .absolute,
+              .linha-gatilho
+            ),
+          + * > img,
+          + * > picture
+        )
+      ) {
+      --n-b: var(--nevoa-extravaso);
+      --n-bf: 1;
+    }
+  }
+
+  /* Cabeçalho com ação à direita: lado a lado, sem emenda vertical entre os dois. */
+  @media (min-width: 64rem) {
+    .nevoa-bloco .lg\:flex-row > * {
+      --n-t: inherit;
+      --n-b: inherit;
+      --n-tf: inherit;
+      --n-bf: inherit;
+    }
+  }
+
+  /* Quem pinta: o elemento que é a própria névoa (`nevoa-propria`) e as folhas do bloco (filho
+     que não é grupo nem está fora do balão; no terceiro nível, todo filho que não está fora). */
+  :is(
+    .nevoa-propria,
+    :where(
+      .nevoa-bloco > *,
+      .nevoa-bloco
+        > :is(div, header):not([aria-hidden="true"], .rounded-card, :has(> img, > picture)):has(
+          > :is(h1, h2, h3, h4, p, ul, ol, div, blockquote)
+        )
+        > *
+    ):not(
+      [aria-hidden="true"],
+      img,
+      picture,
+      svg,
+      .rounded-card,
+      :has(> img, > picture),
+      :is(div, header):has(> :is(h1, h2, h3, h4, p, ul, ol, div, blockquote))
+    ),
+    :where(
+      .nevoa-bloco
+        > :is(div, header):not([aria-hidden="true"], .rounded-card, :has(> img, > picture)):has(
+          > :is(h1, h2, h3, h4, p, ul, ol, div, blockquote)
+        )
+        > :is(div, header):not([aria-hidden="true"], .rounded-card, :has(> img, > picture)):has(
+          > :is(h1, h2, h3, h4, p, ul, ol, div, blockquote)
+        )
+        > *
+    ):not([aria-hidden="true"], img, picture, svg, .rounded-card, :has(> img, > picture))
+  ) {
+    position: relative;
+
+    &:not(ul, ol) {
+      width: fit-content;
+    }
+
+    &::before {
+      /* Rampa vertical (topo/base) pelo extravaso; lateral pelo extravaso lateral. */
+      --nevoa-rampa: calc(var(--nevoa-extravaso) * (1 - var(--nevoa-nucleo)));
+      --nevoa-rx: calc(var(--nevoa-lateral) * (1 - var(--nevoa-nucleo)));
+      --nevoa-rt: calc(var(--n-tf) * var(--nevoa-rampa));
+      --nevoa-rb: calc(var(--n-bf) * var(--nevoa-rampa));
+      --nevoa-mx: calc(100% - 2 * var(--nevoa-rx));
+      --nevoa-my: calc(100% - var(--nevoa-rt) - var(--nevoa-rb));
+      --nevoa-cor: var(--fundo-atual);
+      content: "";
+      position: absolute;
+      inset: calc(var(--n-t) * -1) calc(var(--nevoa-lateral) * -1) calc(var(--n-b) * -1);
+      z-index: -1;
+      pointer-events: none;
+      opacity: var(--nevoa-opacidade);
+      background:
+        linear-gradient(var(--nevoa-cor), var(--nevoa-cor)) calc(var(--nevoa-rx) - 1px)
+          calc(var(--nevoa-rt) - 1px) / calc(var(--nevoa-mx) + 2px) calc(var(--nevoa-my) + 2px)
+          no-repeat,
+        linear-gradient(to top, var(--nevoa-cor), transparent) var(--nevoa-rx) 0 / var(--nevoa-mx)
+          var(--nevoa-rt) no-repeat,
+        linear-gradient(to bottom, var(--nevoa-cor), transparent) var(--nevoa-rx) 100% /
+          var(--nevoa-mx) var(--nevoa-rb) no-repeat,
+        linear-gradient(to left, var(--nevoa-cor), transparent) 0 var(--nevoa-rt) / var(--nevoa-rx)
+          var(--nevoa-my) no-repeat,
+        linear-gradient(to right, var(--nevoa-cor), transparent) 100% var(--nevoa-rt) /
+          var(--nevoa-rx) var(--nevoa-my) no-repeat,
+        radial-gradient(farthest-side at 100% 100%, var(--nevoa-cor), transparent) 0 0 /
+          var(--nevoa-rx) var(--nevoa-rt) no-repeat,
+        radial-gradient(farthest-side at 0% 100%, var(--nevoa-cor), transparent) 100% 0 /
+          var(--nevoa-rx) var(--nevoa-rt) no-repeat,
+        radial-gradient(farthest-side at 100% 0%, var(--nevoa-cor), transparent) 0 100% /
+          var(--nevoa-rx) var(--nevoa-rb) no-repeat,
+        radial-gradient(farthest-side at 0% 0%, var(--nevoa-cor), transparent) 100% 100% /
+          var(--nevoa-rx) var(--nevoa-rb) no-repeat;
+    }
+  }
+}
+
+/* Gatilho do trilho numerado: um ponto a 25% da base do trilho; o `AoEntrar` o marca quando
+   três quartos do trilho já estão na tela. */
+.linha-gatilho {
+  position: absolute;
+  bottom: 25%;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
 }
 
 /* Respiro vertical da seção, por token (`Secao` aplica `secao-normal|curto|compacto`): com
@@ -407,24 +806,6 @@
 
 .titulo-desencontrado > span:nth-child(2) {
   margin-inline-start: var(--mov-cta-recuo);
-}
-
-/* Campo (camada ambiente): preenche a folha como máscara do SVG (`--campo` vem da `Secao`)
-   sobre a cor corrente; as linhas nascem e morrem fora da caixa. */
-.campo {
-  position: absolute;
-  inset: 0;
-}
-
-.campo-deriva {
-  display: block;
-  height: 100%;
-  scale: var(--mov-campo-escala);
-  background-color: currentColor;
-  mask-image: var(--campo);
-  mask-size: cover;
-  mask-position: center;
-  mask-repeat: no-repeat;
 }
 
 /* Cortina do footer (2.8): o `<main>` é o palco opaco com sombra na borda inferior; o footer
@@ -506,6 +887,30 @@ body > main {
 @supports not selector(:popover-open) {
   .modal-prosa {
     display: none;
+  }
+}
+
+/* Pop-up da profissional (Equipe): entra e sai com opacity e translateY, por `@starting-style`
+   e transição discreta de `display`/`overlay`, sem JavaScript. */
+.popup-entra {
+  opacity: 0;
+  translate: 0 var(--mov-popup-desloc);
+  transition:
+    opacity var(--mov-dur-popup) var(--mov-curva),
+    translate var(--mov-dur-popup) var(--mov-curva),
+    overlay var(--mov-dur-popup) allow-discrete,
+    display var(--mov-dur-popup) allow-discrete;
+}
+
+.popup-entra:popover-open {
+  opacity: 1;
+  translate: 0 0;
+}
+
+@starting-style {
+  .popup-entra:popover-open {
+    opacity: 0;
+    translate: 0 var(--mov-popup-desloc);
   }
 }
 
@@ -643,7 +1048,6 @@ body > main {
   /* Chegada por âncora (/equipe#psicologia, /contato#agendar): a seção alvo não pisca. */
   .secao:target .reveal,
   .secao:target .reveal-stagger > *,
-  .secao:target .reveal-linha > *,
   .secao:target :is(h1, h2, .text-eyebrow) {
     animation: none;
   }
@@ -710,8 +1114,8 @@ body > main {
     animation: mov-pop var(--mov-dur-pop) var(--mov-curva) both;
   }
 
-  /* parallax: translateY ligado ao scroll ao longo da passagem do elemento (range `cover`).
-     Mundo (fator < 1, sentido +1) fica para trás; frente (sentido -1) corre à frente da página. */
+  /* parallax local: translateY ligado ao scroll ao longo da passagem do elemento (range `cover`).
+     Fator < 1, sentido +1: fica para trás em relação à página. */
   @keyframes mov-parallax {
     from {
       translate: 0 calc((1 - var(--mov-fator)) * var(--mov-parallax-base) * var(--mov-sentido));
@@ -721,9 +1125,7 @@ body > main {
     }
   }
 
-  .parallax-mundo,
-  .parallax-frente,
-  .parallax-campo {
+  .parallax-mundo {
     animation: mov-parallax linear both;
     animation-timeline: view();
     animation-range: cover 0% cover 100%;
@@ -732,16 +1134,6 @@ body > main {
 
   .parallax-mundo {
     --mov-fator: var(--mov-parallax-mundo);
-    --mov-sentido: 1;
-  }
-
-  .parallax-frente {
-    --mov-fator: var(--mov-parallax-frente);
-    --mov-sentido: -1;
-  }
-
-  .parallax-campo {
-    --mov-fator: var(--mov-parallax-campo);
     --mov-sentido: 1;
   }
 
@@ -765,18 +1157,10 @@ body > main {
 
   /* drift e tilt3d: consomem --mx/--my escritas pelo Mundo; em touch as variáveis não existem. */
   @media (pointer: fine) {
-    .drift-mundo,
-    .drift-frente {
-      translate: calc(var(--mx, 0) * var(--mov-drift)) calc(var(--my, 0) * var(--mov-drift));
-      will-change: transform;
-    }
-
     .drift-mundo {
-      --mov-drift: var(--mov-drift-mundo);
-    }
-
-    .drift-frente {
-      --mov-drift: var(--mov-drift-frente);
+      translate: calc(var(--mx, 0) * var(--mov-drift-mundo))
+        calc(var(--my, 0) * var(--mov-drift-mundo));
+      will-change: transform;
     }
 
     .tilt3d {
@@ -787,7 +1171,52 @@ body > main {
     }
   }
 
-  /* Rotação lenta contínua dos grafismos do mundo (±1,5° em 40s). */
+  /* Camada global: com scroll-driven animations todos os itens existem. Parallax pelo scroll da
+     página: o item viaja `curso` para cada lado da posição-base enquanto a página rola
+     `curso / fator` em torno do trecho dele (`--gg-trecho`, em % da rolagem total), ou seja, na
+     tela ele anda `fator` vezes a rolagem. Fora desse intervalo já está fora da viewport. */
+  .gg:not(:first-child) {
+    display: block;
+  }
+
+  @keyframes mov-global-parallax {
+    from {
+      translate: 0 var(--mov-global-curso);
+    }
+    to {
+      translate: 0 calc(var(--mov-global-curso) * -1);
+    }
+  }
+
+  .gg {
+    animation: mov-global-parallax linear both;
+    animation-timeline: scroll(root);
+    animation-range: calc(var(--gg-trecho) - var(--mov-global-curso) / var(--mov-global-parallax))
+      calc(var(--gg-trecho) + var(--mov-global-curso) / var(--mov-global-parallax));
+    will-change: transform;
+  }
+
+  /* Tilt por scrub: o grafismo inclina de um lado ao outro `--gg-ondas` vezes ao longo da página
+     (perto de uma vez por folha que passa). Só com cursor fino e no desktop, somado ao tilt do cursor. */
+  @keyframes mov-global-inclinar {
+    from {
+      rotate: y calc(var(--mov-global-inclinar) * -1);
+    }
+    to {
+      rotate: y var(--mov-global-inclinar);
+    }
+  }
+
+  @media (pointer: fine) and (min-width: 64rem) {
+    .gg-inclina {
+      animation: mov-global-inclinar ease-in-out both;
+      animation-timeline: scroll(root);
+      animation-iteration-count: var(--gg-ondas, 6);
+      animation-direction: alternate;
+    }
+  }
+
+  /* Rotação lenta contínua dos grafismos (±1,5° em 40s). */
   @keyframes mov-girar-lento {
     0%,
     100% {
@@ -800,32 +1229,6 @@ body > main {
 
   .gira-lento {
     animation: mov-girar-lento var(--mov-grafismo-ciclo) ease-in-out infinite;
-  }
-
-  /* Campo: deriva de ±2% e ±1° num ciclo lento (o fundo "vivo", a 20 a 30% das referências). */
-  @keyframes mov-campo-deriva {
-    0%,
-    100% {
-      translate: 0 0;
-      rotate: 0deg;
-    }
-    25% {
-      translate: var(--mov-campo-deriva) calc(var(--mov-campo-deriva) * -0.5);
-      rotate: var(--mov-campo-rotacao);
-    }
-    50% {
-      translate: 0 var(--mov-campo-deriva);
-      rotate: 0deg;
-    }
-    75% {
-      translate: calc(var(--mov-campo-deriva) * -1) calc(var(--mov-campo-deriva) * 0.5);
-      rotate: calc(var(--mov-campo-rotacao) * -1);
-    }
-  }
-
-  .campo-deriva {
-    animation: mov-campo-deriva var(--mov-campo-ciclo) ease-in-out infinite;
-    will-change: transform;
   }
 
   /* maskReveal: clip-path abrindo ao entrar na viewport (fotos que não são LCP). */
@@ -877,66 +1280,17 @@ body > main {
     animation-name: mov-mask-circular;
   }
 
-  /* scrub: propriedade ligada ao progresso da seção (`--secao`) ou da pilha (`--pilha`). */
-  @keyframes mov-girar {
-    to {
-      rotate: var(--mov-scrub-rotacao);
-    }
-  }
-
-  .scrub-rotacao {
-    animation: mov-girar linear both;
-    animation-timeline: --secao;
-    animation-range: cover 0% cover 100%;
-  }
-
-  @keyframes mov-deslocar {
-    to {
-      translate: 0 var(--mov-scrub-desloc);
-    }
-  }
-
-  .scrub-deslocamento {
-    animation: mov-deslocar linear both;
-    animation-timeline: --secao;
-    animation-range: cover 0% cover 100%;
-    will-change: transform;
-  }
-
-  @keyframes mov-deslocar-pilha {
-    to {
-      translate: var(--mov-pilha-desloc-x) var(--mov-pilha-desloc-y);
-    }
-  }
-
-  .scrub-pilha {
-    animation: mov-deslocar-pilha linear both;
-    animation-timeline: --pilha;
-    animation-range: cover 0% cover 100%;
-    will-change: transform;
-  }
-
-  /* wipe na carga: o grafismo aparece como traço desenhado (clip-path progressivo). */
-  @keyframes mov-wipe {
-    from {
-      clip-path: inset(0 100% 0 0);
-    }
-    to {
-      clip-path: inset(0);
-    }
-  }
-
-  .wipe-carga {
-    animation: mov-wipe var(--mov-dur-wipe) var(--mov-curva) both;
-  }
-
   /* Folhas (2.1): a seção N fica presa pela borda inferior enquanto a seção N+1 sobe os
      primeiros `--mov-folha-sobre` sobre ela, e recua (escala 0.97, opacidade 0.9). O range
-     usa a própria timeline de N: `cover calc(100% - 100dvh)` é "borda inferior de N no fim
-     da viewport" (= topo de N+1 entrando), qualquer que seja a altura de N. É peel, não pin:
-     a translação é curta, e N nunca esconde conteúdo (a faixa coberta é o seu padding).
-     Com `fill: both` toda seção vira stacking context; a sangria de grafismo entre seções
-     (Decisão 008, item 4) deixa de existir por desenho: a folha é uma camada inteira. */
+     usa a timeline da própria seção N (`--secao`): `cover calc(100% - 100dvh)` é "borda
+     inferior de N no fim da viewport" (= topo de N+1 entrando), qualquer que seja a altura de N.
+     É peel, não pin: a translação é curta, e N nunca esconde conteúdo (a faixa coberta é o seu
+     padding).
+     Revisão v2 (3.2): quem anima são os filhos (fundo, slot do símbolo e Container), não a
+     `<section>`, que fica sem transform e sem opacity e por isso não é stacking context. Os três
+     usam a mesma animação, a mesma timeline e a mesma origem de escala, o centro da seção: no
+     fundo e no slot (inset 0) é 50% 50%; no Container, que termina `--mov-folha-sobre` antes da
+     borda inferior da seção, é o próprio centro mais metade da sobreposição. */
   @keyframes mov-folha-peel {
     from {
       translate: 0 0;
@@ -948,23 +1302,34 @@ body > main {
     }
   }
 
-  /* O recuo em opacidade vai no conteúdo (o Container, último filho), não na folha: a folha
-     opaca continua tapando a anterior; na pilha, a folha coberta vazaria pela da frente. */
-  @keyframes mov-folha-esmaecer {
+  /* O recuo em opacidade vai só no conteúdo (o Container), não no fundo: a folha opaca
+     continua tapando a anterior; na pilha, a folha coberta vazaria pela da frente. */
+  @keyframes mov-folha-peel-conteudo {
+    from {
+      translate: 0 0;
+      scale: 1;
+      opacity: 1;
+    }
     to {
+      translate: 0 var(--mov-folha-sobre);
+      scale: var(--mov-folha-escala);
       opacity: var(--mov-folha-opacidade);
     }
   }
 
   body > main > .secao:not(:last-of-type):not(.capa) {
     padding-bottom: calc(var(--secao-py) + var(--mov-folha-sobre));
+  }
+
+  body > main > .secao:not(:last-of-type):not(.capa) > :is(.secao-fundo, .secao-simbolo) {
     animation: mov-folha-peel linear both;
-    animation-timeline: view();
+    animation-timeline: --secao;
     animation-range: cover calc(100% - 100dvh) cover calc(100% - 100dvh + var(--mov-folha-sobre));
   }
 
-  body > main > .secao:not(:last-of-type):not(.capa) > :last-child {
-    animation: mov-folha-esmaecer linear both;
+  body > main > .secao:not(:last-of-type):not(.capa) > .secao-conteudo {
+    transform-origin: 50% calc(50% + var(--mov-folha-sobre) / 2);
+    animation: mov-folha-peel-conteudo linear both;
     animation-timeline: --secao;
     animation-range: cover calc(100% - 100dvh) cover calc(100% - 100dvh + var(--mov-folha-sobre));
   }
@@ -972,14 +1337,16 @@ body > main {
   /* A primeira seção da página (abertura) costuma caber acima da dobra: a folha seguinte já
      "entrou" no carregamento, e o peel a deixaria recuada e deslocada antes de qualquer
      rolagem. Ela fica parada, com a sobreposição estática (margem negativa; o padding extra
-     compensa) e stacking context próprio, para a folha seguinte pintar por cima dela. */
+     compensa). Sem `isolation`: o fundo da folha seguinte (z 0, depois no DOM) pinta sobre o
+     fundo dela, e a faixa sobreposta é só padding. */
   body > main > .secao:first-of-type:not(:last-of-type):not(.capa) {
     margin-bottom: calc(-1 * var(--mov-folha-sobre));
-    isolation: isolate;
-    animation: none;
   }
 
-  body > main > .secao:first-of-type:not(:last-of-type):not(.capa) > :last-child {
+  body
+    > main
+    > .secao:first-of-type:not(:last-of-type):not(.capa)
+    > :is(.secao-fundo, .secao-simbolo, .secao-conteudo) {
     animation: none;
   }
 
@@ -993,12 +1360,6 @@ body > main {
     margin-top: calc(-1 * var(--mov-folha-sobre));
   }
 
-  /* O slot de grafismo das folhas recorta nos dois eixos: o desenho nunca escapa da folha
-     sobre a vizinha. A primeira seção continua só com recorte horizontal (sangra sob o header). */
-  :is(body > main > .secao:not(:first-of-type), .stack > .secao) > .secao-grafismo {
-    overflow: clip;
-  }
-
   /* capa (2.2): o hero é coberto pela primeira folha. A folha seguinte publica `--pos-capa`
      (escopo no `<main>`); o trajeto do topo dela do fim ao topo da viewport (`cover 0% →
      cover 100dvh`, uma viewport de scroll qualquer que seja a altura da folha) é o relógio de
@@ -1008,19 +1369,18 @@ body > main {
     view-timeline-axis: block, block;
   }
 
-  /* Mobile: o hero é mais alto que a viewport, então fica preso pela borda inferior por
-     translação (o scroll da cobertura é anulado) e, no fim, vai a opacity 0 para não aparecer
-     na emenda subpixel entre dois fundos nem nas frestas das folhas recuadas. */
+  /* Revisão v2 (3.2): a capa não é mais `sticky` (que cria stacking context) nem transformada.
+     A seção rola normalmente e recorta o que sai dela (`overflow: clip`, que não cria stacking
+     context nem scroll container); o fundo e o Container descem `100dvh` ao longo da cobertura,
+     anulando a rolagem: o hero parece parado e a borda inferior da seção, que sobe junto com o
+     topo da folha seguinte, vai escondendo o conteúdo. Vale em todas as larguras: no desktop o
+     hero cabe em 100svh; no mobile é mais alto e fica preso pela borda inferior. */
   @keyframes mov-capa-fixar {
     from {
       translate: 0 0;
     }
-    95% {
-      opacity: 1;
-    }
     to {
       translate: 0 100dvh;
-      opacity: 0;
     }
   }
 
@@ -1029,27 +1389,20 @@ body > main {
     flex-direction: column;
     justify-content: center;
     min-height: 100svh;
+    overflow: clip;
+  }
+
+  .capa > :is(.secao-fundo, .secao-conteudo) {
     animation: mov-capa-fixar linear both;
     animation-timeline: --pos-capa;
     animation-range: cover 0% cover 100dvh;
-  }
-
-  /* Desktop: o hero cabe em 100svh e é `sticky` de verdade em `top: 0`; só esmaece no fim. */
-  @keyframes mov-capa-sumir {
-    to {
-      opacity: 0;
-    }
+    will-change: transform;
   }
 
   @media (min-width: 64rem) {
     .capa {
-      position: sticky;
-      top: 0;
       height: 100svh;
       min-height: auto;
-      animation: mov-capa-sumir linear both;
-      animation-timeline: --pos-capa;
-      animation-range: cover calc(100dvh * 0.92) cover 100dvh;
     }
   }
 
@@ -1112,18 +1465,6 @@ body > main {
     }
   }
 
-  @keyframes mov-inclinar {
-    to {
-      rotate: y var(--mov-capa-inclinar);
-    }
-  }
-
-  .capa-inclina {
-    animation: mov-inclinar linear both;
-    animation-timeline: --pos-capa;
-    animation-range: cover 0% cover 100dvh;
-  }
-
   /* Indicador de rolagem: balança devagar e some nos primeiros 80px de scroll. */
   @keyframes mov-balancar {
     0%,
@@ -1176,73 +1517,97 @@ body > main {
     min-height: var(--mov-folha-min);
   }
 
+  /* O recuo da folha coberta anima o fundo e o Container (não a `<section>`), como nas folhas
+     de página; a origem é o centro da folha (padding simétrico: centro do Container = centro da folha). */
   @keyframes mov-folha-recuar {
     to {
       scale: var(--mov-folha-escala);
     }
   }
 
-  .stack > .folha:not(:last-child) {
+  @keyframes mov-folha-recuar-conteudo {
+    to {
+      scale: var(--mov-folha-escala);
+      opacity: var(--mov-folha-opacidade);
+    }
+  }
+
+  .stack > .folha:not(:last-child) > :is(.secao-fundo, .secao-simbolo) {
     animation: mov-folha-recuar linear both;
     animation-range: entry 0% entry 100%;
   }
 
-  .stack > .folha:not(:last-child) > :last-child {
-    animation: mov-folha-esmaecer linear both;
+  .stack > .folha:not(:last-child) > .secao-conteudo {
+    animation: mov-folha-recuar-conteudo linear both;
     animation-range: entry 0% entry 100%;
   }
 
   .stack > .folha:nth-child(1) {
     view-timeline-name: --folha-1;
-    animation-timeline: --folha-2;
   }
-  .stack > .folha:nth-child(1) > :last-child {
+  .stack > .folha:nth-child(1) > :is(.secao-fundo, .secao-simbolo, .secao-conteudo) {
     animation-timeline: --folha-2;
   }
   .stack > .folha:nth-child(2) {
     view-timeline-name: --folha-2;
-    animation-timeline: --folha-3;
   }
-  .stack > .folha:nth-child(2) > :last-child {
+  .stack > .folha:nth-child(2) > :is(.secao-fundo, .secao-simbolo, .secao-conteudo) {
     animation-timeline: --folha-3;
   }
   .stack > .folha:nth-child(3) {
     view-timeline-name: --folha-3;
-    animation-timeline: --folha-4;
   }
-  .stack > .folha:nth-child(3) > :last-child {
+  .stack > .folha:nth-child(3) > :is(.secao-fundo, .secao-simbolo, .secao-conteudo) {
     animation-timeline: --folha-4;
   }
   .stack > .folha:nth-child(4) {
     view-timeline-name: --folha-4;
-    animation-timeline: --folha-5;
   }
-  .stack > .folha:nth-child(4) > :last-child {
+  .stack > .folha:nth-child(4) > :is(.secao-fundo, .secao-simbolo, .secao-conteudo) {
     animation-timeline: --folha-5;
   }
   .stack > .folha:nth-child(5) {
     view-timeline-name: --folha-5;
-    animation-timeline: --folha-6;
   }
-  .stack > .folha:nth-child(5) > :last-child {
+  .stack > .folha:nth-child(5) > :is(.secao-fundo, .secao-simbolo, .secao-conteudo) {
     animation-timeline: --folha-6;
   }
   .stack > .folha:nth-child(6) {
     view-timeline-name: --folha-6;
-    animation-timeline: --folha-7;
   }
-  .stack > .folha:nth-child(6) > :last-child {
+  .stack > .folha:nth-child(6) > :is(.secao-fundo, .secao-simbolo, .secao-conteudo) {
     animation-timeline: --folha-7;
   }
   .stack > .folha:nth-child(7) {
     view-timeline-name: --folha-7;
-    animation-timeline: --folha-8;
   }
-  .stack > .folha:nth-child(7) > :last-child {
+  .stack > .folha:nth-child(7) > :is(.secao-fundo, .secao-simbolo, .secao-conteudo) {
     animation-timeline: --folha-8;
   }
   .stack > .folha:nth-child(8) {
     view-timeline-name: --folha-8;
+  }
+
+  /* Afinação 2: cada pilha afina o próprio trajeto, a altura da folha e o recuo. O gap é
+     recalculado aqui porque custom property com `var()` resolve onde é declarada. */
+  .stack-pilares {
+    --mov-folha-escala: var(--mov-pilar-escala);
+    --mov-folha-opacidade: var(--mov-pilar-opacidade);
+    --mov-folha-sombra: var(--mov-pilar-sombra);
+  }
+
+  @media (min-width: 64rem) {
+    .stack-passos {
+      --mov-stack-trajeto: var(--mov-passos-trajeto);
+      --mov-folha-min: var(--mov-passos-folha);
+      --mov-folha-gap: max(0px, calc(var(--mov-stack-trajeto) - var(--mov-folha-min)));
+    }
+
+    .stack-pilares {
+      --mov-stack-trajeto: var(--mov-pilar-trajeto);
+      --mov-folha-min: var(--mov-pilar-folha);
+      --mov-folha-gap: max(0px, calc(var(--mov-stack-trajeto) - var(--mov-folha-min)));
+    }
   }
 
   /* Botão "próximo" discreto da folha: só existe com pilha, só no desktop. */
@@ -1252,9 +1617,8 @@ body > main {
     }
   }
 
-  /* linha desenhada: stroke-dashoffset 1 → 0 (pathLength="1") pelo progresso da seção, da
-     pilha ou do trilho que a envolve (`--linha`); neste último, os itens de `.reveal-linha`
-     revelam quando a linha alcança o centro deles. */
+  /* linha desenhada: stroke-dashoffset 1 → 0 (pathLength="1") pelo progresso da seção ou da
+     pilha. No trilho numerado ela é de tempo (mais abaixo). */
   @keyframes mov-desenhar {
     to {
       stroke-dashoffset: 0;
@@ -1274,32 +1638,82 @@ body > main {
     animation-range: cover 0% cover 90%;
   }
 
-  .linha-trilho {
-    view-timeline: --linha block;
-    --mov-linha-passo: calc(
-      (var(--mov-linha-fim) - var(--mov-linha-inicio)) / var(--mov-pontos, 4)
-    );
+  /* Trilho numerado (Etapas do Método, Como funciona do on-line; afinação 2). Coreografia de
+     tempo disparada uma vez, quando o `AoEntrar` marca o gatilho (a 25% da base do trilho, ou
+     seja, três quartos do trilho na tela): a linha se desenha em `--mov-linha-dur`, linear;
+     cada número faz o pop no instante em que a linha o alcança (`--mov-t`, a fração do
+     percurso, vem do item) e o card desliza `--mov-linha-card-atraso` depois.
+     O estado inicial (linha não desenhada, números e cards invisíveis) vem do CSS desde o
+     primeiro paint, e só quando a página tem JavaScript (`scripting: enabled`) e o movimento
+     não é reduzido: sem JavaScript ou com `prefers-reduced-motion`, o trilho nunca fica
+     escondido e aparece no estado final. Antes, o estado escondido só existia depois da
+     marcação (o `from` da animação): com o trilho já na tela na carga (Atendimento on-line a
+     1440×900), ele aparecia pronto, sumia na hidratação e animava. Risco residual, aceito: com
+     JavaScript habilitado mas o bundle falhando, o trilho fica escondido (a navegação também
+     falharia). */
+  @keyframes mov-tracar {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
   }
 
-  .linha-desenhada-trilho :is(path, line) {
-    animation-timeline: --linha;
-    animation-range: cover var(--mov-linha-inicio) cover var(--mov-linha-fim);
+  @keyframes mov-deslizar {
+    from {
+      opacity: 0;
+      translate: var(--mov-linha-card-desloc) 0;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
   }
 
-  /* O invólucro `.reveal-linha` recebe `--mov-i` inline (índice do item no trilho); os filhos herdam. */
-  .reveal-linha > * {
-    animation: mov-reveal var(--mov-dur-reveal) var(--mov-curva) both;
-    animation-timeline: --linha;
-    animation-range: cover
-      calc(
-        var(--mov-linha-inicio) + var(--mov-linha-passo) * (var(--mov-i, 0) + 0.5) -
-          var(--mov-linha-janela) / 2
-      )
-      cover
-      calc(
-        var(--mov-linha-inicio) + var(--mov-linha-passo) * (var(--mov-i, 0) + 0.5) +
-          var(--mov-linha-janela) / 2
-      );
+  @media (min-width: 64rem) {
+    /* Base: estado final, parado (anula o scrub genérico da linha e o pop próprio dos números). */
+    .linha-desenhada-trilho :is(path, line) {
+      stroke-dashoffset: 0;
+      animation: none;
+    }
+
+    .linha-trilho .linha-numero {
+      animation: none;
+    }
+
+    .linha-gatilho[data-entrou] ~ .linha-desenhada-trilho :is(path, line) {
+      animation: mov-tracar var(--mov-linha-dur) linear both;
+    }
+
+    .linha-gatilho[data-entrou] ~ * .linha-numero {
+      animation: mov-pop var(--mov-dur-pop) var(--mov-curva) both;
+      animation-delay: calc(var(--mov-linha-dur) * var(--mov-t, 0));
+    }
+
+    .linha-gatilho[data-entrou] ~ * .linha-card {
+      animation: mov-deslizar var(--mov-dur-card) var(--mov-curva) both;
+      animation-delay: calc(var(--mov-linha-dur) * var(--mov-t, 0) + var(--mov-linha-card-atraso));
+    }
+  }
+
+  @media (min-width: 64rem) and (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+    .linha-gatilho:not([data-entrou]) ~ .linha-desenhada-trilho :is(path, line) {
+      stroke-dashoffset: 1;
+    }
+
+    .linha-gatilho:not([data-entrou]) ~ * :is(.linha-numero, .linha-card) {
+      opacity: 0;
+    }
+  }
+
+  /* Abaixo de `lg` não há linha: o número faz o pop ao entrar (`.pop`) e o card entra por `view()`. */
+  @media (max-width: 63.99rem) {
+    .linha-card {
+      animation: mov-reveal var(--mov-dur-reveal) var(--mov-curva) both;
+      animation-timeline: view();
+      animation-range: entry var(--mov-reveal-inicio) entry var(--mov-reveal-fim);
+    }
   }
 
   /* Círculo Maya (2.4). Estado-base: montado. Três animações por anel, nesta ordem (a
@@ -1425,6 +1839,27 @@ body > main {
 
   .circulo-maya[data-entrou] .circulo-palavra {
     animation-name: mov-palavra-surgir, mov-palavra-sumir;
+  }
+
+  /* Estado inicial dos pops de tempo (rodada final, mesma correção do trilho): até o `AoEntrar`
+     marcar, o número com pop e os anéis e palavras do Círculo Maya já nascem escondidos pelo
+     CSS, desde o primeiro paint, e só com JavaScript e movimento não reduzido. Antes, o
+     escondido só existia no `from` da animação: o que já carregava dentro da tela (passo 1 da
+     Home no mobile, pilar 01 do Método, círculos em telas altas) aparecia pronto, sumia na
+     marcação e animava. Sem JavaScript, tudo visível; com movimento reduzido, o `AoEntrar`
+     marca na hora e o bloco 4 desliga as animações (estado final). O JavaScript só dispara.
+     O número do trilho fica fora no desktop: lá quem o esconde é o gatilho do trilho. */
+  @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+    .pop[data-ao-entrar]:not([data-entrou], .linha-numero),
+    .circulo-maya[data-ao-entrar]:not([data-entrou]) :is(.circulo-anel, .circulo-palavra) {
+      opacity: 0;
+    }
+  }
+
+  @media (max-width: 63.99rem) and (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+    .pop.linha-numero[data-ao-entrar]:not([data-entrou]) {
+      opacity: 0;
+    }
   }
 
   /* hover (2.6): levanta 4px com rotateX 2° em perspectiva, tudo em `transform` (as entradas
@@ -1751,7 +2186,7 @@ body > main {
     rotate: 45deg;
   }
 
-  /* Barra de progresso de leitura do post: scale-x pelo scroll da página. */
+  /* Barra de progresso de leitura do post: escala horizontal pelo scroll da página. */
   @keyframes mov-progresso {
     from {
       scale: 0 1;
@@ -1776,41 +2211,35 @@ body > main {
 
 /* --- 4. prefers-reduced-motion: bloco único que desliga todo o movimento -------
  * Capa, pilha e cortina continuam onde estão (sticky é layout, não movimento); o que sai é o
- * scrub de escala/opacidade, reveals, parallax, drift, tilt, wipe, deriva dos campos, rotação
- * dos grafismos, montagem do círculo, hover e transições. Popover e voltar ao topo funcionam
+ * scrub de escala/opacidade, a fixação da capa (o hero passa a rolar normalmente), reveals,
+ * parallax, drift, tilt, rotação dos grafismos (a camada global mostra só o primeiro, parado),
+ * trilho numerado, montagem do círculo, hover e transições. Popover e voltar ao topo funcionam
  * sem animação (o botão fica visível depois do gatilho, sem fade). */
 @media (prefers-reduced-motion: reduce) {
   .reveal,
   .reveal-stagger > *,
   .reveal-carga > *,
-  .reveal-linha > *,
+  .linha-card,
+  .linha-numero,
+  .gg,
+  .gg-inclina,
   .menu-mobile > *,
   :is(h1, h2, .text-eyebrow),
   .titulo-desencontrado > span,
   .pop[data-entrou],
   .parallax-mundo,
-  .parallax-frente,
-  .parallax-campo,
   .parallax-midia,
   .gira-lento,
-  .campo-deriva,
   .mask-reveal-cima,
   .mask-reveal-direita,
   .mask-reveal-circular,
-  .scrub-rotacao,
-  .scrub-deslocamento,
-  .scrub-pilha,
-  .wipe-carga,
-  body > main > .secao,
-  body > main > .secao > :last-child,
-  .stack > .folha > :last-child,
-  .capa,
+  body > main > .secao > :is(.secao-fundo, .secao-simbolo, .secao-conteudo),
+  .stack > .folha > :is(.secao-fundo, .secao-simbolo, .secao-conteudo),
+  .capa > :is(.secao-fundo, .secao-conteudo),
   .capa-esmaece,
   .capa-recua,
   .capa-foto,
-  .capa-inclina,
   .indicador-rolagem,
-  .stack > .folha,
   .linha-desenhada :is(path, line),
   .circulo-maya .circulo-anel,
   .circulo-maya .circulo-traco,
@@ -1840,16 +2269,19 @@ body > main {
   .sublinha-hover::after,
   .faq-corpo,
   .faq-icone,
-  .transicao-hover {
+  .transicao-hover,
+  .popup-entra {
     transition: none !important;
   }
 
+  .gg:not(:first-child) {
+    display: none;
+  }
+
   .drift-mundo,
-  .drift-frente,
   .tilt3d,
   .parallax-midia,
-  .capa-foto,
-  .campo-deriva {
+  .capa-foto {
     translate: none;
     transform: none;
     scale: none;

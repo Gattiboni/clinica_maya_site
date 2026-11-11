@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CamadaGrafismos } from "@/components/layout/CamadaGrafismos";
 import { Abertura } from "@/components/atendimento/Abertura";
 import { ChamadaFinal } from "@/components/atendimento/ChamadaFinal";
 import { ComoFunciona } from "@/components/atendimento/ComoFunciona";
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
 export default function AtendimentoOnline() {
   return (
     <>
+      <CamadaGrafismos pagina="atendimento" />
       <Abertura />
       <ComoFunciona />
       <OQueMuda />

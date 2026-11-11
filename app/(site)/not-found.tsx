@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { Grafismo } from "@/components/ui/Grafismo";
+import { CamadaGrafismos } from "@/components/layout/CamadaGrafismos";
 import { LinkTexto } from "@/components/ui/LinkTexto";
+import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { MOV } from "@/lib/movimento";
 
@@ -19,39 +20,32 @@ const CAMINHOS = [
  * site. Vale para `notFound()` lançado em qualquer rota de `(site)` (ex.: post
  * sem slug correspondente); para URLs sem rota, `app/not-found.tsx` compõe
  * header e footer em volta deste mesmo componente. Só `reveal` de abertura.
- * Grafismo `inline`, sem sprite: a árvore do 404 entra no payload RSC de toda
- * página (duas vezes: 404 global e do grupo), e o sprite ali pesaria 2 × 29 KB.
+ * A camada de grafismos emite só o símbolo que usa (`sprite="usados"`): a
+ * árvore do 404 entra no payload RSC de toda página (duas vezes: 404 global e
+ * do grupo), e o sprite completo ali pesaria 2 × 29 KB.
  */
 export default function NaoEncontrado() {
   return (
     <>
-      <Secao
-        fundo="bege"
-        grafismo={
-          <Grafismo
-            nome="5"
-            cor="marrom"
-            posicao="-top-32 -right-15"
-            largura="w-72 lg:w-[380px]"
-            opacidade="opacity-20"
-            parallax="mundo"
-            inline
-          />
-        }
-        className={`${MOV.revealCarga} flex flex-col items-center gap-5 text-center lg:items-start lg:text-left`}
-      >
-        <p className="text-eyebrow font-bold uppercase">Erro 404</p>
-        <h1 className="max-w-3xl text-h1 font-normal">Essa página não existe</h1>
-        <p className="max-w-prosa-longa text-lead">
-          O endereço pode ter mudado ou ter sido digitado errado. Os caminhos abaixo levam de volta.
-        </p>
-        <ul className="mt-3 flex flex-wrap justify-center gap-x-8 gap-y-3 lg:justify-start">
-          {CAMINHOS.map((caminho) => (
-            <li key={caminho.href}>
-              <LinkTexto href={caminho.href}>{caminho.rotulo}</LinkTexto>
-            </li>
-          ))}
-        </ul>
+      <CamadaGrafismos pagina="nao-encontrado" sprite="usados" />
+      <Secao fundo="bege" className="flex flex-col items-center lg:items-start">
+        <Nevoa
+          className={`${MOV.revealCarga} flex flex-col items-center gap-5 text-center lg:items-start lg:text-left`}
+        >
+          <p className="text-eyebrow font-bold uppercase">Erro 404</p>
+          <h1 className="max-w-3xl text-h1 font-normal">Essa página não existe</h1>
+          <p className="max-w-prosa-longa text-lead">
+            O endereço pode ter mudado ou ter sido digitado errado. Os caminhos abaixo levam de
+            volta.
+          </p>
+          <ul className="mt-3 flex flex-wrap justify-center gap-x-8 gap-y-3 lg:justify-start">
+            {CAMINHOS.map((caminho) => (
+              <li key={caminho.href}>
+                <LinkTexto href={caminho.href}>{caminho.rotulo}</LinkTexto>
+              </li>
+            ))}
+          </ul>
+        </Nevoa>
       </Secao>
     </>
   );

@@ -1,35 +1,43 @@
 import type { CSSProperties } from "react";
 import { CabecalhoSecao } from "@/components/ui/CabecalhoSecao";
 import { LinhaDesenhada } from "@/components/ui/LinhaDesenhada";
+import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { ETAPAS } from "@/lib/conteudo/metodo";
 import { AO_ENTRAR, MOV } from "@/lib/movimento";
 
 /**
- * §Método 3 · Etapas como linha do tempo animada (afinação 1, 2.11). Mesma
- * gramática dos passos da Home: círculos numerados ligados por uma linha a
- * partir de `lg`. O invólucro é o trilho (`linha-trilho`, timeline `--linha`):
- * a linha 1 → 4 é desenhada por scrub ao longo dele, cada etapa (nome e texto)
- * revela quando a linha alcança o centro dela (`reveal-linha`) e o número faz
- * o pop ao entrar na viewport. Padding compacto: metade do normal, para
- * encostar na pilha dos pilares. Campo-1 na camada ambiente.
+ * §Método 3 · Etapas como linha do tempo animada. Círculos numerados ligados
+ * por uma linha a partir de `lg`.
+ *
+ * Afinação 2 (achado: a coreografia por scrub existia, mas cabia em ~370px de
+ * rolagem com a seção ainda entrando por baixo, e os quatro números faziam o
+ * pop juntos; passava despercebida). Agora é de tempo, disparada uma vez
+ * quando o trilho entra inteiro na tela (gatilho `linha-gatilho`, marcado
+ * pelo `AoEntrar`): a linha se desenha de 1 a 4, cada número faz o pop quando
+ * a linha o alcança (`--mov-t`, a fração do percurso em que ele está) e o card
+ * desliza da linha (translateX 24px → 0) logo depois do número. Abaixo de
+ * `lg` não há linha: cada número faz o pop e cada card entra ao aparecer.
+ * Padding compacto, para encostar na pilha dos pilares.
  */
 export function Etapas() {
+  const ultimo = ETAPAS.length - 1;
+
   return (
-    <Secao fundo="bege" espaco="compacto" campo="campo-1">
-      <CabecalhoSecao
-        titulo={
-          <>
-            As quatro etapas da <em>jornada</em>
-          </>
-        }
-        lead="Da primeira conversa à consolidação dos novos hábitos."
-        className={`${MOV.reveal} mb-14`}
-      />
-      <div
-        className={`${MOV.linhaTrilho} relative`}
-        style={{ "--mov-pontos": ETAPAS.length } as CSSProperties}
-      >
+    <Secao fundo="bege" espaco="compacto">
+      <Nevoa className="mx-auto mb-14 w-fit lg:mx-0">
+        <CabecalhoSecao
+          titulo={
+            <>
+              As quatro etapas da <em>jornada</em>
+            </>
+          }
+          lead="Da primeira conversa à consolidação dos novos hábitos."
+          className={MOV.reveal}
+        />
+      </Nevoa>
+      <Nevoa className={MOV.linhaTrilho}>
+        <span aria-hidden="true" {...{ [AO_ENTRAR]: "" }} className={MOV.linhaGatilho} />
         <LinhaDesenhada
           direcao="horizontal"
           pontos={ETAPAS.length}
@@ -41,25 +49,23 @@ export function Etapas() {
             <li
               key={etapa.nome}
               className="relative flex flex-col items-center gap-3.5 text-center lg:px-5"
+              style={{ "--mov-t": indice / ultimo } as CSSProperties}
             >
               <span
                 aria-hidden="true"
                 {...{ [AO_ENTRAR]: "" }}
-                className={`${MOV.pop} flex size-12 items-center justify-center rounded-full bg-verde font-titulo text-lead text-bege`}
+                className={`${MOV.pop} ${MOV.linhaNumero} flex size-12 items-center justify-center rounded-full bg-verde font-titulo text-lead text-bege`}
               >
                 {indice + 1}
               </span>
-              <div
-                className={`${MOV.revealLinha} flex flex-col items-center gap-3.5`}
-                style={{ "--mov-i": indice } as CSSProperties}
-              >
+              <div className={`${MOV.linhaCard} flex flex-col items-center gap-3.5`}>
                 <h3 className="text-h3 font-semibold">{etapa.nome}</h3>
                 <p className="max-w-prosa-nota text-nota">{etapa.texto}</p>
               </div>
             </li>
           ))}
         </ol>
-      </div>
+      </Nevoa>
     </Secao>
   );
 }

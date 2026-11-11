@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CamadaGrafismos } from "@/components/layout/CamadaGrafismos";
 import { Abertura } from "@/components/metodo/Abertura";
 import { ChamadaFinal } from "@/components/metodo/ChamadaFinal";
 import { ComoComeca } from "@/components/metodo/ComoComeca";
@@ -15,6 +16,7 @@ export const metadata: Metadata = {
 export default function Metodo() {
   return (
     <>
+      <CamadaGrafismos pagina="metodo" />
       <Abertura />
       <Pilares />
       <Etapas />

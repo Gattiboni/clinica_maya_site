@@ -1,5 +1,6 @@
 import { CabecalhoSecao } from "@/components/ui/CabecalhoSecao";
 import { Grafismo } from "@/components/ui/Grafismo";
+import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { MANIFESTO } from "@/lib/conteudo/manifesto";
 import { MOV } from "@/lib/movimento";
@@ -20,31 +21,19 @@ const FRAGMENTOS = [
 
 /**
  * §A Clínica 2 · Manifesto. Blocos entram em sequência de 120ms com
- * profundidade (é leitura, mais lento); no hover levantam e o fragmento de
- * grafismo acende atrás (afinação 1, 2.6). O grafismo-5 do mundo tem as
- * pontas cortadas em cima: ancorado no topo esquerdo, elas ficam na borda da
- * folha (2.7).
+ * profundidade (é leitura, mais lento); no hover levantam e o fragmento do
+ * original acende atrás (afinação 1, 2.6).
  */
 export function Manifesto() {
   return (
-    <Secao
-      fundo="creme"
-      grafismo={
-        <Grafismo
-          nome="5"
-          cor="marrom"
-          posicao="-top-20 -left-[90px]"
-          largura="w-[300px]"
-          opacidade="opacity-22"
-          parallax="mundo"
+    <Secao fundo="creme">
+      <Nevoa className="mx-auto mb-12 w-fit lg:mx-0">
+        <CabecalhoSecao
+          titulo="O nosso manifesto"
+          lead="Por que existimos, como cuidamos e o que oferecemos."
+          className={MOV.reveal}
         />
-      }
-    >
-      <CabecalhoSecao
-        titulo="O nosso manifesto"
-        lead="Por que existimos, como cuidamos e o que oferecemos."
-        className={`${MOV.reveal} mb-12`}
-      />
+      </Nevoa>
       <ul
         className={`${MOV.revealStagger} ${MOV.stagger120} ${MOV.profundo} grid gap-6 lg:grid-cols-3`}
       >

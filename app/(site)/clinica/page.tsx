@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CamadaGrafismos } from "@/components/layout/CamadaGrafismos";
 import { Abertura } from "@/components/clinica/Abertura";
 import { ChamadaFinal } from "@/components/clinica/ChamadaFinal";
 import { CirculoMaya } from "@/components/clinica/CirculoMaya";
@@ -15,6 +16,7 @@ export const metadata: Metadata = {
 export default function AClinica() {
   return (
     <>
+      <CamadaGrafismos pagina="clinica" />
       <Abertura />
       <Manifesto />
       <Espaco />

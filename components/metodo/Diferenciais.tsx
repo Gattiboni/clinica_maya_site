@@ -1,6 +1,7 @@
 import { CabecalhoSecao } from "@/components/ui/CabecalhoSecao";
 import { CirculoMaya } from "@/components/ui/CirculoMaya";
 import { Grafismo } from "@/components/ui/Grafismo";
+import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { DIFERENCIAIS } from "@/lib/conteudo/metodo";
 import { MOV } from "@/lib/movimento";
@@ -17,9 +18,8 @@ const FRAGMENTOS = [
  * §Método 4 · Diferenciais: quatro cards em linha a partir de `lg`, em duas
  * colunas a partir de `sm`. O símbolo corpo-mente-espírito é o `CirculoMaya`
  * (afinação 1, 2.4), que se monta ao entrar e se desmonta ao sair, sobre o
- * creme sólido do canto superior direito (regra 9: sem grafismo nem campo
- * nesta seção, e o slot da folha recorta a sangria das vizinhas); inteiro
- * dentro da folha, nunca cortado. Abaixo de `md` ele cruzaria o título, então
+ * creme do canto superior direito, inteiro dentro da folha, nunca cortado
+ * (slot `simbolo` da `Secao`). Abaixo de `md` ele cruzaria o título, então
  * não aparece (decisão: símbolo cortado ou sobre texto é pior que ausente).
  * Cards com profundidade, hover e fragmento que acende (2.6). Sem fotos, como no mock.
  */
@@ -27,7 +27,7 @@ export function Diferenciais() {
   return (
     <Secao
       fundo="creme"
-      grafismo={
+      simbolo={
         <CirculoMaya
           id="circulo-diferenciais"
           cor="marrom"
@@ -36,7 +36,9 @@ export function Diferenciais() {
         />
       }
     >
-      <CabecalhoSecao titulo="O que torna o método diferente" className={`${MOV.reveal} mb-12`} />
+      <Nevoa className="mx-auto mb-12 w-fit lg:mx-0">
+        <CabecalhoSecao titulo="O que torna o método diferente" className={MOV.reveal} />
+      </Nevoa>
       <ul
         className={`${MOV.revealStagger} ${MOV.profundo} grid gap-5 sm:grid-cols-2 lg:grid-cols-4`}
       >

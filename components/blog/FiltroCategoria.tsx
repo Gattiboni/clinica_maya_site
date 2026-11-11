@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
 import { CardPost } from "@/components/blog/CardPost";
 import type { DadosCardPost } from "@/components/blog/dadosCardPost";
+import { Nevoa } from "@/components/ui/Nevoa";
 import { ESTADO_VAZIO_BLOG, ROTULO_TODOS } from "@/lib/conteudo/blog";
 import { MOV } from "@/lib/movimento";
 
@@ -71,7 +72,11 @@ export function GradePosts({ posts }: { posts: readonly DadosCardPost[] }) {
   const visiveis = atual ? posts.filter((post) => post.categorias.includes(atual)) : posts;
 
   if (visiveis.length === 0) {
-    return <p className="text-center text-lead lg:text-left">{ESTADO_VAZIO_BLOG}</p>;
+    return (
+      <Nevoa elemento="p" className="mx-auto w-fit text-center text-lead lg:mx-0 lg:text-left">
+        {ESTADO_VAZIO_BLOG}
+      </Nevoa>
+    );
   }
 
   return (

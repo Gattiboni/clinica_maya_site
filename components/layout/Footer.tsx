@@ -14,6 +14,9 @@ const CLASSES_ICONE =
 const CLASSES_LINK =
   "text-nota underline underline-offset-3 transition-colors hover:text-creme focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bege";
 
+/** Linha final (copy v1.3): um texto só, para a inscrição ficar inteira no HTML. */
+const LINHA_REGISTRO = `${CLINICA.razaoSocial} · Inscrição CRM-SC nº ${CLINICA.inscricaoCrm} · Responsável técnica: ${CLINICA.responsavelTecnica.nome} · ${CLINICA.responsavelTecnica.crm} · ${CLINICA.responsavelTecnica.rqe}`;
+
 function TituloColuna({ children }: { children: string }) {
   return <h2 className="mb-1.5 text-corpo font-semibold tracking-rotulo uppercase">{children}</h2>;
 }
@@ -22,8 +25,12 @@ function TituloColuna({ children }: { children: string }) {
  * Footer de todas as páginas (server component). Abaixo de `md` as três
  * colunas viram uma, centralizada (regra de recentralização do lote).
  * O grafismo-5 vai `inline` (sem depender do sprite da página): o footer
- * também aparece em páginas sem sprite, como a Política de privacidade. O
- * símbolo corpo-mente-espírito é o `CirculoMaya` estático (o PNG saiu de uso).
+ * também aparece em páginas sem sprite, como a Política de privacidade. Fica
+ * no canto inferior esquerdo, com a borda cortada da arte (a esquerda) fora
+ * da tela, e o símbolo corpo-mente-espírito (o `CirculoMaya` estático) vai
+ * para o canto direito. O footer está atrás do `<main>`, fora da camada
+ * global de grafismos. Linha final (Revisão v2): razão social, inscrição da
+ * clínica no CRM-SC e responsável técnica.
  *
  * Cortina (afinação 1, 2.8): `footer-cortina` deixa o footer `sticky` no fim
  * da viewport, atrás do `<main>` (palco opaco com sombra); ao rolar até o fim,
@@ -38,7 +45,7 @@ export function Footer() {
       <Grafismo
         nome="5"
         cor="bege"
-        posicao="-right-10 -bottom-30"
+        posicao="-bottom-30 -left-6"
         largura="w-[300px]"
         opacidade="opacity-18"
         inline
@@ -49,7 +56,7 @@ export function Footer() {
         cor="bege"
         fundo="verde"
         animado={false}
-        className="pointer-events-none absolute -bottom-20 -left-[70px] w-[260px] opacity-10 select-none"
+        className="pointer-events-none absolute -right-[70px] -bottom-20 w-[260px] opacity-10 select-none"
       />
       <Container className="relative pt-16 pb-8">
         <div className="grid gap-12 text-center md:grid-cols-[1.4fr_1fr_1fr] md:items-start md:text-left">
@@ -141,8 +148,8 @@ export function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col gap-2 border-t border-bege/25 pt-6 text-center text-legenda md:flex-row md:justify-between md:gap-6 md:text-left">
-          <span>© 2026 {CLINICA.nome} · Todos os direitos reservados</span>
-          <span>Responsável técnica: {CLINICA.responsavelTecnica}</span>
+          <span>{`© 2026 ${CLINICA.nome} · Todos os direitos reservados`}</span>
+          <span>{LINHA_REGISTRO}</span>
         </div>
       </Container>
     </footer>

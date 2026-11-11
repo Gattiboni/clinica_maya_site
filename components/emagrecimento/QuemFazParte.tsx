@@ -1,6 +1,7 @@
 import { CabecalhoSecao } from "@/components/ui/CabecalhoSecao";
 import { Grafismo } from "@/components/ui/Grafismo";
 import { LinkTexto } from "@/components/ui/LinkTexto";
+import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { AREAS_EMAGRECIMENTO } from "@/lib/conteudo/emagrecimento";
 import { MOV } from "@/lib/movimento";
@@ -21,11 +22,13 @@ const FRAGMENTOS = [
 export function QuemFazParte() {
   return (
     <Secao fundo="bege">
-      <CabecalhoSecao
-        titulo="Quem pode fazer parte do seu plano"
-        lead="O acompanhamento é médico e nutricional. A psicologia entra quando faz sentido para você e para a equipe."
-        className={`${MOV.reveal} mb-11`}
-      />
+      <Nevoa className="mx-auto mb-11 w-fit lg:mx-0">
+        <CabecalhoSecao
+          titulo="Quem pode fazer parte do seu plano"
+          lead="O acompanhamento é médico e nutricional. A psicologia entra quando faz sentido para você e para a equipe."
+          className={MOV.reveal}
+        />
+      </Nevoa>
       <ul
         className={`${MOV.revealStagger} ${MOV.profundo} grid gap-6 sm:grid-cols-2 lg:grid-cols-3`}
       >

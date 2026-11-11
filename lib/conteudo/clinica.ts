@@ -21,7 +21,16 @@ export const CLINICA = {
     cep: "CEP 88180-211",
   },
   horario: "Seg. a sex., 8h às 18h",
-  responsavelTecnica: "Dra. Mayara Brasil · CRM SC 21112 · RQE 22484",
+  /** Pessoa jurídica (copy v1.3, Revisão v2): rodapé e Política de privacidade. */
+  razaoSocial: "Clínica Dra. Mayara Brasil Ltda",
+  cnpj: "52.845.958/0001-87",
+  /** Inscrição da clínica (pessoa jurídica) no CRM-SC. */
+  inscricaoCrm: "11127",
+  responsavelTecnica: {
+    nome: "Dra. Mayara Brasil Machado",
+    crm: "CRM-SC 21112",
+    rqe: "RQE 22484",
+  },
   /** Destino de todo CTA "Agendar" (página do Lote 3). */
   agendarHref: "/contato#agendar",
   politicaPrivacidade: {

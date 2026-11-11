@@ -2,6 +2,7 @@ import Image from "next/image";
 import { CirculoMaya } from "@/components/ui/CirculoMaya";
 import { LinhaDesenhada } from "@/components/ui/LinhaDesenhada";
 import { ProximaFolha } from "@/components/ui/ProximaFolha";
+import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { PASSOS } from "@/lib/conteudo/passos";
 import { AO_ENTRAR, MOV } from "@/lib/movimento";
@@ -14,21 +15,23 @@ const ID_PASSO = "passo";
  *
  * Fase 4 (mapa §2 H5; afinação 1, 2.3): os três passos viram `stack`, três
  * folhas creme `sticky` que se empilham; a seguinte começa a cobrir a anterior
- * enquanto ela ainda está inteira (trajeto de 65svh por folha no desktop,
- * folha de `min(56svh, 32rem)`; no mobile, conteúdo + respiro). O fundo da
- * pilha é creme como as folhas, então o espaço entre elas é folha contínua. A
- * linha 1 → 3 é desenhada ao longo da pilha (um trilho por folha, no mesmo
- * ponto e na mesma timeline, lido como um só); os números fazem o pop ao
- * entrar; botão "próximo" discreto no desktop rola até a folha seguinte ficar
- * inteira. A foto abre da esquerda para a direita e o símbolo decorativo é o
- * `CirculoMaya` estático no mundo, com parallax, cortado só pela borda da tela.
+ * enquanto ela ainda está inteira. Afinação 2: pilha concisa (`stack-passos`),
+ * trajeto de 50svh por folha no desktop e folha de `min(50svh, 30rem)`, de
+ * modo que o passo 3 chega em uma viewport de rolagem; no mobile, conteúdo +
+ * respiro. O fundo da pilha é creme como as folhas. A linha 1 → 3 é
+ * desenhada ao longo da pilha (um trilho por folha, no mesmo ponto e na mesma
+ * timeline, lido como um só); os números fazem o pop ao entrar; botão
+ * "próximo" discreto no desktop rola até a folha seguinte ficar inteira. A
+ * foto abre da esquerda para a direita e o símbolo decorativo é o
+ * `CirculoMaya` estático (slot `simbolo`), com parallax, cortado só pela
+ * borda da tela. As folhas são cartas opacas: a camada global passa atrás.
  */
 export function ComoComeca() {
   return (
     <>
       <Secao
         fundo="bege"
-        grafismo={
+        simbolo={
           <span className={`${MOV.parallaxMundo} absolute top-10 -right-15 w-[260px]`}>
             <CirculoMaya
               id="circulo-como-comeca"
@@ -41,8 +44,8 @@ export function ComoComeca() {
         }
         className="grid items-end gap-8 lg:grid-cols-[1fr_300px] lg:gap-12"
       >
-        <div
-          className={`${MOV.revealStagger} flex flex-col items-center gap-3 text-center lg:items-start lg:text-left`}
+        <Nevoa
+          className={`${MOV.revealStagger} mx-auto flex w-fit flex-col items-center gap-3 text-center lg:mx-0 lg:items-start lg:text-left`}
         >
           <h2 className="text-h2 font-medium">
             Toda jornada começa com uma <em>conversa</em>
@@ -51,7 +54,7 @@ export function ComoComeca() {
             Você não precisa saber de antemão qual área procurar.
             <br />A gente ajuda a encontrar o caminho.
           </p>
-        </div>
+        </Nevoa>
         <Image
           src={home1}
           alt="Recepção da Clínica Maya"
@@ -59,7 +62,7 @@ export function ComoComeca() {
           className={`${MOV.maskDireita} aspect-[3/2] w-[300px] max-w-full justify-self-center rounded-card object-cover object-[50%_25%] lg:justify-self-end`}
         />
       </Secao>
-      <div className={`${MOV.stack} bg-creme`}>
+      <div className={`${MOV.stack} ${MOV.stackPassos} bg-creme`}>
         {PASSOS.map((passo, indice) => (
           <Secao
             key={passo.titulo}

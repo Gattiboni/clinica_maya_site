@@ -1,6 +1,6 @@
-# Copy do site: Clínica Maya · v1.2 (Lotes 1, 2 e 3a)
+# Copy do site: Clínica Maya · v1.3.2 (Lotes 1, 2, 3a, Revisão v2 e pop-ups da Equipe)
 
-**29/10/2026** (v1.2: Atendimento on-line, Blog, Contato, 404 e Política de privacidade; v1.1.1: atributos visuais do Lote 2 alinhados ao mock após o relatório do Codinho: grafismos, fundos, fotos e itálicos; v1.1: Equipe, Método, Emagrecimento e Dra. Mayara; v1.0.1: correções após o relatório do Codinho; itálicos, grafismos e fundos de A Clínica alinhados ao mock). Fonte única da copy institucional que vai para os `.tsx` (Decisão 005, item 2). Origem: mock v3.1 aprovado em 29/10 (`Clinica Maya - Site Completo v20261014.html`; páginas desempacotadas em `mock-v3.1-*.html` na raiz, gitignored) e esqueleto v3. O Codinho transcreve **literal**; correção de texto é edição aqui primeiro, depois no código.
+**10/11/2026** (v1.3.2: pop-up da Talita Porto, a partir do documento dela de 16/10; v1.3.1: pop-ups da Equipe; v1.3: Revisão v2 da gestora e da cliente, seção final deste arquivo, que **prevalece** sobre as seções anteriores onde houver conflito; v1.2: Atendimento on-line, Blog, Contato, 404 e Política de privacidade; v1.1.1: atributos visuais do Lote 2 alinhados ao mock após o relatório do Codinho: grafismos, fundos, fotos e itálicos; v1.1: Equipe, Método, Emagrecimento e Dra. Mayara; v1.0.1: correções após o relatório do Codinho; itálicos, grafismos e fundos de A Clínica alinhados ao mock). Fonte única da copy institucional que vai para os `.tsx` (Decisão 005, item 2). Origem: mock v3.1 aprovado em 29/10 (`Clinica Maya - Site Completo v20261014.html`; páginas desempacotadas em `mock-v3.1-*.html` na raiz, gitignored) e esqueleto v3. O Codinho transcreve **literal**; correção de texto é edição aqui primeiro, depois no código.
 
 Convenções: `[PENDÊNCIA: ...]` é nota para humanos e **nunca vai para o código**. Itálico marcado com `*palavra*` é ênfase do mock e vai para o código. Links de texto terminam com seta "→" decorativa (`aria-hidden`), como no mock; botões não têm seta. Travessão não existe no site (varredura); use vírgula, dois-pontos ou ponto. Tom feminino para a paciente ("acompanhada"), neutro para a equipe.
 
@@ -526,3 +526,163 @@ Lote 1: `home-1.jpg` · `home-2.jpg` · `equipe-mayara.jpg` · `clinica-1.jpg` �
 Lote 2: `equipe-arthur.jpg` · `equipe-bianca.jpg` · `equipe-talita.jpg` · `equipe-tania.jpg` (todas já em `public/fotos/`, 29/10)
 
 `[PENDÊNCIA: confirmar que os sete nomes existem na pasta de origem com essa grafia; se divergirem, renomear na cópia, não no código.]`
+
+---
+
+# Revisão v2 (10/11/2026): deltas que prevalecem sobre as seções acima
+
+Fonte: `REVISÕES SITE V2.docx` (Amanda, com os pedidos da Dra. Mayara), reunião de 09/11, certificado do CRM-SC e avaliações públicas do Google. Onde um item abaixo contradiz uma seção anterior, **vale o item abaixo**.
+
+## Global
+
+- **Rodapé, linha final:** © 2026 Clínica Maya · Todos os direitos reservados  ·  Clínica Dra. Mayara Brasil Ltda · Inscrição CRM-SC nº 11127 · Responsável técnica: Dra. Mayara Brasil Machado · CRM-SC 21112 · RQE 22484
+- **Política de privacidade, "Quem somos":** Este site é da Clínica Maya (Clínica Dra. Mayara Brasil Ltda, CNPJ 52.845.958/0001-87, inscrita no CRM-SC sob o nº 11127), clínica de saúde integral com sede na Av. João Antônio Besen, 265, Centro, Antônio Carlos/SC, CEP 88180-211. Responsável técnica: Dra. Mayara Brasil Machado, CRM-SC 21112. Quando esta política fala em "nós", fala da Clínica Maya.  ·  `[PENDÊNCIA: encarregado de dados continua sem nome e sem e-mail.]`
+- **Grafismos:** só os três originais da marca (3, 4, 5), sem espelhar, sem esticar fora de proporção; escala uniforme é permitida. Os "campos de linhas" saem de todas as páginas.
+- **Cards de área (Home e A Clínica):** só nome da área e texto; **sem nomes de profissionais e sem modalidade**. Nome e modalidade existem só na Equipe.
+
+## Home
+
+- **Hero:** foto passa a ser a fachada, `public/fotos/clinica-1.jpg`, alt "Fachada da Clínica Maya". Grafismo do hero é o maior do site, `grafismo-4` (o de várias folhas), ao fundo.
+- **Áreas de cuidado:** cards sem nomes e sem modalidade (regra global).
+- **Dores ("Talvez você se reconheça aqui"): seção removida.** A cliente acha que confunde; a identificação virá pelos posts do blog.
+- **Faixa emagrecimento, texto novo:**
+  - H2: Emagrecimento saudável, sem radicalismos
+  - Texto: Na primeira consulta, a Dra. Mayara conhece a sua história e indica o programa de acompanhamento que faz mais sentido para você. Além das consultas médicas, pode contar com o apoio de nutrição, psicologia e outras áreas da clínica. A decisão é sempre compartilhada: nada é imposto ou obrigatório.
+  - Botão: Saiba mais → `/emagrecimento`
+- **Avaliações (seção nova, entre Dra. Mayara e Blog; substitui o espaço reservado de prova social):**
+  - H2: O que dizem as pacientes
+  - Lead: Avaliações públicas deixadas no Google.
+  - 3 depoimentos, transcritos literalmente, nome com inicial do sobrenome:
+    1. "Ótimo espaço, atendimento maravilhoso na recepção e a Dra. Mayara é ótima, cuidadosa em cada detalhe e sempre atenciosa e prestativa nas diferentes necessidades dos pacientes." · Joice F.
+    2. "Uma clínica acolhedora, organizada e com profissionais muito atenciosos e competentes. É muito bom ser atendida em um lugar onde somos tratados com carinho, respeito e profissionalismo." · Elisa
+    3. "Desde a recepção até o atendimento com a doutora Mayara. Ela é muito atenciosa comigo e a nutri também." · Marivone M.
+  - Botão: Ver todas as avaliações no Google → `https://share.google/nynv1xQtxqTvIDMBR` (nova aba)
+  - Regra: sem nota numérica fixa no site (muda), sem depoimento que cite peso, quilos, prazo ou resultado (CFM 2.336/2023). Depoimentos de Fernanda e Carla ficam fora por isso.
+
+## A Clínica
+
+- **Espaço:** terceira foto passa a ser o consultório médico, `consultorio-1.jpg`, alt "Consultório médico da Clínica Maya"; quarta foto passa a ser a sala de saúde capilar, `consultorio-2.jpg` (provisória; a gestora fotografa de novo), alt "Sala de saúde capilar da Clínica Maya". Primeira e segunda continuam `clinica-1.jpg` e `clinica-2.jpg`.
+- **Quem faz a clínica:** cards sem nomes e sem modalidade (regra global).
+
+## Equipe (substitui integralmente os cards da seção Equipe acima)
+
+Card: foto (quando houver) · nome · título e registro · resumo · modalidade · Instagram (nova aba). Textos literais da gestora.
+
+**`#medicina` · Medicina**
+- Dra. Mayara Brasil · Médica de Família · CRM SC 21112 · RQE 22484 · Médica de família e fundadora da clínica, com atuação em emagrecimento e saúde. Atende adultos com escuta e tempo, cuidando de cada história de forma individualizada. · Presencial e on-line · @dramayarabrasilm · foto `equipe-mayara.jpg`
+- Dr. Arthur Hank · Cardiologista · CRM SC 18646 · RQE 16250 · Cardiologista, com foco na prevenção e no tratamento de doenças do coração. Atende adultos e idosos com escuta atenta e orientações claras, baseadas em evidências. · Presencial · @dr.arthurhank_cardiologista · foto `equipe-arthur.jpg`
+- `[PENDÊNCIA: Dra. Beatriz Dalssasso, nova médica: aguardando dados e foto; não entra até vir.]`
+
+**`#nutricao` · Nutrição**
+- Tânia Guesser · Nutricionista · CRN-10 11976 · Nutricionista com foco em emagrecimento e performance esportiva. Atende mulheres com escuta e estratégias que cabem na rotina, sem dietas impossíveis de manter. · Presencial e on-line · @taniagnutri · foto `equipe-tania.jpg`
+
+**`#psicologia` · Psicologia**
+- Alexandra Invitti · Psicóloga · CRP 12/09797 · Psicóloga que atende crianças, adolescentes, adultos e casais, com orientação familiar, avaliação neuropsicológica e apoio ao comportamento alimentar. · Presencial · @alexandrainvitti.psico · foto `equipe-alexandra.jpg`
+- Gabriella Sponton · Psicóloga · CRP 32348 · Psicóloga que atende mulheres com ansiedade, depressão, maternidade e mudanças de vida. Oferece um espaço de acolhimento, sem julgamentos, para entender a própria mente. · Presencial e on-line · @gabriellaspontonpsi · foto `equipe-gabriella.jpg`
+- Beatriz Nietsche · Psicóloga · CRP 12/7482 · Psicóloga que atende crianças e adolescentes, auxiliando no desenvolvimento emocional e no enfrentamento de desafios relacionados à infância e à adolescência. Oferece um espaço de acolhimento e escuta, respeitando a singularidade de cada criança e sua família. Também realiza orientação parental. · Presencial e on-line · @beatriznietchepsi · foto `equipe-beatriz.jpg`
+
+**`#terapia` · Terapia**
+- Talita Porto · Enfermeira · COREN-SC 243287 · Enfermeira e terapeuta, com mestrado em Saúde Mental e Atenção Psicossocial. Acompanha pessoas a partir de 11 anos em processos de autoconhecimento, autoestima e relações. · Presencial · @talitaportoterapias · foto `equipe-talita.jpg`
+
+**`#capilar` · Saúde capilar**
+- Bianca Folzke · Fisioterapeuta · CREFITO 294907-F · Fisioterapeuta tricologista que atende pessoas com queda de cabelo e afinamento dos fios. Avalia o couro cabeludo em detalhes. · Presencial e on-line · @biancamelofolzke · foto `equipe-bianca.jpg`
+
+Resolve a pendência Folske × Folks: a grafia é **Folzke**. Bios longas (`CV_EQUIPE.docx`) ficam para os pop-ups de cada profissional, depois da publicação.
+
+## Método
+
+- **Abertura:** foto passa a ser `metodo-1.jpg` (convertida do HEIC da pasta), alt "Ambiente da Clínica Maya".
+
+## Emagrecimento
+
+- **Abertura, texto:** Na primeira consulta, a Dra. Mayara conhece a sua história e indica o programa de acompanhamento que faz mais sentido para você. Além das consultas médicas, pode contar com o apoio de nutrição, psicologia e outras áreas da clínica. A decisão é sempre compartilhada: nada é imposto ou obrigatório.
+- **Porta de entrada, texto:** É nela que vocês decidem como será o seu tratamento e sua jornada de emagrecimento.  ·  botão e link permanecem
+- **Card novo "Conheça a Dra. Mayara"**, entre Porta de entrada e Quem faz parte, fino, com foto pequena (`equipe-mayara.jpg`), eyebrow "Medicina · Responsável técnica", texto: Médica de família e fundadora da clínica. Conheça a trajetória, como é a consulta e a formação. · Link: Conheça a Dra. Mayara → `/dra-mayara-brasil`
+- **Quem faz parte:** o card Medicina continua levando a `/equipe#medicina` (lá estão a Dra. Mayara e o Dr. Arthur).
+
+## Dra. Mayara (substitui as seções 2, 3 e 4 acima)
+
+### Sobre a Dra. Mayara
+- Parágrafo 1: A Dra. Mayara Brasil é médica de Família e Comunidade, com mais de 10 anos de experiência. Ela fundou a Clínica Maya, em Antônio Carlos, na Grande Florianópolis, com um propósito claro: oferecer um cuidado baseado em ciência, com tempo para ouvir cada paciente de verdade.
+- Parágrafo 2: Hoje, seu foco é o tratamento médico do sobrepeso e da obesidade, sempre individualizado e sem julgamentos. Atende adultos presencialmente e on-line.
+
+### Como é a consulta
+- Parágrafo 1: A consulta dura cerca de 1h30. Esse tempo existe para conhecer a fundo a sua história, a sua rotina e o que tem dificultado o seu emagrecimento até aqui, com escuta atenta e sem pressa.
+- Parágrafo 2: O olhar vai além da balança. Sono, ansiedade, comer emocional, compulsão alimentar e a sua relação com a comida fazem parte da conversa, assim como a investigação de metabolismo, alterações hormonais e deficiências de vitaminas.
+- Parágrafo 3: Na consulta presencial, além do exame físico e das medidas corporais, é feita a bioimpedância, que mostra a sua composição corporal e ajuda a acompanhar sua evolução com mais precisão do que o peso sozinho.
+- Parágrafo 4: A partir disso, vocês constroem juntas um plano de tratamento individualizado, pensado para caber na sua vida e ser sustentável a longo prazo.
+
+### Formação
+- Graduação em Medicina · Universidade do Sul de Santa Catarina (UNISUL) · 2014
+- Título de Especialista em Medicina de Família e Comunidade · SBMFC/AMB
+- Membra da ABESO · Associação Brasileira para o Estudo da Obesidade e da Síndrome Metabólica
+- Linha de registro: Dra. Mayara Brasil Machado · CRM-SC 21112 · RQE 22484 · Medicina de Família e Comunidade
+
+`[PENDÊNCIA: universidade e ano vieram entre colchetes no doc da gestora; confirmar com a Dra. antes da publicação. "Mais de 10 anos" agora é texto da própria cliente.]`
+
+## Fotos novas (origem: pasta "site" do Google Drive → `revisao_mock\r20261014\web\` → `public/fotos/`)
+
+`consultorio-1.heic` → `consultorio-1.jpg` · `consultorio-2.heic` → `consultorio-2.jpg` · `método-1.heic` → `metodo-1.jpg` · `equipe-gabriella.jpeg` → `equipe-gabriella.jpg` · `equipe-beatriz.jpg` · `equipe-alexandra.jpg` (todas convertidas e em `public/fotos/` em 10/11; HEIC via pillow-heif, lado maior 2000px, JPEG q85)
+
+## Pop-ups da Equipe (v1.3.1 e v1.3.2, 10/11): bios longas
+
+Fonte: `CV_EQUIPE.docx` (respostas das próprias profissionais à gestora), editadas para o tom da casa e para o filtro regulatório: sem nome de técnica de psicoterapia, sem duração de consulta fora da página da Dra. Mayara, sem promessa, sem medicamento. Respostas sobre vida pessoal fora do consultório não entram (nem todas responderam; o pop-up é profissional). Estrutura de cada pop-up: cabeçalho igual ao card (foto, nome, título e registro, modalidade, @) e os blocos abaixo; bloco sem texto não aparece.
+
+**Quem tem pop-up ativo:** Alexandra, Bianca, Tânia, Gabriella, Dr. Arthur e Talita (v1.3.2). **Dra. Mayara:** o card leva à página `/dra-mayara-brasil` (o texto dela tem "1h30", que só pode existir lá). **Sem pop-up (card estático, sem clique):** Beatriz Nietsche, até mandar a versão longa.
+
+### Alexandra Invitti
+- **Formação:** Graduação em Psicologia. Orientação familiar e educação parental. Neuropsicologia pelo Hospital Albert Einstein.
+- **O que atende e para quem:** Atendo crianças, adolescentes, adultos e casais. Realizo avaliação neuropsicológica e, no acompanhamento em equipe, auxilio as pacientes nas questões relacionadas ao comportamento alimentar. Meus atendimentos são presenciais.
+- **Como é a primeira consulta:** Recebo a paciente e os familiares com um sorriso, acolhimento e disponibilidade para ouvir. Busco compreender o que ela sente e conhecer sua história de vida: é nesse momento que começamos a construir o vínculo. Espero que ela saia com as emoções mais aliviadas, com pensamentos e ações para refletir e com esperança de melhora.
+- **O que não faço e não prometo:** Na minha consulta você não encontrará julgamentos, críticas, imposições ou respostas prontas. Não estabeleço prazos para a melhora, porque cada pessoa tem o próprio tempo, que precisa ser respeitado. Não decido por você, não diminuo a sua dor e não desconsidero a sua história. Caminho ao lado da paciente, com conhecimento científico, técnica e sensibilidade, para ajudá-la a compreender seus sentimentos, desenvolver recursos emocionais e encontrar os próprios caminhos.
+- **Por que escolhi essa área:** Escolhi ser psicóloga para ajudar as pessoas a cuidar da saúde mental, enfrentar dificuldades, aliviar emoções e encontrar caminhos para uma vida mais feliz. Acompanhar o desenvolvimento de alguém, perceber suas mudanças e conquistas, é uma das grandes realizações da minha profissão.
+- **Frase:** "Eu acredito que cuidar de alguém é ser empático com os sentimentos e as necessidades do ser humano."
+
+### Bianca Folzke
+- **Formação:** Fisioterapeuta, pós-graduada em Tricologia e em Saúde da Mulher. Terapeuta capilar pela Academia Brasileira de Tricologia.
+- **O que atende e para quem:** Atendo mulheres de todas as idades que estejam passando por queda de cabelo e afinamento dos fios. Meu atendimento é principalmente presencial; para mulheres de outros estados ou que moram mais longe, também atendo on-line.
+- **Como é a primeira consulta:** Começa com uma avaliação detalhada. Além de conversar e entender toda a sua história, uso um tricoscópio para analisar o couro cabeludo e os fios. Depois dessa análise, conversamos sobre os objetivos e sobre o que faz sentido para o seu momento. Eu escuto muito. Procuro entender de verdade a dor daquela mulher, validar o que ela está vivendo e nunca julgar o que ela já tentou antes de chegar até mim.
+- **O que não faço e não prometo:** Não indico o que a pessoa não precisa. Não comercializo produtos capilares e não realizo procedimentos sem respaldo científico. Meu trabalho é baseado em ciência.
+- **Por que escolhi essa área:** Minha história com a tricologia começou de um lugar muito pessoal: depois de uma cirurgia, meu cabelo começou a cair e, mais tarde, a afinar. Passei pelo que muitas das minhas pacientes passam antes de chegar a um diagnóstico e a um cuidado adequado. Foi estudando para cuidar de mim que encontrei a terapia capilar, e foi uma amiga que me perguntou por que eu não atendia. Continuei estudando, me aprofundando, e me tornei tricologista.
+- **Frase:** "Eu também já vi meu cabelo cair. Ali, tudo começou."
+
+`[PENDÊNCIA: a versão original da Bianca cita o diagnóstico, a cirurgia e um medicamento; a edição acima deixa a história sem esses nomes. Confirmar com ela se prefere assim ou com mais detalhe.]`
+
+### Tânia Guesser
+- **Formação:** Pós-graduada em nutrição clínica, esportiva e materno-infantil. Atendimento voltado ao emagrecimento e à performance esportiva.
+- **O que atende e para quem:** Atendo presencialmente e on-line, principalmente mulheres entre 20 e 45 anos que desejam emagrecer, melhorar a performance nos treinos e construir uma relação mais leve com a comida. Mulheres que já tentaram muitas dietas e ainda não encontraram um caminho que funcione de verdade; que treinam, mas não percebem a evolução que gostariam; ou que sentem falta de força e energia para concluir os treinos. A alimentação precisa fazer sentido para o corpo, os objetivos e a vida de cada mulher.
+- **Como é a primeira consulta:** É um momento de escuta, acolhimento e compreensão da sua história. Busco conhecer rotina, hábitos, dificuldades, experiências anteriores com dietas e objetivos. A partir dessa conversa, construo uma estratégia individualizada, considerando a sua realidade, sem propor mudanças que não cabem no seu dia a dia. Quero que você saia entendendo os próximos passos e percebendo que é possível cuidar da alimentação sem abrir mão da sua rotina.
+- **O que não faço e não prometo:** Não acredito em uma única estratégia alimentar que sirva para todas, nem que emagrecer precise ser marcado por restrições extremas e sofrimento. Não proponho rotinas impossíveis de seguir nem ignoro as dificuldades de cada paciente. Mais do que entregar uma lista de alimentos, quero contribuir para uma relação melhor com a comida e para caminhos possíveis de cuidar da saúde.
+- **Por que escolhi essa área:** Sempre tive vontade de cuidar das pessoas antes que elas precisassem chegar ao hospital. Alimentação e exercício são grandes aliados na prevenção e na construção de uma vida com mais saúde. Foi essa visão de cuidado e prevenção que me aproximou da Nutrição.
+- **Frase:** "Por você, com você."
+
+### Gabriella Sponton
+- **Formação:** Psicologia pela Universidade Paulista (UNIP) e pós-graduação em Psicopatologia pela Universidade Focus.
+- **O que atende e para quem:** Você não precisa dar conta de tudo sozinha. Atendo mulheres que enfrentam ansiedade, depressão, desafios da maternidade e mudanças de vida. Acredito que a terapia pode ser um espaço de acolhimento, respeito e autoconhecimento, onde você possa falar sobre o que sente sem medo de julgamentos.
+- **Como é o acompanhamento:** Com reflexões, exercícios práticos e psicoeducação, gosto de ajudar cada paciente a compreender melhor a própria mente, reconhecer seus padrões e encontrar novas formas de lidar com o que vive.
+- **Frase:** "Entender a mente é o primeiro passo em direção ao bem-estar."
+
+### Dr. Arthur Hank
+- **Formação:** Médico pela Universidade Regional de Blumenau (2012) e cardiologista pelo Instituto de Cardiologia de Santa Catarina, em São José (2018).
+- **O que atende e para quem:** Atendo adultos e idosos que buscam cuidar melhor da saúde, com foco na promoção da saúde e na prevenção e no tratamento de doenças cardiovasculares. Avalio pacientes com hipertensão, colesterol elevado, insuficiência cardíaca, palpitações, arritmias, queixas de cansaço e também quem passou por infarto, angioplastia ou cirurgia cardíaca. Meu objetivo é ajudar cada paciente a entender melhor a própria saúde, prevenir problemas futuros e encontrar o melhor caminho para cuidar do coração.
+- **Como é a primeira consulta:** Gosto de ouvir com cuidado e atenção, entendendo não só as queixas, mas também aspectos da vida, da família e do trabalho que influenciam o bem-estar. Reviso o histórico de saúde, os medicamentos em uso e suas indicações; quando necessário, solicito exames complementares para avaliar a saúde cardiovascular e identificar oportunidades de prevenção. Reforço a importância da atividade física. Faço questão de deixar o paciente à vontade para perguntar, com respostas claras, acessíveis e fundamentadas em evidências científicas.
+- **O que não faço e não prometo:** Não prometo resultados fáceis nem acredito em soluções iguais para todos. Cada paciente tem sua história, suas necessidades e seus objetivos. Meu papel é orientar com clareza, usar as melhores evidências disponíveis e construir, junto com o paciente, o caminho mais adequado. Um bom atendimento começa com confiança e expectativas realistas.
+- **Por que escolhi essa área:** Escolhi a Cardiologia pela relevância da especialidade e pela forma como ela se relaciona com diversos sistemas do corpo. Gosto de atuar em diferentes etapas da vida do paciente: da prevenção de um infarto ao cuidado e à reabilitação de quem passou por um evento cardiovascular ou por uma cirurgia. Também me identifico com o acompanhamento de pacientes com insuficiência cardíaca, buscando melhorar sintomas, qualidade de vida e prognóstico.
+- **Frase:** "Cuidar de alguém é olhar o mundo através dos seus olhos e ter empatia pelas suas angústias."
+
+### Talita Porto (v1.3.2)
+
+Fonte: `Bio clínica Talita Porto.doc` (16/10/2026, respostas dela ao mesmo roteiro). Filtro mais apertado da equipe: o briefing veta divulgar a terapia dela como serviço da clínica e o regulatório veta práticas sem respaldo científico no site de uma clínica médica. O pop-up fica no que a gestora já validou no card (enfermeira, mestrado, escuta, autoestima e relações). Título do terceiro bloco é "Como é a primeira sessão" (ela não usa "consulta").
+
+- **Formação:** Enfermeira pela Universidade Federal de Santa Catarina, com especialização em Saúde da Família e mestrado em Saúde Mental e Atenção Psicossocial pela mesma universidade. Doze anos de trabalho no Sistema Único de Saúde, onde construiu a escuta e o acolhimento de pessoas de realidades muito diferentes. Estudos posteriores em relações familiares e desenvolvimento humano.
+- **O que atende e para quem:** Acompanho processos de autoconhecimento e travessias de transformação, com pessoas a partir de 11 anos, presencialmente. Acolho quem quer compreender melhor as próprias emoções, os relacionamentos e a maneira como vem vivendo a própria vida: autoestima, identidade, vínculos afetivos, conflitos emocionais, transições de vida e dificuldades nas relações. Atendo individualmente, casais e grupos, e meu atendimento é aberto a diferentes histórias, identidades, orientações sexuais, configurações familiares e formas de existir.
+- **Como é a primeira sessão:** A primeira sessão é, antes de tudo, um encontro. Você pode chegar como está, sem organizar as emoções antes e sem procurar as palavras certas. Começamos pela escuta da sua história, do momento que você vive e do que a trouxe até aqui; não parto de respostas prontas. Também me interessa compreender como as experiências aparecem no corpo, nas relações e no dia a dia. Depois conversamos sobre suas necessidades, suas expectativas e as possibilidades de acompanhamento. Quero que você saia se sentindo respeitada e ouvida, sem a obrigação de ter compreendido ou resolvido tudo no primeiro dia.
+- **O que não faço e não prometo:** Não ofereço fórmulas prontas, respostas universais ou garantias de resultado. Não acredito que exista uma única maneira correta de viver, sentir ou se relacionar, e não defino quem a pessoa deveria ser nem quais escolhas precisa fazer. Algumas situações pedem o acompanhamento de outros profissionais, e nesses casos o trabalho é compartilhado com a equipe e com outros serviços de saúde. O cuidado não substitui a autonomia: ele ajuda a pessoa a reconhecer os próprios recursos e a participar, de forma mais consciente, das decisões da sua vida.
+- **Por que escolhi essa área:** Comecei na Enfermagem, mas meu interesse pelas pessoas sempre foi além do corpo que adoece. Com o tempo entendi que, por trás de uma queixa, existe alguém atravessado por histórias, relações e valores próprios. A saúde pública aprofundou essa percepção e me levou a estudar o corpo, as emoções e a subjetividade. Me interessa compreender não só o que acontece com alguém, mas como essa pessoa vive aquilo que lhe acontece. Cuidar não é só acompanhar a dor: é também abrir espaço para outras possibilidades de viver.
+- **Frase:** "Sou porto, mas não sou cais; sou travessia."
+
+`[PENDÊNCIA (gestora): ficaram fora do pop-up, pelo filtro acima, os títulos e práticas de terapia que ela lista no documento, as especializações fora da enfermagem, o foco temático do mestrado e os temas de sexualidade. A versão curta do card segue a do documento da gestora. Ela pergunta no documento se pode constar atendimento on-line fora da clínica; o card diz presencial, como a gestora mandou. Blocos "O que as pessoas comentam" e "Fora do consultório" não entram, como nas demais.]`
+
+### Textos de interface dos pop-ups (autorizados)
+- Botão do card ativo: `aria-label` "Ver mais sobre {nome}"; indicação visual discreta: "Ver mais →" no rodapé do card.
+- Botão de fechar: "Fechar". Rodapé do pop-up: botão "Agendar consulta" → `/contato#agendar` e link "Voltar para a equipe" (fecha).

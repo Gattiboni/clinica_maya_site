@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import { CamadaGrafismos } from "@/components/layout/CamadaGrafismos";
 import { Areas } from "@/components/home/Areas";
+import { Avaliacoes } from "@/components/home/Avaliacoes";
 import { Blog } from "@/components/home/Blog";
 import { ChamadaFinal } from "@/components/home/ChamadaFinal";
 import { ComoComeca } from "@/components/home/ComoComeca";
-import { Dores } from "@/components/home/Dores";
 import { DraMayara } from "@/components/home/DraMayara";
 import { FaixaEmagrecimento } from "@/components/home/FaixaEmagrecimento";
 import { Hero } from "@/components/home/Hero";
@@ -21,14 +22,14 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
+      <CamadaGrafismos pagina="home" />
       <Hero />
       <Areas />
-      <Dores />
       <Metodo />
       <ComoComeca />
       <FaixaEmagrecimento />
       <DraMayara />
-      {/* §Home 8 · Prova social: não renderizada. Ver docs/copy-site-v1.md §Home 8. */}
+      <Avaliacoes />
       <Blog />
       <ChamadaFinal />
     </>

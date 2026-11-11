@@ -1,6 +1,6 @@
 /**
- * Movimento (Fase 4, mapa de movimento v0.3, Decisão 010; afinação 1 de
- * 30/10): só as constantes que precisam existir em código para componente e
+ * Movimento (Fase 4, mapa de movimento v0.4, Decisões 010 e 011; afinação 2 e
+ * camada global de grafismos da Revisão v2, 10/11): só as constantes que precisam existir em código para componente e
  * CSS não divergirem. Os valores de afinação (durações, fatores, ângulos,
  * opacidades) vivem como tokens `--mov-*` em `app/globals.css`; aqui ficam
  * nomes de classe, atributos e limites que o CSS repete por `nth-child`.
@@ -57,14 +57,11 @@ export const MOV = {
   pop: "pop",
   /** Parallax por camada (fatores em tokens). */
   parallaxMundo: "parallax-mundo",
-  parallaxFrente: "parallax-frente",
-  parallaxCampo: "parallax-campo",
   /** Foto que se move dentro da máscara (`.mascara` no pai). */
   parallaxMidia: "parallax-midia",
   mascara: "mascara",
   /** Drift pelo cursor (amplitude em tokens), só `pointer: fine`. */
   driftMundo: "drift-mundo",
-  driftFrente: "drift-frente",
   tilt3d: "tilt3d",
   /** Rotação lenta contínua (±1,5° em 40s) dos grafismos do mundo. */
   giraLento: "gira-lento",
@@ -72,47 +69,63 @@ export const MOV = {
   maskCima: "mask-reveal-cima",
   maskDireita: "mask-reveal-direita",
   maskCircular: "mask-reveal-circular",
-  /** Scrub ao longo da seção (`--secao`) ou da pilha (`--pilha`). */
-  scrubRotacao: "scrub-rotacao",
-  scrubDeslocamento: "scrub-deslocamento",
-  scrubPilha: "scrub-pilha",
-  scrubInclinar: "capa-inclina",
-  /** Wipe na carga (hero). */
-  wipeCarga: "wipe-carga",
   /**
-   * Capa: o hero. Desktop: `sticky` real em `top: 0`, cabendo em 100svh;
-   * mobile: preso pela borda inferior por translação. Tudo ligado à entrada da
-   * folha seguinte (`--pos-capa`, publicada por `.capa + .secao`).
+   * Capa: o hero. A seção rola normalmente com `overflow: clip`; o fundo e o
+   * Container descem na mesma medida (translação), então o hero parece parado
+   * enquanto a folha seguinte o cobre, sem a seção virar stacking context.
+   * Tudo ligado à entrada da folha seguinte (`--pos-capa`, publicada por
+   * `.capa + .secao`).
    */
   capa: "capa",
   capaEsmaece: "capa-esmaece",
   capaRecua: "capa-recua",
   capaFoto: "capa-foto",
   indicadorRolagem: "indicador-rolagem",
-  /** Pilha de folhas `sticky`. */
+  /** Pilha de folhas `sticky`; as variantes afinam trajeto, altura e recuo por pilha (tokens `--mov-passos-*` e `--mov-pilar-*`). */
   stack: "stack",
+  stackPassos: "stack-passos",
+  stackPilares: "stack-pilares",
   folha: "folha",
   folhaProximo: "folha-proximo",
   /** Toda `Secao` leva esta classe: timeline `--secao`, `scroll-margin-top` do header e a folha (2.1). */
   secao: "secao",
   /** Fundo da seção (camada `fundo`): recebe o canto arredondado e a sombra da folha. */
   secaoFundo: "secao-fundo",
-  /** Slot de grafismo da seção: nas folhas (toda seção que não é a primeira) recorta nos dois eixos. */
-  secaoGrafismo: "secao-grafismo",
+  /** Slot do símbolo decorativo (Círculo Maya) da seção: recua junto com o fundo. */
+  secaoSimbolo: "secao-simbolo",
+  /** Container da seção (camada `conteudo`): recebe o recuo e o esmaecer da folha. */
+  secaoConteudo: "secao-conteudo",
   /** Chamada final como folha cheia (70svh no desktop, conteúdo centralizado). */
   ctaFolha: "cta-folha",
   /** Título em duas linhas desencontradas, cada uma entrando de um lado. */
   tituloDesencontrado: "titulo-desencontrado",
-  /** Campo de linhas orgânicas (camada ambiente): deriva contínua e parallax 0.2. */
-  campo: "campo",
-  campoDeriva: "campo-deriva",
-  /** Linha SVG desenhada por scrub: pela seção, pela pilha ou pelo trilho (`--linha`) que a envolve. */
+  /**
+   * Camada global de grafismos (`CamadaGrafismos`): invólucro recortado ao
+   * palco, janelas `sticky` (uma por cor, com `mix-blend-mode`), item com
+   * parallax pelo scroll da página, camadas internas e tilt por scrub.
+   */
+  global: "camada-global",
+  globalJanela: "camada-janela",
+  globalMarrom: "camada-marrom",
+  globalBege: "camada-bege",
+  globalItem: "gg",
+  globalCamada: "gg-camada",
+  globalInclina: "gg-inclina",
+  /** Linha SVG desenhada: por scrub pela seção ou pela pilha; por tempo no trilho (`linha-trilho`). */
   linhaDesenhada: "linha-desenhada",
   linhaDesenhadaPilha: "linha-desenhada-pilha",
   linhaDesenhadaTrilho: "linha-desenhada-trilho",
-  /** Invólucro que publica a timeline `--linha`; os filhos de `.reveal-linha` revelam quando a linha os alcança. */
+  /**
+   * Trilho numerado (Etapas do Método, Como funciona do on-line; afinação 2):
+   * o gatilho (`data-ao-entrar`, perto da base do trilho) dispara uma vez a
+   * coreografia de tempo: a linha se desenha, cada número (`linha-numero`)
+   * faz o pop quando a linha o alcança (`--mov-t` no item) e o card
+   * (`linha-card`) desliza logo depois.
+   */
   linhaTrilho: "linha-trilho",
-  revealLinha: "reveal-linha",
+  linhaGatilho: "linha-gatilho",
+  linhaNumero: "linha-numero",
+  linhaCard: "linha-card",
   /** Círculo Maya em SVG: monta por tempo (`data-entrou`), desmonta por scroll. */
   circulo: "circulo-maya",
   circuloAnel: "circulo-anel",
@@ -140,15 +153,14 @@ export const MOV = {
   /** Botão flutuante "Voltar ao topo": aparece após 100svh e some antes do footer. */
   voltarTopo: "voltar-topo",
   voltarTopoSome: "voltar-topo-some",
-  /** Modal da Política de privacidade (`popover` nativo). */
+  /** Modal de prosa (`popover` nativo): Política de privacidade e pop-ups da Equipe. */
   modal: "modal-prosa",
+  /** Entrada do pop-up da profissional por `@starting-style` (opacity e translateY 12px, 250ms). */
+  popupEntra: "popup-entra",
   /** FAQ e post. */
   faqCorpo: "faq-corpo",
   faqIcone: "faq-icone",
   progressoLeitura: "progresso-leitura",
-  /** Camadas internas do `Grafismo`: raiz com perspectiva e camadas em bloco. */
-  grafismoRaiz: "grafismo-raiz",
-  grafismoCamada: "grafismo-camada",
   /** Fragmento recortado por `clip-path` (`recorte-1` a `recorte-5`). */
   recorte: "recorte",
 } as const;

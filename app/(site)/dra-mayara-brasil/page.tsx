@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import { CamadaGrafismos } from "@/components/layout/CamadaGrafismos";
 import { Abertura } from "@/components/dra-mayara/Abertura";
 import { ChamadaFinal } from "@/components/dra-mayara/ChamadaFinal";
-import { ComoAtende } from "@/components/dra-mayara/ComoAtende";
-import { FormacaoRegistro } from "@/components/dra-mayara/FormacaoRegistro";
-import { Trajetoria } from "@/components/dra-mayara/Trajetoria";
+import { ComoEAConsulta } from "@/components/dra-mayara/ComoEAConsulta";
+import { Formacao } from "@/components/dra-mayara/Formacao";
+import { Sobre } from "@/components/dra-mayara/Sobre";
 
 export const metadata: Metadata = {
   title: "Dra. Mayara Brasil",
@@ -14,10 +15,11 @@ export const metadata: Metadata = {
 export default function DraMayaraBrasil() {
   return (
     <>
+      <CamadaGrafismos pagina="dra-mayara" />
       <Abertura />
-      <Trajetoria />
-      <ComoAtende />
-      <FormacaoRegistro />
+      <Sobre />
+      <ComoEAConsulta />
+      <Formacao />
       <ChamadaFinal />
     </>
   );

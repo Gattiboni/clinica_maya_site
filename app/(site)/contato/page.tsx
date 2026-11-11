@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CamadaGrafismos } from "@/components/layout/CamadaGrafismos";
 import { Abertura } from "@/components/contato/Abertura";
 import { Agendar } from "@/components/contato/Agendar";
 import { ModalPolitica } from "@/components/politica/ModalPolitica";
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
 export default function Contato() {
   return (
     <>
+      <CamadaGrafismos pagina="contato" />
       <Abertura />
       <Agendar />
       <ModalPolitica />

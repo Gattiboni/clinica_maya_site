@@ -120,4 +120,5 @@ Nos HTML gerados, o conteúdo das tags `<script>` é ignorado: é payload do Rea
 - Imagens do Sanity não têm campo de texto alternativo próprio: o site usa o nome da profissional e o título do post como `alt`.
 - O singleton `siteConfig` não pode ser criado, duplicado, apagado nem despublicado pelo Studio.
 - Arquivos gravados com fim de linha LF (`.gitattributes` e Prettier).
+- `.prettierignore` exclui `.claude/` (escrito pela ferramenta) e `graphify-out/` (gerado); `format:check` cobre o repo inteiro.
 - Nenhum favicon dedicado: a metadata aponta para `public/marca/logo-vertical-verde.png`.

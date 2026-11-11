@@ -19,3 +19,7 @@ docs/
 
 # Imagens
 public/
+
+# Gerados ou escritos por ferramenta (não se formata à mão)
+.claude/
+graphify-out/

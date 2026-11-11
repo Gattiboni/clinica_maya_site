@@ -2,6 +2,7 @@ import { CardPost } from "@/components/blog/CardPost";
 import { dadosCardPost } from "@/components/blog/dadosCardPost";
 import { CabecalhoSecao } from "@/components/ui/CabecalhoSecao";
 import { LinkTexto } from "@/components/ui/LinkTexto";
+import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { MOV } from "@/lib/movimento";
 import { client } from "@/lib/sanity/client";
@@ -34,11 +35,13 @@ export async function Blog() {
 
   return (
     <Secao fundo="creme">
-      <CabecalhoSecao
-        titulo="Para ler com calma"
-        acao={<LinkTexto href="/blog">Ver o blog</LinkTexto>}
-        className={`${MOV.reveal} mb-12`}
-      />
+      <Nevoa className="mb-12">
+        <CabecalhoSecao
+          titulo="Para ler com calma"
+          acao={<LinkTexto href="/blog">Ver o blog</LinkTexto>}
+          className={MOV.reveal}
+        />
+      </Nevoa>
       <ul className={`${MOV.revealStagger} grid gap-6 sm:grid-cols-2 lg:grid-cols-3`}>
         {posts.map((post) => (
           <li key={post._id} className="flex">

@@ -1,3 +1,5 @@
+import { CLINICA } from "@/lib/conteudo/clinica";
+
 export type ItemDestacado = {
   /** Trecho em negrito no início do item (ex.: "Formulário de contato."). */
   destaque: string;
@@ -13,14 +15,14 @@ export type SecaoPolitica = {
 
 /**
  * Política de privacidade (§Política de privacidade), texto literal da copy
- * v1.2. Texto base para revisão jurídica na Fase 6; as notas de pendência da
+ * v1.2 ("Quem somos": v1.3, com razão social, CNPJ e inscrição no CRM-SC). Texto base para revisão jurídica na Fase 6; as notas de pendência da
  * copy não vão ao ar.
  */
 export const SECOES_POLITICA: readonly SecaoPolitica[] = [
   {
     titulo: "Quem somos",
     paragrafos: [
-      'Este site é da Clínica Maya, clínica de saúde integral com sede na Av. João Antônio Besen, 265, Centro, Antônio Carlos/SC, CEP 88180-211. Responsável técnica: Dra. Mayara Brasil, CRM SC 21112. Quando esta política fala em "nós", fala da Clínica Maya.',
+      `Este site é da ${CLINICA.nome} (${CLINICA.razaoSocial}, CNPJ ${CLINICA.cnpj}, inscrita no CRM-SC sob o nº ${CLINICA.inscricaoCrm}), clínica de saúde integral com sede na Av. João Antônio Besen, 265, Centro, Antônio Carlos/SC, CEP 88180-211. Responsável técnica: ${CLINICA.responsavelTecnica.nome}, ${CLINICA.responsavelTecnica.crm}. Quando esta política fala em "nós", fala da ${CLINICA.nome}.`,
     ],
   },
   {

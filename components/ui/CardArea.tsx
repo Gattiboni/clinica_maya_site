@@ -18,7 +18,7 @@ const FUNDOS = {
 
 /**
  * Um fragmento por área, na ordem da copy: recortes dos SVGs 3, 4 e 5 por
- * `clip-path` (sem asset novo), em cantos diferentes do card.
+ * `clip-path` (pedaço do original, sem asset novo), em cantos diferentes do card.
  */
 const FRAGMENTOS = [
   { nome: "3", recorte: 1, posicao: "-top-12 -right-24", largura: "w-72" },
@@ -28,7 +28,10 @@ const FRAGMENTOS = [
   { nome: "4", recorte: 5, posicao: "-top-20 -right-16", largura: "w-64" },
 ] as const;
 
-/** Card de área de cuidado: nome, texto, quem atende e modalidade. O card inteiro é o link. */
+/**
+ * Card de área de cuidado: só nome da área e texto (Revisão v2: quem atende e
+ * a modalidade existem apenas na Equipe). O card inteiro é o link.
+ */
 export function CardArea({ area, fundo, indice }: CardAreaProps) {
   const fragmento = FRAGMENTOS[indice % FRAGMENTOS.length];
 
@@ -48,10 +51,6 @@ export function CardArea({ area, fundo, indice }: CardAreaProps) {
       />
       <h3 className="text-h3 font-semibold">{area.nome}</h3>
       <p className="flex-1 text-nota">{area.texto}</p>
-      <p className="text-nota leading-snug font-bold">{area.quem}</p>
-      <span className="self-start rounded-pilula border border-marrom/35 px-3 py-1 text-legenda font-bold tracking-rotulo uppercase">
-        {area.modalidade}
-      </span>
     </Link>
   );
 }

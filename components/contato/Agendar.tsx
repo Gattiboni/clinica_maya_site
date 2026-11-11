@@ -1,5 +1,5 @@
 import { FormularioContato } from "@/components/contato/FormularioContato";
-import { Grafismo } from "@/components/ui/Grafismo";
+import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { ONDE_ESTAMOS, REDES } from "@/lib/conteudo/contato";
 import { MOV } from "@/lib/movimento";
@@ -8,33 +8,15 @@ const CLASSES_LINK_EXTERNO =
   "inline-block self-start text-corpo font-bold underline underline-offset-4 transition-colors hover:text-marrom focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-verde";
 
 /**
- * §Contato 2 · Onde estamos, Redes e Formulário. `id="agendar"` na seção:
- * todo CTA "Agendar" do site chega aqui, sob o header, pelo `scroll-margin-top`
- * de `Secao`. Mapa como link de busca no Google Maps (sem iframe). O
- * grafismo-3 (pontas cortadas à esquerda e em cima) ancora no canto superior
- * esquerdo, com as pontas fora da tela e na borda da folha (2.7); campo-1 na
- * camada ambiente. Fase 4: blocos da esquerda com `reveal`; campos do
- * formulário em sequência.
+ * §Contato 2 · Onde estamos, Redes e Formulário. `id="agendar"` na seção: todo
+ * CTA "Agendar" do site chega aqui, sob o header, pelo `scroll-margin-top` de
+ * `Secao`. Mapa como link de busca no Google Maps (sem iframe). Fase 4: blocos
+ * da esquerda com `reveal`; campos do formulário em sequência.
  */
 export function Agendar() {
   return (
-    <Secao
-      id="agendar"
-      fundo="creme"
-      campo="campo-1"
-      grafismo={
-        <Grafismo
-          nome="3"
-          cor="marrom"
-          posicao="-top-16 -left-40"
-          largura="w-80 lg:w-[440px]"
-          opacidade="opacity-20"
-          parallax="mundo"
-        />
-      }
-      className="grid gap-14 lg:grid-cols-2 lg:gap-16"
-    >
-      <div className={`${MOV.revealStagger} flex flex-col gap-10 text-center lg:text-left`}>
+    <Secao id="agendar" fundo="creme" className="grid gap-14 lg:grid-cols-2 lg:gap-16">
+      <Nevoa className={`${MOV.revealStagger} flex flex-col gap-10 text-center lg:text-left`}>
         <div className="flex flex-col items-center gap-3 lg:items-start">
           <h2 className="text-h2 font-medium">Onde estamos</h2>
           <p className="text-corpo">
@@ -72,11 +54,15 @@ export function Agendar() {
             ))}
           </ul>
         </div>
-      </div>
+      </Nevoa>
 
       <div className="flex flex-col gap-3">
-        <h2 className={`${MOV.reveal} text-h2 font-medium`}>Prefere que a gente chame você?</h2>
-        <p className={`${MOV.reveal} text-corpo`}>Deixe seu contato e retornamos pelo WhatsApp.</p>
+        <Nevoa className="flex flex-col gap-3 self-start">
+          <h2 className={`${MOV.reveal} text-h2 font-medium`}>Prefere que a gente chame você?</h2>
+          <p className={`${MOV.reveal} text-corpo`}>
+            Deixe seu contato e retornamos pelo WhatsApp.
+          </p>
+        </Nevoa>
         <FormularioContato />
       </div>
     </Secao>
