@@ -1,6 +1,6 @@
-# Copy do site: Clínica Maya · v1.3.2 (Lotes 1, 2, 3a, Revisão v2 e pop-ups da Equipe)
+# Copy do site: Clínica Maya · v1.4.0 (Lotes 1, 2, 3a, Revisão v2, pop-ups da Equipe e Revisão v3)
 
-**10/11/2026** (v1.3.2: pop-up da Talita Porto, a partir do documento dela de 16/10; v1.3.1: pop-ups da Equipe; v1.3: Revisão v2 da gestora e da cliente, seção final deste arquivo, que **prevalece** sobre as seções anteriores onde houver conflito; v1.2: Atendimento on-line, Blog, Contato, 404 e Política de privacidade; v1.1.1: atributos visuais do Lote 2 alinhados ao mock após o relatório do Codinho: grafismos, fundos, fotos e itálicos; v1.1: Equipe, Método, Emagrecimento e Dra. Mayara; v1.0.1: correções após o relatório do Codinho; itálicos, grafismos e fundos de A Clínica alinhados ao mock). Fonte única da copy institucional que vai para os `.tsx` (Decisão 005, item 2). Origem: mock v3.1 aprovado em 29/10 (`Clinica Maya - Site Completo v20261014.html`; páginas desempacotadas em `mock-v3.1-*.html` na raiz, gitignored) e esqueleto v3. O Codinho transcreve **literal**; correção de texto é edição aqui primeiro, depois no código.
+**19/11/2026** (v1.4.0: Revisão v3 da gestora, lote A; v1.3.2: pop-up da Talita Porto, a partir do documento dela de 16/10; v1.3.1: pop-ups da Equipe; v1.3: Revisão v2 da gestora e da cliente, seção final deste arquivo, que **prevalece** sobre as seções anteriores onde houver conflito; v1.2: Atendimento on-line, Blog, Contato, 404 e Política de privacidade; v1.1.1: atributos visuais do Lote 2 alinhados ao mock após o relatório do Codinho: grafismos, fundos, fotos e itálicos; v1.1: Equipe, Método, Emagrecimento e Dra. Mayara; v1.0.1: correções após o relatório do Codinho; itálicos, grafismos e fundos de A Clínica alinhados ao mock). Fonte única da copy institucional que vai para os `.tsx` (Decisão 005, item 2). Origem: mock v3.1 aprovado em 29/10 (`Clinica Maya - Site Completo v20261014.html`; páginas desempacotadas em `mock-v3.1-*.html` na raiz, gitignored) e esqueleto v3. O Codinho transcreve **literal**; correção de texto é edição aqui primeiro, depois no código.
 
 Convenções: `[PENDÊNCIA: ...]` é nota para humanos e **nunca vai para o código**. Itálico marcado com `*palavra*` é ênfase do mock e vai para o código. Links de texto terminam com seta "→" decorativa (`aria-hidden`), como no mock; botões não têm seta. Travessão não existe no site (varredura); use vírgula, dois-pontos ou ponto. Tom feminino para a paciente ("acompanhada"), neutro para a equipe.
 
@@ -686,3 +686,41 @@ Fonte: `Bio clínica Talita Porto.doc` (16/10/2026, respostas dela ao mesmo rote
 ### Textos de interface dos pop-ups (autorizados)
 - Botão do card ativo: `aria-label` "Ver mais sobre {nome}"; indicação visual discreta: "Ver mais →" no rodapé do card.
 - Botão de fechar: "Fechar". Rodapé do pop-up: botão "Agendar consulta" → `/contato#agendar` e link "Voltar para a equipe" (fecha).
+
+---
+
+# Revisão v3 (19/11/2026), lote A: deltas que prevalecem sobre as seções acima
+
+Fonte: `REVISÕES SITE_V3` (Google Docs da gestora, 16/11) e `CV EQUIPE` (bio da Beatriz Nietsche). Itens 4, 5, 6 e 9 do documento ficam para os lotes seguintes.
+
+## Equipe
+
+- **`#medicina`, descrição da área:** Avaliação e acompanhamento médico, com base em evidências científicas.
+- **Dra. Mayara Brasil, resumo do card:** Médica de família e fundadora da clínica, com atuação em emagrecimento e saúde. Atende adultos e cuida de cada história de forma individualizada.
+- **Dr. Arthur Hank:** foto nova, mesmo arquivo `equipe-arthur.jpg`.
+- **Beatriz Nietsche passa a ter pop-up ativo.** O card curto não muda.
+
+### Beatriz Nietsche (pop-up)
+
+Fonte: `CV EQUIPE` (texto dela à gestora), editado pelo mesmo filtro das demais: sem nome de técnica de psicoterapia, sem "o que comentam" e sem vida fora do consultório. Título do terceiro bloco é "Como são os primeiros encontros".
+
+- **Formação:** Psicóloga, atualmente cursando Neuropsicologia.
+- **O que atende e para quem:** Atendo crianças e adolescentes e ofereço também orientação parental, nas modalidades presencial e on-line.
+- **Como são os primeiros encontros:** Meu trabalho é pautado pelo acolhimento, pela escuta e pelo respeito à individualidade de cada criança e adolescente. Nos primeiros encontros, busco acolher as dúvidas, dificuldades e preocupações da família, compreender a história e as necessidades da criança e construir, em conjunto, os objetivos do acompanhamento psicológico.
+- **Como é o acompanhamento:** Ao longo do processo, utilizo recursos lúdicos, brincadeiras e histórias infantis, escolhidos de acordo com as preferências e necessidades de cada criança. Acredito que esses recursos são ferramentas importantes para favorecer a expressão, o desenvolvimento emocional e a construção de novas habilidades.
+- **O que não faço e não prometo:** Procuro respeitar o tempo e a individualidade de cada paciente, sem trabalhar com fórmulas prontas ou expectativas de resultados imediatos. Entendo que o desenvolvimento emocional é um processo gradual, construído com acolhimento, parceria e participação da família.
+- **Por que escolhi essa área:** O que me encanta na psicologia infantojuvenil é acompanhar o desenvolvimento e o florescer de cada criança. Acredito no potencial que cada uma carrega e na importância de oferecer um espaço de acolhimento, cuidado e oportunidades para que possa descobrir suas capacidades, desenvolver recursos emocionais e construir sua própria história.
+- **Frase:** "Acredito que cuidar de alguém é acolher sua história, respeitar sua individualidade e oferecer caminhos para que possa desenvolver suas potencialidades."
+
+`[PENDÊNCIA (gestora): a formação em uma técnica específica de psicoterapia, citada por ela, ficou fora pelo filtro. Confirmar com a Beatriz o texto editado.]`
+
+## A Clínica · Espaço
+
+Grade de quatro fotos, mesma disposição de hoje:
+
+- Foto maior, à esquerda: `espaco-4.jpg`, alt "Sala de atendimento da Clínica Maya, com sofá e poltrona"
+- Foto do detalhe com a xícara: continua a mesma
+- Foto que hoje mostra a mesa com computador: passa a ser `espaco-5.jpg`, alt "Sala de atendimento da Clínica Maya, com mesa e poltronas"
+- Fachada: continua a mesma
+
+`[PENDÊNCIA (gestora): nome correto das duas salas, para afinar os alt. Os alt acima só descrevem o que a foto mostra.]`

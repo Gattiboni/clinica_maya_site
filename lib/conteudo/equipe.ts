@@ -74,17 +74,17 @@ export const INSTAGRAM_URL = "https://instagram.com/";
 export const idPopup = (profissional: Pick<Profissional, "id">) => `bio-${profissional.id}`;
 
 /**
- * Áreas e profissionais da página Equipe, na ordem da copy v1.3.1 (seções
- * "Equipe" e "Pop-ups da Equipe" da Revisão v2; textos literais da gestora).
- * `object-position` das fotos novas (Alexandra, Gabriella, Beatriz) definido
- * pelo enquadramento do rosto no recorte 4:3.
+ * Áreas e profissionais da página Equipe, na ordem da copy v1.4.0 (seções
+ * "Equipe" e "Pop-ups da Equipe" da Revisão v2, com os deltas da Revisão v3,
+ * lote A; textos literais da gestora). `object-position` das fotos novas
+ * (Alexandra, Gabriella, Beatriz; Arthur na Revisão v3) definido pelo
+ * enquadramento do rosto no recorte 4:3 do card e no 4:5 do pop-up.
  */
 export const AREAS_EQUIPE: readonly AreaEquipe[] = [
   {
     id: "medicina",
     nome: "Medicina",
-    descricao:
-      "Avaliação e acompanhamento médico de toda a jornada, com base em evidências científicas.",
+    descricao: "Avaliação e acompanhamento médico, com base em evidências científicas.",
     profissionais: [
       {
         id: "mayara",
@@ -92,7 +92,7 @@ export const AREAS_EQUIPE: readonly AreaEquipe[] = [
         titulo: "Médica de Família",
         registro: "CRM SC 21112 · RQE 22484",
         resumo:
-          "Médica de família e fundadora da clínica, com atuação em emagrecimento e saúde. Atende adultos com escuta e tempo, cuidando de cada história de forma individualizada.",
+          "Médica de família e fundadora da clínica, com atuação em emagrecimento e saúde. Atende adultos e cuida de cada história de forma individualizada.",
         modalidade: "Presencial e on-line",
         instagram: "dramayarabrasilm",
         foto: { src: equipeMayara, posicao: "50% 12%" },
@@ -107,7 +107,7 @@ export const AREAS_EQUIPE: readonly AreaEquipe[] = [
           "Cardiologista, com foco na prevenção e no tratamento de doenças do coração. Atende adultos e idosos com escuta atenta e orientações claras, baseadas em evidências.",
         modalidade: "Presencial",
         instagram: "dr.arthurhank_cardiologista",
-        foto: { src: equipeArthur, posicao: "50% 18%" },
+        foto: { src: equipeArthur, posicao: "50% 12%" },
         bio: {
           formacao:
             "Médico pela Universidade Regional de Blumenau (2012) e cardiologista pelo Instituto de Cardiologia de Santa Catarina, em São José (2018).",
@@ -216,6 +216,23 @@ export const AREAS_EQUIPE: readonly AreaEquipe[] = [
         modalidade: "Presencial e on-line",
         instagram: "beatriznietchepsi",
         foto: { src: equipeBeatriz, posicao: "50% 22%" },
+        // Bio longa da copy v1.4.0 ("Beatriz Nietsche (pop-up)"); o card curto acima não muda.
+        bio: {
+          formacao: "Psicóloga, atualmente cursando Neuropsicologia.",
+          atende:
+            "Atendo crianças e adolescentes e ofereço também orientação parental, nas modalidades presencial e on-line.",
+          primeiraConsulta:
+            "Meu trabalho é pautado pelo acolhimento, pela escuta e pelo respeito à individualidade de cada criança e adolescente. Nos primeiros encontros, busco acolher as dúvidas, dificuldades e preocupações da família, compreender a história e as necessidades da criança e construir, em conjunto, os objetivos do acompanhamento psicológico.",
+          acompanhamento:
+            "Ao longo do processo, utilizo recursos lúdicos, brincadeiras e histórias infantis, escolhidos de acordo com as preferências e necessidades de cada criança. Acredito que esses recursos são ferramentas importantes para favorecer a expressão, o desenvolvimento emocional e a construção de novas habilidades.",
+          naoPrometo:
+            "Procuro respeitar o tempo e a individualidade de cada paciente, sem trabalhar com fórmulas prontas ou expectativas de resultados imediatos. Entendo que o desenvolvimento emocional é um processo gradual, construído com acolhimento, parceria e participação da família.",
+          porque:
+            "O que me encanta na psicologia infantojuvenil é acompanhar o desenvolvimento e o florescer de cada criança. Acredito no potencial que cada uma carrega e na importância de oferecer um espaço de acolhimento, cuidado e oportunidades para que possa descobrir suas capacidades, desenvolver recursos emocionais e construir sua própria história.",
+          frase:
+            '"Acredito que cuidar de alguém é acolher sua história, respeitar sua individualidade e oferecer caminhos para que possa desenvolver suas potencialidades."',
+          titulos: { primeiraConsulta: "Como são os primeiros encontros" },
+        },
       },
     ],
   },
