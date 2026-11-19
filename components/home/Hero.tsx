@@ -14,14 +14,15 @@ import clinica1 from "@/public/fotos/clinica-1.jpg";
  * em 4:3 no mobile e 5:4 no desktop, com o arco em cima, para a fachada
  * aparecer inteira (letreiro, entrada e jardim); `object-position` centrado
  * no letreiro. Continua sendo o LCP: visível desde o primeiro frame, sem
- * maskReveal. O grafismo-4 grande ao fundo vem da `CamadaGrafismos` da página.
+ * maskReveal. O grafismo-4 grande ao fundo vem da `CamadaGrafismos` da página,
+ * recortado no fim do hero (Revisão v3, lote B).
  *
  * A capa (mapa §2 H1; afinação 1, 2.2; Revisão v2, 3.2): a seção não é mais
  * `sticky` nem transformada. Ela rola normalmente com `overflow: clip`, e o
  * fundo e o Container descem na mesma medida (translação pelo relógio da
  * entrada de Áreas, `--pos-capa`): o hero parece parado enquanto a folha
- * seguinte o cobre, e a seção continua sem stacking context, para a camada
- * global passar entre o fundo e o conteúdo. Pelo mesmo relógio a foto recua
+ * seguinte o cobre, e a seção continua sem stacking context, para o grafismo
+ * da abertura passar entre o fundo e o conteúdo. Pelo mesmo relógio a foto recua
  * (0.94, desktop) e sobe dentro da máscara, e o texto esmaece e sobe 24px
  * (mobile: só esmaece nos últimos 30%). Os textos entram em sequência na
  * carga (200ms + 80ms por item). O indicador de rolagem (desktop) some nos

@@ -1,4 +1,3 @@
-import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { MOV } from "@/lib/movimento";
 
@@ -27,12 +26,11 @@ type FaqProps = {
 export function Faq({ itens }: FaqProps) {
   return (
     <Secao fundo="creme">
-      <Nevoa
-        elemento="h2"
+      <h2
         className={`${MOV.reveal} mx-auto mb-10 w-fit text-center text-h2 font-medium lg:mx-0 lg:text-left`}
       >
         Perguntas frequentes
-      </Nevoa>
+      </h2>
       <ul className={`${MOV.revealStagger} ${MOV.profundo} grid gap-6 lg:grid-cols-2`}>
         {itens.map((item) => (
           <li key={item.pergunta}>

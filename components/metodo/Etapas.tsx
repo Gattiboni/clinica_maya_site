@@ -1,7 +1,6 @@
 import type { CSSProperties } from "react";
 import { CabecalhoSecao } from "@/components/ui/CabecalhoSecao";
 import { LinhaDesenhada } from "@/components/ui/LinhaDesenhada";
-import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { ETAPAS } from "@/lib/conteudo/metodo";
 import { AO_ENTRAR, MOV } from "@/lib/movimento";
@@ -25,7 +24,7 @@ export function Etapas() {
 
   return (
     <Secao fundo="bege" espaco="compacto">
-      <Nevoa className="mx-auto mb-14 w-fit lg:mx-0">
+      <div className="mx-auto mb-14 w-fit lg:mx-0">
         <CabecalhoSecao
           titulo={
             <>
@@ -35,8 +34,8 @@ export function Etapas() {
           lead="Da primeira conversa à consolidação dos novos hábitos."
           className={MOV.reveal}
         />
-      </Nevoa>
-      <Nevoa className={MOV.linhaTrilho}>
+      </div>
+      <div className={MOV.linhaTrilho}>
         <span aria-hidden="true" {...{ [AO_ENTRAR]: "" }} className={MOV.linhaGatilho} />
         <LinhaDesenhada
           direcao="horizontal"
@@ -65,7 +64,7 @@ export function Etapas() {
             </li>
           ))}
         </ol>
-      </Nevoa>
+      </div>
     </Secao>
   );
 }

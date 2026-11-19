@@ -1,6 +1,5 @@
 import { CardProfissional } from "@/components/equipe/CardProfissional";
 import { CabecalhoSecao } from "@/components/ui/CabecalhoSecao";
-import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import type { AreaEquipe } from "@/lib/conteudo/equipe";
 import { MOV } from "@/lib/movimento";
@@ -24,14 +23,14 @@ export function SecaoArea({ area, indice }: SecaoAreaProps) {
 
   return (
     <Secao id={area.id} fundo={creme ? "creme" : "bege"}>
-      <Nevoa className="mx-auto mb-10 w-fit">
+      <div className="mx-auto mb-10 w-fit">
         <CabecalhoSecao
           titulo={area.nome}
           lead={area.descricao}
           alinhar="centro"
           className={MOV.reveal}
         />
-      </Nevoa>
+      </div>
       <ul
         className={`${MOV.revealStagger} ${MOV.profundo} grid justify-center gap-6 [grid-template-columns:repeat(auto-fit,min(100%,22rem))]`}
       >

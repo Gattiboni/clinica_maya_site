@@ -1,6 +1,5 @@
 import { CirculoMaya } from "@/components/ui/CirculoMaya";
 import { LinkTexto } from "@/components/ui/LinkTexto";
-import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { PILARES } from "@/lib/conteudo/pilares";
 import { MOV } from "@/lib/movimento";
@@ -29,7 +28,7 @@ export function Metodo() {
         rotulo="Círculo Maya: corpo, mente e espírito"
         className="mx-auto w-full max-w-[380px] rounded-full bg-verde"
       />
-      <Nevoa className="mx-auto flex w-fit flex-col items-center gap-5 text-center lg:mx-0 lg:items-start lg:text-left">
+      <div className="mx-auto flex w-fit flex-col items-center gap-5 text-center lg:mx-0 lg:items-start lg:text-left">
         <h2 className={`${MOV.reveal} text-h2 font-medium`}>O Método Maya</h2>
         <p className={`${MOV.reveal} max-w-prosa text-lead`}>
           Corpo, mente e espírito são três dimensões de um mesmo cuidado. No Círculo Maya, ninguém
@@ -50,7 +49,7 @@ export function Metodo() {
         <LinkTexto href="/metodo" tom="bege" className={`${MOV.reveal} self-center lg:self-start`}>
           Conhecer o método
         </LinkTexto>
-      </Nevoa>
+      </div>
     </Secao>
   );
 }

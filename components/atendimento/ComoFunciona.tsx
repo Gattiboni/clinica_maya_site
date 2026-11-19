@@ -1,6 +1,5 @@
 import type { CSSProperties } from "react";
 import { LinhaDesenhada } from "@/components/ui/LinhaDesenhada";
-import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { PASSOS_ONLINE } from "@/lib/conteudo/atendimento";
 import { AO_ENTRAR, MOV } from "@/lib/movimento";
@@ -19,13 +18,12 @@ import { AO_ENTRAR, MOV } from "@/lib/movimento";
 export function ComoFunciona() {
   return (
     <Secao fundo="creme">
-      <Nevoa
-        elemento="h2"
+      <h2
         className={`${MOV.reveal} mx-auto mb-12 w-fit text-center text-h2 font-medium lg:mx-0 lg:text-left`}
       >
         Como funciona, passo a passo
-      </Nevoa>
-      <Nevoa className={MOV.linhaTrilho}>
+      </h2>
+      <div className={MOV.linhaTrilho}>
         <span aria-hidden="true" {...{ [AO_ENTRAR]: "" }} className={MOV.linhaGatilho} />
         <LinhaDesenhada
           direcao="horizontal"
@@ -54,7 +52,7 @@ export function ComoFunciona() {
             </li>
           ))}
         </ol>
-      </Nevoa>
+      </div>
     </Secao>
   );
 }

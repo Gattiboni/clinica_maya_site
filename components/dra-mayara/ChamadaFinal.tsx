@@ -1,5 +1,4 @@
 import { Botao } from "@/components/ui/Botao";
-import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { TituloDesencontrado } from "@/components/ui/TituloDesencontrado";
 import { CLINICA } from "@/lib/conteudo/clinica";
@@ -13,7 +12,7 @@ import { MOV } from "@/lib/movimento";
 export function ChamadaFinal() {
   return (
     <Secao fundo="verde" folha="cta" className="flex flex-col items-center">
-      <Nevoa className={`${MOV.revealStagger} flex flex-col items-center gap-6 text-center`}>
+      <div className={`${MOV.revealStagger} flex flex-col items-center gap-6 text-center`}>
         <TituloDesencontrado
           linhas={["A primeira consulta", "é o começo da jornada"]}
           className="max-w-3xl"
@@ -26,7 +25,7 @@ export function ChamadaFinal() {
             Agendar on-line
           </Botao>
         </div>
-      </Nevoa>
+      </div>
     </Secao>
   );
 }

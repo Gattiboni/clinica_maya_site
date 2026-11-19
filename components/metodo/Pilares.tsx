@@ -1,5 +1,4 @@
 import { ProximaFolha } from "@/components/ui/ProximaFolha";
-import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { PILARES } from "@/lib/conteudo/pilares";
 import { AO_ENTRAR, MOV } from "@/lib/movimento";
@@ -26,12 +25,12 @@ export function Pilares() {
   return (
     <>
       <Secao fundo="verde" espaco="compacto" className="flex flex-col items-center lg:items-start">
-        <Nevoa
+        <div
           className={`${MOV.revealStagger} flex flex-col items-center gap-3 text-center lg:items-start lg:text-left`}
         >
           <h2 className="text-h2 font-medium">Os quatro pilares</h2>
           <p className="max-w-prosa text-lead">O que sustenta cada jornada dentro da clínica.</p>
-        </Nevoa>
+        </div>
       </Secao>
       <div className={`${MOV.stack} ${MOV.stackPilares} bg-verde`}>
         {PILARES.map((pilar, indice) => {
