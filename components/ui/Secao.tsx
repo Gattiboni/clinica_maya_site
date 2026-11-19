@@ -21,7 +21,8 @@ type SecaoProps = {
   espaco?: Espaco;
   /**
    * Círculo Maya decorativo, posicionado em absoluto dentro do slot da camada
-   * `simbolo`. Grafismo da marca não entra aqui: vive na `CamadaGrafismos`.
+   * `simbolo`. Grafismo da marca não entra aqui: o da abertura vive na
+   * `CamadaGrafismos`.
    */
   simbolo?: ReactNode;
   /** Marca a seção como folha de pilha, capa ou chamada final (Fase 4); sem suporte a scroll-driven animations, só o layout muda. */
@@ -74,7 +75,7 @@ const ESPACOS: Record<Espaco, string> = {
 
 /**
  * A folha de pilha é `sticky`, que cria stacking context por definição: ela
- * vai inteira para a camada de conteúdo (carta opaca à frente da camada global).
+ * vai inteira para a camada de conteúdo (carta opaca).
  */
 const FOLHAS: Record<Folha, string> = {
   pilha: `${MOV.folha} ${CAMADA.conteudo}`,
@@ -92,9 +93,9 @@ const FOLHAS: Record<Folha, string> = {
  * borda inferior") é aplicado pelo CSS ao fundo, ao slot do símbolo e ao
  * Container separadamente, com a mesma animação, a mesma timeline (`--secao`)
  * e a mesma origem (o centro da seção), de modo que os três se movem como um
- * bloco só; o esmaecer continua só no Container. É isso que deixa a
- * `CamadaGrafismos` (z 10 na página) passar entre o fundo e o conteúdo de
- * todas as seções.
+ * bloco só; o esmaecer continua só no Container. É isso que deixa o grafismo
+ * da abertura (`CamadaGrafismos`, z 10 na página, Revisão v3) passar entre o
+ * fundo e o conteúdo da primeira seção.
  *
  * Folhas (afinação 1, 2.1): toda seção é uma folha. O fundo leva a classe
  * `secao-fundo`, que o CSS arredonda em cima e sombreia (exceto na primeira

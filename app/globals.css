@@ -194,11 +194,6 @@
   --mov-grafismo-pulso-min: 0.7;
   --mov-grafismo-pulso-ciclo: 7s;
 
-  /* Fragmento de grafismo que acende atrás dos cards. */
-  --mov-acende-hover: 0.25;
-  --mov-acende-touch: 0.1;
-  --mov-acende-desloc: 6px;
-
   /* Folhas (2.1): toda fronteira de seção. Raio do canto, sobreposição curta ("peel"), recuo da anterior, sombra. */
   --mov-folha-raio: 32px;
   --mov-folha-sobre: 14svh;
@@ -273,9 +268,7 @@
   --mov-cta-recuo: clamp(1.5rem, 12vw, 10rem);
   --mov-cta-entrada: 40px;
 
-  /* Cortina do footer e voltar ao topo (2.8, 2.9), em `scroll(root)`. */
-  --mov-footer-parallax: 28px;
-  --mov-footer-faixa: 70svh;
+  /* Voltar ao topo (2.9), em `scroll(root)`. */
   --mov-topo-aparece: 100svh;
   --mov-topo-fade: 20svh;
   --mov-topo-some: 70svh;
@@ -1815,49 +1808,6 @@ body > main {
     opacity: 0;
   }
 
-  /* hoverAcende: fragmento de grafismo atrás do card acende e sobe 6px; no touch fica fixo. */
-  .hover-acende {
-    position: relative;
-    overflow: clip;
-    isolation: isolate;
-  }
-
-  .acende {
-    z-index: -1;
-    opacity: 0;
-    transition:
-      opacity var(--mov-dur-hover) var(--mov-curva),
-      translate var(--mov-dur-hover) var(--mov-curva);
-  }
-
-  .hover-acende:hover .acende {
-    opacity: var(--mov-acende-hover);
-    translate: 0 calc(var(--mov-acende-desloc) * -1);
-  }
-
-  @media (hover: none) {
-    .acende {
-      opacity: var(--mov-acende-touch);
-    }
-  }
-
-  /* Recortes dos SVGs da marca (sem asset novo): top right bottom left. */
-  .recorte-1 {
-    clip-path: inset(0 40% 45% 0);
-  }
-  .recorte-2 {
-    clip-path: inset(35% 0 0 40%);
-  }
-  .recorte-3 {
-    clip-path: inset(0 0 50% 35%);
-  }
-  .recorte-4 {
-    clip-path: inset(45% 35% 0 0);
-  }
-  .recorte-5 {
-    clip-path: inset(20%);
-  }
-
   /* zoom dentro da máscara (capa de post 1.04, foto de profissional 1.03). */
   .hover-zoom .zoom-capa,
   .hover-zoom .zoom-foto {
@@ -1946,24 +1896,6 @@ body > main {
   .titulo-desencontrado > span:nth-child(2) {
     animation-name: mov-entrar-direita;
     animation-range: entry 20% entry 70%;
-  }
-
-  /* Cortina do footer: o grafismo do footer desce de leve enquanto a última folha sobe
-     (parallax inverso), nos últimos 70svh de rolagem da página. */
-  @keyframes mov-footer-grafismo {
-    from {
-      translate: 0 calc(var(--mov-footer-parallax) * -1);
-    }
-    to {
-      translate: 0 0;
-    }
-  }
-
-  .footer-grafismo {
-    animation: mov-footer-grafismo linear both;
-    animation-timeline: scroll(root);
-    animation-range: calc(100% - var(--mov-footer-faixa)) 99.9%;
-    will-change: transform;
   }
 
   /* Voltar ao topo (2.9): aparece depois de 100svh de rolagem e some 70svh antes do fim
@@ -2158,7 +2090,6 @@ body > main {
   .circulo-maya .circulo-traco,
   .circulo-maya .circulo-palavra,
   .pulsar,
-  .footer-grafismo,
   .header-fixo::before,
   .header-conteudo,
   .header-logo,
@@ -2176,7 +2107,6 @@ body > main {
 
   .hover-eleva,
   .hover-eleva::after,
-  .acende,
   .zoom-capa,
   .zoom-foto,
   .sublinha-hover::after,

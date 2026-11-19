@@ -1,6 +1,6 @@
-# Copy do site: Clínica Maya · v1.4.1 (Lotes 1, 2, 3a, Revisão v2, pop-ups da Equipe e Revisão v3)
+# Copy do site: Clínica Maya · v1.4.2 (Lotes 1, 2, 3a, Revisão v2, pop-ups da Equipe e Revisão v3)
 
-**19/11/2026** (v1.4.1: Revisão v3, lote B (grafismos só na abertura, Dra. Mayara reescrita, FAQ); v1.4.0: Revisão v3 da gestora, lote A; v1.3.2: pop-up da Talita Porto, a partir do documento dela de 16/10; v1.3.1: pop-ups da Equipe; v1.3: Revisão v2 da gestora e da cliente, seção final deste arquivo, que **prevalece** sobre as seções anteriores onde houver conflito; v1.2: Atendimento on-line, Blog, Contato, 404 e Política de privacidade; v1.1.1: atributos visuais do Lote 2 alinhados ao mock após o relatório do Codinho: grafismos, fundos, fotos e itálicos; v1.1: Equipe, Método, Emagrecimento e Dra. Mayara; v1.0.1: correções após o relatório do Codinho; itálicos, grafismos e fundos de A Clínica alinhados ao mock). Fonte única da copy institucional que vai para os `.tsx` (Decisão 005, item 2). Origem: mock v3.1 aprovado em 29/10 (`Clinica Maya - Site Completo v20261014.html`; páginas desempacotadas em `mock-v3.1-*.html` na raiz, gitignored) e esqueleto v3. O Codinho transcreve **literal**; correção de texto é edição aqui primeiro, depois no código.
+**19/11/2026** (v1.4.2: Revisão v3, lote C (formação da Beatriz, grafismo fora do rodapé e do hover); v1.4.1: Revisão v3, lote B (grafismos só na abertura, Dra. Mayara reescrita, FAQ); v1.4.0: Revisão v3 da gestora, lote A; v1.3.2: pop-up da Talita Porto, a partir do documento dela de 16/10; v1.3.1: pop-ups da Equipe; v1.3: Revisão v2 da gestora e da cliente, seção final deste arquivo, que **prevalece** sobre as seções anteriores onde houver conflito; v1.2: Atendimento on-line, Blog, Contato, 404 e Política de privacidade; v1.1.1: atributos visuais do Lote 2 alinhados ao mock após o relatório do Codinho: grafismos, fundos, fotos e itálicos; v1.1: Equipe, Método, Emagrecimento e Dra. Mayara; v1.0.1: correções após o relatório do Codinho; itálicos, grafismos e fundos de A Clínica alinhados ao mock). Fonte única da copy institucional que vai para os `.tsx` (Decisão 005, item 2). Origem: mock v3.1 aprovado em 29/10 (`Clinica Maya - Site Completo v20261014.html`; páginas desempacotadas em `mock-v3.1-*.html` na raiz, gitignored) e esqueleto v3. O Codinho transcreve **literal**; correção de texto é edição aqui primeiro, depois no código.
 
 Convenções: `[PENDÊNCIA: ...]` é nota para humanos e **nunca vai para o código**. Itálico marcado com `*palavra*` é ênfase do mock e vai para o código. Links de texto terminam com seta "→" decorativa (`aria-hidden`), como no mock; botões não têm seta. Travessão não existe no site (varredura); use vírgula, dois-pontos ou ponto. Tom feminino para a paciente ("acompanhada"), neutro para a equipe.
 
@@ -780,3 +780,17 @@ Quatro pares novos, depois dos quatro atuais, nesta ordem:
 - Vocês aceitam plano de saúde? · O atendimento é particular. Emitimos nota fiscal para você pedir reembolso, se o seu plano oferecer.
 - Quais são as formas de pagamento? · Pix, dinheiro ou cartão de crédito sem juros.
 - Como é o acompanhamento depois da primeira consulta? · No fim da consulta, a Dra. Mayara apresenta um acompanhamento personalizado. Ele inclui consultas periódicas, suporte pelo WhatsApp e a comunidade do Círculo Maya. A nutrição entra quando for indicada.
+
+---
+
+# Revisão v3 (19/11/2026), lote C: deltas que prevalecem sobre as seções acima
+
+## Equipe
+
+- **Beatriz Nietsche, pop-up, Formação:** Psicóloga, com formação em Terapia Cognitivo-Comportamental (TCC), atualmente cursando Neuropsicologia.
+
+Decisão da gestora em 19/11: a formação da Beatriz pode citar a técnica. Resolve a pendência do lote A. Na varredura é exceção por frase exata em `permitidos`: "com formação em Terapia Cognitivo-Comportamental (TCC)". As regras continuam valendo para o resto do site institucional.
+
+## Global
+
+- **Grafismos:** a regra do lote B vale sem exceção. Saem o grafismo do rodapé e os fragmentos de grafismo que acendiam no hover dos cards (Áreas, Manifesto, Diferenciais, Quem faz parte). O hover dos cards continua existindo, sem a arte.

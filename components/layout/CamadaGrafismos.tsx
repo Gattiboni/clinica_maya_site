@@ -9,9 +9,9 @@ type CamadaGrafismosProps = {
   /** Página cuja composição (`lib/conteudo/grafismos`) a camada desenha. */
   pagina: PaginaGrafismos;
   /**
-   * `todos` (padrão): os três símbolos, que os cards com hoverAcende também
-   * usam. `usados`: só o da composição (404, cuja árvore entra no payload RSC
-   * de toda página).
+   * `todos` (padrão): os três símbolos. `usados`: só o da composição (404,
+   * cuja árvore entra no payload RSC de toda página). Desde a Revisão v3,
+   * lote C, só o símbolo da composição é referenciado em qualquer página.
    */
   sprite?: "todos" | "usados";
 };
@@ -56,7 +56,7 @@ export function CamadaGrafismos({ pagina, sprite = "todos" }: CamadaGrafismosPro
         <span className={MOV.grafismoAbertura} style={estilo}>
           <span
             className={MOV.grafismoPulso}
-            dangerouslySetInnerHTML={{ __html: marcacaoSvg(grafismo.nome, false, SVG_GRAFISMO) }}
+            dangerouslySetInnerHTML={{ __html: marcacaoSvg(grafismo.nome, SVG_GRAFISMO) }}
           />
         </span>
       </div>

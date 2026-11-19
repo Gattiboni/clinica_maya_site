@@ -8,8 +8,10 @@ const CITACAO = '"No Círculo Maya, ninguém caminha sozinha."';
  * §A Clínica 4 · Círculo Maya. Abaixo de `lg` o texto centraliza sob o círculo.
  * Fase 4 (afinação 1, 2.4): o símbolo é o `CirculoMaya` em SVG, que se monta
  * ao entrar e se desmonta ao sair; texto e citação entram em sequência.
- * Regra 9 do mapa: disco verde opaco atrás do símbolo, para a camada global
- * de grafismos passar por trás dele.
+ * O disco verde atrás do símbolo existia para a camada global de grafismos
+ * passar por trás dele; desde a Revisão v3 não há grafismo aqui. Fica porque
+ * tirá-lo muda em 1/255 o antialiasing do anel externo, que encosta na borda
+ * do disco (medido no lote C, em 375, 768 e 1440 px).
  */
 export function CirculoMaya() {
   return (

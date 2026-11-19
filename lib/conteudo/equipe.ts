@@ -216,9 +216,10 @@ export const AREAS_EQUIPE: readonly AreaEquipe[] = [
         modalidade: "Presencial e on-line",
         instagram: "beatriznietchepsi",
         foto: { src: equipeBeatriz, posicao: "50% 22%" },
-        // Bio longa da copy v1.4.0 ("Beatriz Nietsche (pop-up)"); o card curto acima não muda.
+        // Bio longa da copy v1.4.0 ("Beatriz Nietsche (pop-up)"), formação da v1.4.2; o card curto acima não muda.
         bio: {
-          formacao: "Psicóloga, atualmente cursando Neuropsicologia.",
+          formacao:
+            "Psicóloga, com formação em Terapia Cognitivo-Comportamental (TCC), atualmente cursando Neuropsicologia.",
           atende:
             "Atendo crianças e adolescentes e ofereço também orientação parental, nas modalidades presencial e on-line.",
           primeiraConsulta:

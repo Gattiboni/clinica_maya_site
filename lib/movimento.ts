@@ -13,9 +13,6 @@ export const MAX_FILHOS_STAGGER = 8;
 /** Folhas de uma pilha com timeline nomeada (`--folha-1` a `--folha-8`). */
 export const MAX_FOLHAS = 8;
 
-/** Fragmentos de grafismo recortados por `clip-path` (`.recorte-1` a `.recorte-5`). */
-export const MAX_RECORTES = 5;
-
 /**
  * Atributos do `AoEntrar` (único IntersectionObserver do site, exceção da
  * Decisão 010 autorizada na afinação 1): o elemento pede com `data-ao-entrar`
@@ -124,8 +121,6 @@ export const MOV = {
   circuloPalavra: "circulo-palavra",
   /** Hover. */
   hoverEleva: "hover-eleva",
-  hoverAcende: "hover-acende",
-  acende: "acende",
   hoverZoom: "hover-zoom",
   zoomCapa: "zoom-capa",
   zoomFoto: "zoom-foto",
@@ -140,7 +135,6 @@ export const MOV = {
   menuMobile: "menu-mobile",
   /** Cortina do footer: `<main>` é o palco opaco que sobe e revela o footer `sticky` embaixo. */
   footerCortina: "footer-cortina",
-  footerGrafismo: "footer-grafismo",
   /** Botão flutuante "Voltar ao topo": aparece após 100svh e some antes do footer. */
   voltarTopo: "voltar-topo",
   voltarTopoSome: "voltar-topo-some",
@@ -152,6 +146,4 @@ export const MOV = {
   faqCorpo: "faq-corpo",
   faqIcone: "faq-icone",
   progressoLeitura: "progresso-leitura",
-  /** Fragmento recortado por `clip-path` (`recorte-1` a `recorte-5`). */
-  recorte: "recorte",
 } as const;

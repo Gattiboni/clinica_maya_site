@@ -4,7 +4,7 @@ import { LinkTexto } from "@/components/ui/LinkTexto";
 import { Secao } from "@/components/ui/Secao";
 import { MOV } from "@/lib/movimento";
 
-/** §A Clínica 5 · Quem faz a clínica. Mesmos cards, mesmo array de áreas e mesmo hoverAcende da Home. */
+/** §A Clínica 5 · Quem faz a clínica. Mesmos cards, mesmo array de áreas e mesmo hover da Home. */
 export function QuemFaz() {
   return (
     <Secao fundo="bege">
