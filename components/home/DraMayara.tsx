@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { LinkTexto } from "@/components/ui/LinkTexto";
-import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { MOV } from "@/lib/movimento";
 import equipeMayara from "@/public/fotos/equipe-mayara.jpg";
@@ -24,7 +23,7 @@ export function DraMayara() {
           className={`${MOV.parallaxMidia} h-full w-full object-cover object-[50%_15%]`}
         />
       </div>
-      <Nevoa
+      <div
         className={`${MOV.revealStagger} mx-auto flex w-fit flex-col items-center gap-5 text-center lg:mx-0 lg:items-start lg:text-left`}
       >
         <h2 className="text-h2 font-medium">Dra. Mayara Brasil</h2>
@@ -39,7 +38,7 @@ export function DraMayara() {
         <LinkTexto href="/dra-mayara-brasil" className="self-center lg:self-start">
           Conhecer a Dra. Mayara
         </LinkTexto>
-      </Nevoa>
+      </div>
     </Secao>
   );
 }

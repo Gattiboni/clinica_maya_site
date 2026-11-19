@@ -67,7 +67,7 @@ export const PROGRAMAS: readonly Programa[] = [
   },
 ];
 
-/** Perguntas frequentes (§Emagrecimento 6), na ordem da copy. */
+/** Perguntas frequentes (§Emagrecimento 6), na ordem da copy; os quatro últimos pares vêm da Revisão v3, lote B (copy v1.4.1). */
 export const PERGUNTAS_FREQUENTES: readonly PerguntaFrequente[] = [
   {
     pergunta: "Preciso escolher um programa antes de agendar?",
@@ -88,5 +88,24 @@ export const PERGUNTAS_FREQUENTES: readonly PerguntaFrequente[] = [
     pergunta: "A psicologia faz parte do acompanhamento?",
     resposta:
       "Pode fazer, conforme a sua necessidade e a indicação da equipe. Ela também pode ser procurada separadamente.",
+  },
+  {
+    pergunta: "A consulta tem retorno?",
+    resposta:
+      "Não há retorno gratuito. Quando precisar mostrar exames ou ajustar o tratamento, você marca uma nova consulta ou faz isso dentro do acompanhamento.",
+  },
+  {
+    pergunta: "Vocês aceitam plano de saúde?",
+    resposta:
+      "O atendimento é particular. Emitimos nota fiscal para você pedir reembolso, se o seu plano oferecer.",
+  },
+  {
+    pergunta: "Quais são as formas de pagamento?",
+    resposta: "Pix, dinheiro ou cartão de crédito sem juros.",
+  },
+  {
+    pergunta: "Como é o acompanhamento depois da primeira consulta?",
+    resposta:
+      "No fim da consulta, a Dra. Mayara apresenta um acompanhamento personalizado. Ele inclui consultas periódicas, suporte pelo WhatsApp e a comunidade do Círculo Maya. A nutrição entra quando for indicada.",
   },
 ];

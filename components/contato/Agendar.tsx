@@ -1,5 +1,4 @@
 import { FormularioContato } from "@/components/contato/FormularioContato";
-import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { ONDE_ESTAMOS, REDES } from "@/lib/conteudo/contato";
 import { MOV } from "@/lib/movimento";
@@ -16,7 +15,7 @@ const CLASSES_LINK_EXTERNO =
 export function Agendar() {
   return (
     <Secao id="agendar" fundo="creme" className="grid gap-14 lg:grid-cols-2 lg:gap-16">
-      <Nevoa className={`${MOV.revealStagger} flex flex-col gap-10 text-center lg:text-left`}>
+      <div className={`${MOV.revealStagger} flex flex-col gap-10 text-center lg:text-left`}>
         <div className="flex flex-col items-center gap-3 lg:items-start">
           <h2 className="text-h2 font-medium">Onde estamos</h2>
           <p className="text-corpo">
@@ -54,15 +53,15 @@ export function Agendar() {
             ))}
           </ul>
         </div>
-      </Nevoa>
+      </div>
 
       <div className="flex flex-col gap-3">
-        <Nevoa className="flex flex-col gap-3 self-start">
+        <div className="flex flex-col gap-3 self-start">
           <h2 className={`${MOV.reveal} text-h2 font-medium`}>Prefere que a gente chame você?</h2>
           <p className={`${MOV.reveal} text-corpo`}>
             Deixe seu contato e retornamos pelo WhatsApp.
           </p>
-        </Nevoa>
+        </div>
         <FormularioContato />
       </div>
     </Secao>

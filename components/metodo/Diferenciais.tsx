@@ -1,7 +1,6 @@
 import { CabecalhoSecao } from "@/components/ui/CabecalhoSecao";
 import { CirculoMaya } from "@/components/ui/CirculoMaya";
 import { Grafismo } from "@/components/ui/Grafismo";
-import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { DIFERENCIAIS } from "@/lib/conteudo/metodo";
 import { MOV } from "@/lib/movimento";
@@ -36,9 +35,9 @@ export function Diferenciais() {
         />
       }
     >
-      <Nevoa className="mx-auto mb-12 w-fit lg:mx-0">
+      <div className="mx-auto mb-12 w-fit lg:mx-0">
         <CabecalhoSecao titulo="O que torna o método diferente" className={MOV.reveal} />
-      </Nevoa>
+      </div>
       <ul
         className={`${MOV.revealStagger} ${MOV.profundo} grid gap-5 sm:grid-cols-2 lg:grid-cols-4`}
       >

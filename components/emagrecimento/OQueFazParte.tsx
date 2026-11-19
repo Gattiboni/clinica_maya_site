@@ -1,5 +1,4 @@
 import { CabecalhoSecao } from "@/components/ui/CabecalhoSecao";
-import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { ITENS_ACOMPANHAMENTO } from "@/lib/conteudo/emagrecimento";
 import { MOV } from "@/lib/movimento";
@@ -11,15 +10,14 @@ import { MOV } from "@/lib/movimento";
 export function OQueFazParte() {
   return (
     <Secao fundo="creme">
-      <Nevoa className="mx-auto mb-10 w-fit lg:mx-0">
+      <div className="mx-auto mb-10 w-fit lg:mx-0">
         <CabecalhoSecao
           titulo="O que costuma fazer parte do acompanhamento"
           lead="Cada plano é individual, mas alguns cuidados aparecem em toda a jornada."
           className={MOV.reveal}
         />
-      </Nevoa>
-      <Nevoa
-        elemento="ul"
+      </div>
+      <ul
         className={`${MOV.revealStagger} ${MOV.stagger80} mx-auto grid max-w-[980px] gap-x-12 gap-y-4 sm:grid-cols-2 lg:mx-0`}
       >
         {ITENS_ACOMPANHAMENTO.map((item) => (
@@ -28,7 +26,7 @@ export function OQueFazParte() {
             <p className="text-corpo">{item}</p>
           </li>
         ))}
-      </Nevoa>
+      </ul>
     </Secao>
   );
 }

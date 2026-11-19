@@ -111,7 +111,7 @@
 
 /* =========================================================================
  * Movimento e camadas (Fase 4 · mapa de movimento v0.4 · Decisões 010 e 011 ·
- * afinação 2 e camada global de grafismos da Revisão v2, 10/11)
+ * afinação 2 · grafismo da abertura da Revisão v3, lote B, 19/11)
  *
  * CSS-first, zero biblioteca. Tudo que é ligado ao scroll usa scroll-driven
  * animations (`animation-timeline: view()` / `scroll()`), dentro de
@@ -121,12 +121,12 @@
  * rotate) e `opacity` animam; as exceções previstas no mapa são `clip-path`
  * (maskReveal), `stroke-dashoffset` (linha desenhada e Círculo Maya,
  * SVGs pequenos nossos) e `grid-template-rows` (FAQ). `will-change` só em
- * parallax e grafismos da camada global, nunca em texto.
+ * parallax, nunca em texto.
  *
  * Revisão v2 (3.2): nenhuma `<section>` é transformada nem esmaecida. O recuo
  * das folhas e a fixação da capa animam o fundo e o Container da seção, com a
  * mesma animação e a mesma timeline, para a seção não virar stacking context e
- * a camada global de grafismos ficar entre os fundos e os conteúdos.
+ * o grafismo da abertura ficar entre o fundo e o conteúdo dela.
  *
  * Três animações de tempo dependem do `AoEntrar` (IntersectionObserver,
  * exceção da Decisão 010): o pop dos números, o trilho numerado (linha, pops
@@ -187,25 +187,14 @@
   --mov-midia-escala: 1.06;
   --mov-midia-amp: 3%;
 
-  /* Drift e tilt pelo cursor (só pointer: fine). 6° é o teto em repouso. */
-  --mov-drift-mundo: 8px;
-  --mov-tilt: 6deg;
+  /* Grafismo da abertura (Revisão v3, lote B): opacidade-base da cópia marrom em `multiply`
+     (metade da camada global da Revisão v2, que era 0.34) e o pulso, por tempo: a opacidade vai
+     da base cheia até `pulso-min` × base e volta, num ciclo de ida e volta suave. */
+  --mov-grafismo-opacidade: 0.17;
+  --mov-grafismo-pulso-min: 0.7;
+  --mov-grafismo-pulso-ciclo: 7s;
 
-  /* Camada global de grafismos (Revisão v2, 3.2). Parallax: fração da rolagem que o grafismo
-     acompanha (0.15 no toque e abaixo de `lg`); curso: quanto ele viaja na tela para cada lado
-     da posição-base antes de parar, fora da viewport. Tilt por scrub: soma ao do cursor, 6° + 4°
-     = 10° no máximo. Opacidade por cópia: a marrom em `multiply` equivale a marrom ≈ 0.25 sobre
-     bege e creme; a bege em `screen`, a bege ≈ 0.20 sobre verde. */
-  --mov-global-parallax: 0.3;
-  --mov-global-curso: 160svh;
-  --mov-global-inclinar: 4deg;
-  --mov-global-perspectiva: 1400px;
-  --mov-global-marrom: 0.34;
-  --mov-global-bege: 0.27;
-
-  /* Rotação lenta contínua dos grafismos e o fragmento que acende atrás dos cards. */
-  --mov-grafismo-rotacao: 1.5deg;
-  --mov-grafismo-ciclo: 40s;
+  /* Fragmento de grafismo que acende atrás dos cards. */
   --mov-acende-hover: 0.25;
   --mov-acende-touch: 0.1;
   --mov-acende-desloc: 6px;
@@ -318,14 +307,6 @@
   }
 }
 
-/* Toque e telas estreitas: a camada global acompanha menos a rolagem (sem drift e tilt, que já
-   dependem de `pointer: fine`). */
-@media (max-width: 63.99rem), (pointer: coarse) {
-  :root {
-    --mov-global-parallax: 0.15;
-  }
-}
-
 /* Padding lateral do Container (`px-4 sm:px-6 lg:px-10`), para o extravaso lateral da névoa. */
 @media (min-width: 40rem) {
   :root {
@@ -388,43 +369,41 @@
   display: block;
 }
 
-/* Camada global de grafismos (Revisão v2, 3.2). O invólucro (`camada-global`, absolute inset 0
-   com overflow clip, pelas utilities) recorta ao palco; cada janela é `sticky` de uma viewport
-   (a segunda volta por margem negativa e fica sobre a primeira) e é ela o stacking context que
-   mistura com a página: marrom em `multiply` (aparece nos fundos claros), bege em `screen`
-   (aparece no verde). Os itens ancoram na borda esquerda, com a ponta cortada da arte fora da
-   tela. Sem scroll-driven animations só o primeiro item existe, parado na posição-base. */
-.camada-janela {
-  position: sticky;
+/* Grafismo da abertura (Revisão v3, lote B; `CamadaGrafismos`). O invólucro é absoluto no
+   `<main>` (o palco, `position: relative`): começa no topo da página e termina no topo do que vem
+   logo depois da abertura (a primeira `section` do `<main>`), onde a folha seguinte começa a
+   cobri-la; `overflow: clip` recorta o grafismo ali. A ponta de baixo vem por anchor positioning
+   (`anchor-name` no elemento seguinte à abertura, que não ganha stacking context nem transform); sem
+   seção seguinte (404), vai até o fim do `<main>`. O invólucro é o stacking context que mistura
+   com a abertura: marrom em `multiply`, na opacidade-base. O item ancora na borda esquerda, com
+   a ponta cortada da arte fora da tela. Navegador sem anchor positioning não mostra o grafismo
+   (decoração; sem âncora, o recorte não teria onde terminar e o grafismo vazaria). */
+body > main > section:first-of-type + * {
+  anchor-name: --depois-abertura;
+}
+
+.camada-grafismo {
+  position: absolute;
   top: 0;
-  height: 100lvh;
-}
-
-.camada-janela + .camada-janela {
-  margin-top: -100lvh;
-}
-
-.camada-marrom {
+  right: 0;
+  bottom: anchor(--depois-abertura top, 0px);
+  left: 0;
+  overflow: clip;
   mix-blend-mode: multiply;
-  opacity: var(--mov-global-marrom);
+  opacity: var(--mov-grafismo-opacidade);
 }
 
-.camada-bege {
-  mix-blend-mode: screen;
-  opacity: var(--mov-global-bege);
+@supports not (anchor-name: --depois-abertura) {
+  .camada-grafismo {
+    display: none;
+  }
 }
 
 .gg {
-  --mov-perspectiva: var(--mov-global-perspectiva);
   position: absolute;
   top: var(--gg-topo);
   left: calc(var(--gg-sangria) * -1);
   height: var(--gg-altura-m);
-  perspective: var(--mov-global-perspectiva);
-}
-
-.gg:not(:first-child) {
-  display: none;
 }
 
 @media (min-width: 64rem) {
@@ -433,9 +412,21 @@
   }
 }
 
-.gg-camada {
+/* Pulso: só opacidade, por tempo (não depende de scroll-driven animations). */
+@keyframes mov-grafismo-pulso {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: var(--mov-grafismo-pulso-min);
+  }
+}
+
+.gg-pulso {
   display: block;
   height: 100%;
+  animation: mov-grafismo-pulso var(--mov-grafismo-pulso-ciclo) ease-in-out infinite;
 }
 
 /* Névoa (Decisão 012, `components/ui/Nevoa`), rodada do balão: todo bloco de texto corrido
@@ -1153,82 +1144,6 @@ body > main {
     animation-timeline: view();
     animation-range: cover 0% cover 100%;
     will-change: transform;
-  }
-
-  /* drift e tilt3d: consomem --mx/--my escritas pelo Mundo; em touch as variáveis não existem. */
-  @media (pointer: fine) {
-    .drift-mundo {
-      translate: calc(var(--mx, 0) * var(--mov-drift-mundo))
-        calc(var(--my, 0) * var(--mov-drift-mundo));
-      will-change: transform;
-    }
-
-    .tilt3d {
-      transform: perspective(var(--mov-perspectiva))
-        rotateX(calc(var(--my, 0) * var(--mov-tilt) * -1))
-        rotateY(calc(var(--mx, 0) * var(--mov-tilt)));
-      will-change: transform;
-    }
-  }
-
-  /* Camada global: com scroll-driven animations todos os itens existem. Parallax pelo scroll da
-     página: o item viaja `curso` para cada lado da posição-base enquanto a página rola
-     `curso / fator` em torno do trecho dele (`--gg-trecho`, em % da rolagem total), ou seja, na
-     tela ele anda `fator` vezes a rolagem. Fora desse intervalo já está fora da viewport. */
-  .gg:not(:first-child) {
-    display: block;
-  }
-
-  @keyframes mov-global-parallax {
-    from {
-      translate: 0 var(--mov-global-curso);
-    }
-    to {
-      translate: 0 calc(var(--mov-global-curso) * -1);
-    }
-  }
-
-  .gg {
-    animation: mov-global-parallax linear both;
-    animation-timeline: scroll(root);
-    animation-range: calc(var(--gg-trecho) - var(--mov-global-curso) / var(--mov-global-parallax))
-      calc(var(--gg-trecho) + var(--mov-global-curso) / var(--mov-global-parallax));
-    will-change: transform;
-  }
-
-  /* Tilt por scrub: o grafismo inclina de um lado ao outro `--gg-ondas` vezes ao longo da página
-     (perto de uma vez por folha que passa). Só com cursor fino e no desktop, somado ao tilt do cursor. */
-  @keyframes mov-global-inclinar {
-    from {
-      rotate: y calc(var(--mov-global-inclinar) * -1);
-    }
-    to {
-      rotate: y var(--mov-global-inclinar);
-    }
-  }
-
-  @media (pointer: fine) and (min-width: 64rem) {
-    .gg-inclina {
-      animation: mov-global-inclinar ease-in-out both;
-      animation-timeline: scroll(root);
-      animation-iteration-count: var(--gg-ondas, 6);
-      animation-direction: alternate;
-    }
-  }
-
-  /* Rotação lenta contínua dos grafismos (±1,5° em 40s). */
-  @keyframes mov-girar-lento {
-    0%,
-    100% {
-      rotate: calc(var(--mov-grafismo-rotacao) * -1);
-    }
-    50% {
-      rotate: var(--mov-grafismo-rotacao);
-    }
-  }
-
-  .gira-lento {
-    animation: mov-girar-lento var(--mov-grafismo-ciclo) ease-in-out infinite;
   }
 
   /* maskReveal: clip-path abrindo ao entrar na viewport (fotos que não são LCP). */
@@ -2212,7 +2127,7 @@ body > main {
 /* --- 4. prefers-reduced-motion: bloco único que desliga todo o movimento -------
  * Capa, pilha e cortina continuam onde estão (sticky é layout, não movimento); o que sai é o
  * scrub de escala/opacidade, a fixação da capa (o hero passa a rolar normalmente), reveals,
- * parallax, drift, tilt, rotação dos grafismos (a camada global mostra só o primeiro, parado),
+ * parallax, pulso do grafismo da abertura (fica parado na opacidade-base),
  * trilho numerado, montagem do círculo, hover e transições. Popover e voltar ao topo funcionam
  * sem animação (o botão fica visível depois do gatilho, sem fade). */
 @media (prefers-reduced-motion: reduce) {
@@ -2221,15 +2136,13 @@ body > main {
   .reveal-carga > *,
   .linha-card,
   .linha-numero,
-  .gg,
-  .gg-inclina,
+  .gg-pulso,
   .menu-mobile > *,
   :is(h1, h2, .text-eyebrow),
   .titulo-desencontrado > span,
   .pop[data-entrou],
   .parallax-mundo,
   .parallax-midia,
-  .gira-lento,
   .mask-reveal-cima,
   .mask-reveal-direita,
   .mask-reveal-circular,
@@ -2274,12 +2187,6 @@ body > main {
     transition: none !important;
   }
 
-  .gg:not(:first-child) {
-    display: none;
-  }
-
-  .drift-mundo,
-  .tilt3d,
   .parallax-midia,
   .capa-foto {
     translate: none;

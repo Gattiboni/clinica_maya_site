@@ -2,7 +2,6 @@ import Image from "next/image";
 import { CirculoMaya } from "@/components/ui/CirculoMaya";
 import { LinhaDesenhada } from "@/components/ui/LinhaDesenhada";
 import { ProximaFolha } from "@/components/ui/ProximaFolha";
-import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { PASSOS } from "@/lib/conteudo/passos";
 import { AO_ENTRAR, MOV } from "@/lib/movimento";
@@ -44,7 +43,7 @@ export function ComoComeca() {
         }
         className="grid items-end gap-8 lg:grid-cols-[1fr_300px] lg:gap-12"
       >
-        <Nevoa
+        <div
           className={`${MOV.revealStagger} mx-auto flex w-fit flex-col items-center gap-3 text-center lg:mx-0 lg:items-start lg:text-left`}
         >
           <h2 className="text-h2 font-medium">
@@ -54,7 +53,7 @@ export function ComoComeca() {
             Você não precisa saber de antemão qual área procurar.
             <br />A gente ajuda a encontrar o caminho.
           </p>
-        </Nevoa>
+        </div>
         <Image
           src={home1}
           alt="Recepção da Clínica Maya"

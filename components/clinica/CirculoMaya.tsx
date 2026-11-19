@@ -1,5 +1,4 @@
 import { CirculoMaya as Simbolo } from "@/components/ui/CirculoMaya";
-import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { MOV } from "@/lib/movimento";
 
@@ -25,7 +24,7 @@ export function CirculoMaya() {
         rotulo="Círculo Maya: corpo, mente e espírito"
         className="mx-auto w-full max-w-[360px] rounded-full bg-verde"
       />
-      <Nevoa
+      <div
         className={`${MOV.revealStagger} flex flex-col items-center gap-5 text-center lg:items-start lg:text-left`}
       >
         <h2 className="text-h2 font-medium">O Círculo Maya</h2>
@@ -34,7 +33,7 @@ export function CirculoMaya() {
           caminham juntas.
         </p>
         <p className="font-titulo text-h3 leading-normal italic">{CITACAO}</p>
-      </Nevoa>
+      </div>
     </Secao>
   );
 }

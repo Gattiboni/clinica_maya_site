@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { Botao } from "@/components/ui/Botao";
 import { LinkTexto } from "@/components/ui/LinkTexto";
-import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { CLINICA } from "@/lib/conteudo/clinica";
 import { MOV } from "@/lib/movimento";
@@ -15,7 +14,7 @@ import equipeMayara from "@/public/fotos/equipe-mayara.jpg";
 export function PortaDeEntrada() {
   return (
     <Secao fundo="creme" className="grid items-center gap-12 lg:grid-cols-[1.2fr_0.8fr] lg:gap-16">
-      <Nevoa
+      <div
         className={`${MOV.revealStagger} flex flex-col items-center gap-5 text-center lg:items-start lg:text-left`}
       >
         <h2 className="text-h2 font-medium">A porta de entrada é a consulta</h2>
@@ -26,7 +25,7 @@ export function PortaDeEntrada() {
           <Botao href={CLINICA.agendarHref}>Agendar consulta</Botao>
           <LinkTexto href="/dra-mayara-brasil">Conhecer a Dra. Mayara</LinkTexto>
         </div>
-      </Nevoa>
+      </div>
       <div
         className={`${MOV.mascara} ${MOV.maskCima} aspect-[4/5] w-full max-w-md justify-self-center rounded-t-[160px] rounded-b-3xl lg:max-w-[400px] lg:justify-self-end`}
       >

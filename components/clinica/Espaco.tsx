@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { CabecalhoSecao } from "@/components/ui/CabecalhoSecao";
-import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { MOV } from "@/lib/movimento";
 import clinica1 from "@/public/fotos/clinica-1.jpg";
@@ -33,13 +32,13 @@ const CLASSES_MASCARA = `${MOV.mascara} ${MOV.maskCima} ${MOV.hoverZoom} rounded
 export function Espaco() {
   return (
     <Secao fundo="bege">
-      <Nevoa className="mx-auto mb-10 w-fit lg:mx-0">
+      <div className="mx-auto mb-10 w-fit lg:mx-0">
         <CabecalhoSecao
           titulo="O nosso espaço"
           lead="Um ambiente pensado para você se sentir em casa, em Antônio Carlos/SC."
           className={MOV.reveal}
         />
-      </Nevoa>
+      </div>
       <div
         className={`${MOV.stagger} ${MOV.stagger80} grid grid-cols-2 gap-4 lg:grid-cols-[2fr_1fr_1fr] lg:gap-5`}
       >

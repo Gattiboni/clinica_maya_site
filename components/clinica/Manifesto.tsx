@@ -1,6 +1,5 @@
 import { CabecalhoSecao } from "@/components/ui/CabecalhoSecao";
 import { Grafismo } from "@/components/ui/Grafismo";
-import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { MANIFESTO } from "@/lib/conteudo/manifesto";
 import { MOV } from "@/lib/movimento";
@@ -27,13 +26,13 @@ const FRAGMENTOS = [
 export function Manifesto() {
   return (
     <Secao fundo="creme">
-      <Nevoa className="mx-auto mb-12 w-fit lg:mx-0">
+      <div className="mx-auto mb-12 w-fit lg:mx-0">
         <CabecalhoSecao
           titulo="O nosso manifesto"
           lead="Por que existimos, como cuidamos e o que oferecemos."
           className={MOV.reveal}
         />
-      </Nevoa>
+      </div>
       <ul
         className={`${MOV.revealStagger} ${MOV.stagger120} ${MOV.profundo} grid gap-6 lg:grid-cols-3`}
       >

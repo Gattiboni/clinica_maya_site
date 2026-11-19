@@ -1,5 +1,4 @@
 import { CabecalhoSecao } from "@/components/ui/CabecalhoSecao";
-import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { PROGRAMAS } from "@/lib/conteudo/emagrecimento";
 import { MOV } from "@/lib/movimento";
@@ -14,7 +13,7 @@ import { MOV } from "@/lib/movimento";
 export function Programas() {
   return (
     <Secao fundo="bege">
-      <Nevoa className="mx-auto mb-11 w-fit lg:mx-0">
+      <div className="mx-auto mb-11 w-fit lg:mx-0">
         <CabecalhoSecao
           titulo={
             <>
@@ -24,7 +23,7 @@ export function Programas() {
           lead="Para quem precisa de mais do que uma consulta, a clínica tem programas de acompanhamento. A Dra. Mayara indica qual faz sentido para o seu momento."
           className={MOV.reveal}
         />
-      </Nevoa>
+      </div>
       <ul
         className={`${MOV.revealStagger} ${MOV.profundo} grid gap-6 sm:grid-cols-2 lg:grid-cols-3`}
       >

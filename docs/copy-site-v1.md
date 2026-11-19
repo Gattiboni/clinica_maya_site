@@ -1,6 +1,6 @@
-# Copy do site: Clínica Maya · v1.4.0 (Lotes 1, 2, 3a, Revisão v2, pop-ups da Equipe e Revisão v3)
+# Copy do site: Clínica Maya · v1.4.1 (Lotes 1, 2, 3a, Revisão v2, pop-ups da Equipe e Revisão v3)
 
-**19/11/2026** (v1.4.0: Revisão v3 da gestora, lote A; v1.3.2: pop-up da Talita Porto, a partir do documento dela de 16/10; v1.3.1: pop-ups da Equipe; v1.3: Revisão v2 da gestora e da cliente, seção final deste arquivo, que **prevalece** sobre as seções anteriores onde houver conflito; v1.2: Atendimento on-line, Blog, Contato, 404 e Política de privacidade; v1.1.1: atributos visuais do Lote 2 alinhados ao mock após o relatório do Codinho: grafismos, fundos, fotos e itálicos; v1.1: Equipe, Método, Emagrecimento e Dra. Mayara; v1.0.1: correções após o relatório do Codinho; itálicos, grafismos e fundos de A Clínica alinhados ao mock). Fonte única da copy institucional que vai para os `.tsx` (Decisão 005, item 2). Origem: mock v3.1 aprovado em 29/10 (`Clinica Maya - Site Completo v20261014.html`; páginas desempacotadas em `mock-v3.1-*.html` na raiz, gitignored) e esqueleto v3. O Codinho transcreve **literal**; correção de texto é edição aqui primeiro, depois no código.
+**19/11/2026** (v1.4.1: Revisão v3, lote B (grafismos só na abertura, Dra. Mayara reescrita, FAQ); v1.4.0: Revisão v3 da gestora, lote A; v1.3.2: pop-up da Talita Porto, a partir do documento dela de 16/10; v1.3.1: pop-ups da Equipe; v1.3: Revisão v2 da gestora e da cliente, seção final deste arquivo, que **prevalece** sobre as seções anteriores onde houver conflito; v1.2: Atendimento on-line, Blog, Contato, 404 e Política de privacidade; v1.1.1: atributos visuais do Lote 2 alinhados ao mock após o relatório do Codinho: grafismos, fundos, fotos e itálicos; v1.1: Equipe, Método, Emagrecimento e Dra. Mayara; v1.0.1: correções após o relatório do Codinho; itálicos, grafismos e fundos de A Clínica alinhados ao mock). Fonte única da copy institucional que vai para os `.tsx` (Decisão 005, item 2). Origem: mock v3.1 aprovado em 29/10 (`Clinica Maya - Site Completo v20261014.html`; páginas desempacotadas em `mock-v3.1-*.html` na raiz, gitignored) e esqueleto v3. O Codinho transcreve **literal**; correção de texto é edição aqui primeiro, depois no código.
 
 Convenções: `[PENDÊNCIA: ...]` é nota para humanos e **nunca vai para o código**. Itálico marcado com `*palavra*` é ênfase do mock e vai para o código. Links de texto terminam com seta "→" decorativa (`aria-hidden`), como no mock; botões não têm seta. Travessão não existe no site (varredura); use vírgula, dois-pontos ou ponto. Tom feminino para a paciente ("acompanhada"), neutro para a equipe.
 
@@ -724,3 +724,59 @@ Grade de quatro fotos, mesma disposição de hoje:
 - Fachada: continua a mesma
 
 `[PENDÊNCIA (gestora): nome correto das duas salas, para afinar os alt. Os alt acima só descrevem o que a foto mostra.]`
+
+---
+
+# Revisão v3 (19/11/2026), lote B: deltas que prevalecem sobre as seções acima
+
+Fonte: respostas da gestora em 19/11, `Bio profissional · Dra. Mayara Brasil Machado` (16/11, texto da própria Dra.) e o documento de perguntas frequentes da Dra.
+
+## Global
+
+- **Público da Dra. Mayara: "adultos".** Sem faixa etária em nenhum lugar do site (decisão da gestora, 19/11; o texto da Dra. trazia uma idade mínima, que não entra).
+- **Grafismos (substitui a regra de camada global da Revisão v2):** um grafismo por página, só na seção de abertura, bem suave, de fundo, pulsando devagar. Não acompanha a rolagem: fica na abertura e sai de cena com ela. Nenhum grafismo nas demais seções, nos blocos verdes ou no rodapé. Continuam valendo: só os três originais (3, 4, 5), sem espelhar, sem recortar, só escala uniforme.
+
+## Dra. Mayara (substitui as seções "Sobre a Dra. Mayara", "Como é a consulta" e "Formação" da Revisão v2)
+
+A Abertura e a Chamada final não mudam. Texto em primeira pessoa, da própria Dra. Ordem das seções:
+
+### O que atendo e para quem
+Atendo adultos que desejam emagrecer, com sobrepeso ou obesidade. Cuido também de quem convive com compulsão alimentar, ansiedade e outras doenças que vêm junto com o excesso de peso ou são causadas por ele. Muitos chegam depois de já terem tentado emagrecer várias vezes e buscam um acompanhamento médico para emagrecer e manter o peso. Atendo presencialmente em Antônio Carlos/SC e on-line.
+
+### Como é a primeira consulta
+- Parágrafo 1: A primeira consulta dura cerca de 1h30. Começo conhecendo você: sua história com o peso, o que te motiva a emagrecer, sua alimentação, sua rotina, seus hábitos, suas doenças, os medicamentos e suplementos que usa e suas queixas de hoje. Depois faço um exame físico completo, com peso, medidas, bioimpedância, pressão arterial e avaliação das pernas e da circulação.
+- Parágrafo 2: Em seguida, explico cada resultado da bioimpedância e já vamos alinhando juntos os objetivos. Com um cafezinho especial, conversamos sobre o plano de tratamento: explico as opções indicadas para você e decidimos juntos. Tiro todas as dúvidas e, se o tratamento incluir as canetas, ensino a usar e envio um vídeo explicativo depois.
+- Parágrafo 3: No final, apresento o programa de acompanhamento que mais combina com os seus objetivos. Quem entra em um programa tem um WhatsApp exclusivo comigo: recebe as informações do programa, me envia o peso toda semana e conta com meu suporte para dúvidas e receitas durante todo o acompanhamento.
+- Parágrafo 4: Meus pacientes saem motivados a mudar seus hábitos e confiantes de que estão fazendo o melhor pela sua saúde.
+
+### O que não faço e não prometo
+Não prometo resultado garantido nem emagrecimento milagroso, e não trabalho com dietas restritivas. Meu acompanhamento não é para quem busca só acesso à medicação, usa canetas de origem duvidosa (importadas ou manipuladas), quer emagrecer rápido ou só por estética, ou procura reposição hormonal para performance.
+
+Nota de varredura: duas exceções novas em `permitidos`, frases exatas: "Não prometo resultado garantido nem emagrecimento milagroso" e "ou só por estética". Manter as frases exatamente assim.
+
+### Por que escolhi essa área
+- Parágrafo 1: Foi tratando mulheres com ansiedade no consultório. Muitas tinham, como consequência, o comer emocional e o excesso de peso. Comecei a me interessar, fui estudar obesidade e me apaixonei.
+- Parágrafo 2: Eu acredito que cuidar de alguém é ser instrumento de Deus na vida dessa pessoa. Poder ajudá-la a transformar a sua vida por meio do emagrecimento é uma satisfação enorme.
+
+### Formação
+- Graduação em Medicina · Universidade do Sul de Santa Catarina (UNISUL) · 2014
+- Título de Especialista em Medicina de Família e Comunidade · SBMFC/AMB · 2022
+- Cursos de tratamento de sobrepeso e obesidade
+- Membra da ABESO · Associação Brasileira para o Estudo da Obesidade e da Síndrome Metabólica
+- Linha de registro: Dra. Mayara Brasil Machado · CRM-SC 21112 · RQE 22484 · Medicina de Família e Comunidade
+
+Resolve a pendência de universidade e ano: agora é texto da própria Dra.
+
+### Frase em destaque (entre Formação e a Chamada final)
+"Emagrecer não precisa ser sofrido!"
+
+`[PENDÊNCIA (gestora): ficaram fora, como nos pop-ups da equipe, os blocos "O que meus pacientes comentam" e "Fora do consultório". A decisão da gestora foi manter os demais trechos como a Dra. escreveu.]`
+
+## Emagrecimento · FAQ
+
+Quatro pares novos, depois dos quatro atuais, nesta ordem:
+
+- A consulta tem retorno? · Não há retorno gratuito. Quando precisar mostrar exames ou ajustar o tratamento, você marca uma nova consulta ou faz isso dentro do acompanhamento.
+- Vocês aceitam plano de saúde? · O atendimento é particular. Emitimos nota fiscal para você pedir reembolso, se o seu plano oferecer.
+- Quais são as formas de pagamento? · Pix, dinheiro ou cartão de crédito sem juros.
+- Como é o acompanhamento depois da primeira consulta? · No fim da consulta, a Dra. Mayara apresenta um acompanhamento personalizado. Ele inclui consultas periódicas, suporte pelo WhatsApp e a comunidade do Círculo Maya. A nutrição entra quando for indicada.

@@ -1,5 +1,4 @@
 import { Botao } from "@/components/ui/Botao";
-import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { TituloDesencontrado } from "@/components/ui/TituloDesencontrado";
 import { CLINICA } from "@/lib/conteudo/clinica";
@@ -11,7 +10,7 @@ import { MOV } from "@/lib/movimento";
 export function ChamadaFinal() {
   return (
     <Secao fundo="verde" folha="cta" className="flex flex-col items-center">
-      <Nevoa className={`${MOV.revealStagger} flex flex-col items-center gap-5 text-center`}>
+      <div className={`${MOV.revealStagger} flex flex-col items-center gap-5 text-center`}>
         <TituloDesencontrado
           linhas={[
             "Não sabe com quem",
@@ -30,7 +29,7 @@ export function ChamadaFinal() {
           </Botao>
         </div>
         <p className="text-nota">Antônio Carlos/SC e on-line para todo o Brasil</p>
-      </Nevoa>
+      </div>
     </Secao>
   );
 }
