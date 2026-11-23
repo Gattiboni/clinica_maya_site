@@ -181,7 +181,7 @@ Uma decisão por regra de arquitetura ou contrato. Numeração contínua.
 
 ---
 
-## Decisão 015 — Grafismo só na abertura, suave e pulsando; sai a camada global. Supera os itens (2), (4), (6) e (7) da 012
+## Decisão 015 — Grafismo só na abertura, suave e pulsando; sai a camada global. Supera os itens (2), (4) e (7) da 012 e restringe o (6) às aberturas
 
 **Data:** 2026-11-23 · **Owner:** cliente e gestora (pedido, 16 e 19/11) · Alan (escopo "sem exceção") · implementação: Codinho
 

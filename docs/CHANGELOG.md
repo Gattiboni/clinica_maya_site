@@ -27,7 +27,7 @@ Fecha a rodada pós-prévia 2: os nove itens do `REVISÕES SITE_V3` (gestora, 16
 ### Removido
 - **`components/layout/Mundo.tsx`** e as variáveis `--mx`/`--my`: o cursor só alimentava o drift e o tilt da camada global. O único JavaScript de movimento do site passa a ser o `AoEntrar`.
 - **Movimento da camada global:** parallax, tilt por scrub, rotação lenta, drift, tilt do cursor, janelas `sticky`, cópia bege em `screen`.
-- **Grafismo do rodapé e `hover-acende`:** `acende`, `recorte-1` a `recorte-5`, `--mov-acende-*`, `MAX_RECORTES`, `footer-grafismo`, `--mov-footer-*` (71 linhas de CSS no lote C); componente `Grafismo` e as props de cor, recorte e inline (ficam `lerSvg`, `ID_SIMBOLO`, `NOMES_SVG`, `marcacaoSvg`); prop `indice` do `CardArea`.
+- **Grafismo do rodapé e `hover-acende`:** `acende`, `recorte-1` a `recorte-5`, `--mov-acende-*`, `MAX_RECORTES`, `footer-grafismo`, `--mov-footer-*` (71 linhas de CSS no lote C); componente `Grafismo` e as props de cor, recorte e inline (ficam `lerSvg`, `ID_SIMBOLO` e `marcacaoSvg`; `NOMES_SVG` saiu no fecho do lote D); prop `indice` do `CardArea`.
 - **`components/dra-mayara/Sobre.tsx` e `ComoEAConsulta.tsx`.**
 
 ### Validação (β)

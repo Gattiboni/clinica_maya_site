@@ -2,9 +2,6 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { NomeGrafismo } from "@/lib/conteudo/grafismos";
 
-/** Os três SVGs da marca em `public/marca/grafismo-{3,4,5}.svg`. */
-export const NOMES_SVG = ["3", "4", "5"] as const satisfies readonly NomeGrafismo[];
-
 type SvgLido = { viewBox: string; conteudo: string };
 
 const arquivosLidos = new Map<NomeGrafismo, SvgLido>();
