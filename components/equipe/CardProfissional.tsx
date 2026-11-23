@@ -32,8 +32,8 @@ const CLASSES_VER_MAIS = `cursor-pointer text-nota font-bold whitespace-nowrap t
  *     rodapé e nome acessível "Ver mais sobre {nome}";
  * (b) com `href` (Dra. Mayara): o card inteiro é um link para a página dela,
  *     com o mesmo "Ver mais →";
- * (c) sem bio e sem `href` (Beatriz Nietsche, até mandar a versão longa): card estático, sem
- *     botão e com cursor padrão.
+ * (c) sem bio e sem `href`: card estático, sem botão e com cursor padrão (hoje nenhuma
+ *     profissional está neste estado; fica para quem entrar sem a versão longa).
  *
  * Hover (Fase 4): o card levanta com rotateX 2° e a foto faz zoom 1,03.
  */

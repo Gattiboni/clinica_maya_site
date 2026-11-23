@@ -1,6 +1,6 @@
 /**
- * Movimento (Fase 4, mapa de movimento v0.4, Decisões 010 e 011; afinação 2 e
- * camada global de grafismos da Revisão v2, 10/11): só as constantes que precisam existir em código para componente e
+ * Movimento (Fase 4, mapa de movimento v0.4, Decisões 010 e 011; afinação 2;
+ * grafismo da abertura da Revisão v3, lote B): só as constantes que precisam existir em código para componente e
  * CSS não divergirem. Os valores de afinação (durações, fatores, ângulos,
  * opacidades) vivem como tokens `--mov-*` em `app/globals.css`; aqui ficam
  * nomes de classe, atributos e limites que o CSS repete por `nth-child`.
@@ -12,9 +12,6 @@ export const MAX_FILHOS_STAGGER = 8;
 
 /** Folhas de uma pilha com timeline nomeada (`--folha-1` a `--folha-8`). */
 export const MAX_FOLHAS = 8;
-
-/** Fragmentos de grafismo recortados por `clip-path` (`.recorte-1` a `.recorte-5`). */
-export const MAX_RECORTES = 5;
 
 /**
  * Atributos do `AoEntrar` (único IntersectionObserver do site, exceção da
@@ -60,11 +57,6 @@ export const MOV = {
   /** Foto que se move dentro da máscara (`.mascara` no pai). */
   parallaxMidia: "parallax-midia",
   mascara: "mascara",
-  /** Drift pelo cursor (amplitude em tokens), só `pointer: fine`. */
-  driftMundo: "drift-mundo",
-  tilt3d: "tilt3d",
-  /** Rotação lenta contínua (±1,5° em 40s) dos grafismos do mundo. */
-  giraLento: "gira-lento",
   /** maskReveal por `clip-path`. */
   maskCima: "mask-reveal-cima",
   maskDireita: "mask-reveal-direita",
@@ -100,17 +92,13 @@ export const MOV = {
   /** Título em duas linhas desencontradas, cada uma entrando de um lado. */
   tituloDesencontrado: "titulo-desencontrado",
   /**
-   * Camada global de grafismos (`CamadaGrafismos`): invólucro recortado ao
-   * palco, janelas `sticky` (uma por cor, com `mix-blend-mode`), item com
-   * parallax pelo scroll da página, camadas internas e tilt por scrub.
+   * Grafismo da abertura (`CamadaGrafismos`): invólucro confinado à seção de
+   * abertura (anchor positioning, `overflow: clip`, `multiply`), o grafismo
+   * posicionado e a camada interna com o pulso de opacidade.
    */
-  global: "camada-global",
-  globalJanela: "camada-janela",
-  globalMarrom: "camada-marrom",
-  globalBege: "camada-bege",
-  globalItem: "gg",
-  globalCamada: "gg-camada",
-  globalInclina: "gg-inclina",
+  camadaGrafismo: "camada-grafismo",
+  grafismoAbertura: "gg",
+  grafismoPulso: "gg-pulso",
   /** Linha SVG desenhada: por scrub pela seção ou pela pilha; por tempo no trilho (`linha-trilho`). */
   linhaDesenhada: "linha-desenhada",
   linhaDesenhadaPilha: "linha-desenhada-pilha",
@@ -133,8 +121,6 @@ export const MOV = {
   circuloPalavra: "circulo-palavra",
   /** Hover. */
   hoverEleva: "hover-eleva",
-  hoverAcende: "hover-acende",
-  acende: "acende",
   hoverZoom: "hover-zoom",
   zoomCapa: "zoom-capa",
   zoomFoto: "zoom-foto",
@@ -149,7 +135,6 @@ export const MOV = {
   menuMobile: "menu-mobile",
   /** Cortina do footer: `<main>` é o palco opaco que sobe e revela o footer `sticky` embaixo. */
   footerCortina: "footer-cortina",
-  footerGrafismo: "footer-grafismo",
   /** Botão flutuante "Voltar ao topo": aparece após 100svh e some antes do footer. */
   voltarTopo: "voltar-topo",
   voltarTopoSome: "voltar-topo-some",
@@ -161,6 +146,4 @@ export const MOV = {
   faqCorpo: "faq-corpo",
   faqIcone: "faq-icone",
   progressoLeitura: "progresso-leitura",
-  /** Fragmento recortado por `clip-path` (`recorte-1` a `recorte-5`). */
-  recorte: "recorte",
 } as const;

@@ -1,6 +1,5 @@
 import { Botao } from "@/components/ui/Botao";
 import { CabecalhoSecao } from "@/components/ui/CabecalhoSecao";
-import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { AVALIACOES, AVALIACOES_GOOGLE_URL } from "@/lib/conteudo/avaliacoes";
 import { MOV } from "@/lib/movimento";
@@ -17,13 +16,13 @@ import { MOV } from "@/lib/movimento";
 export function Avaliacoes() {
   return (
     <Secao fundo="bege">
-      <Nevoa className="mx-auto mb-12 w-fit lg:mx-0">
+      <div className="mx-auto mb-12 w-fit lg:mx-0">
         <CabecalhoSecao
           titulo="O que dizem as pacientes"
           lead="Avaliações públicas deixadas no Google."
           className={MOV.reveal}
         />
-      </Nevoa>
+      </div>
       <ul className={`${MOV.revealStagger} ${MOV.profundo} grid gap-6 lg:grid-cols-3`}>
         {AVALIACOES.map((avaliacao) => (
           <li key={avaliacao.nome} className="flex">

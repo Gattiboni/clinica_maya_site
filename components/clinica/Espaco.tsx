@@ -1,12 +1,11 @@
 import Image from "next/image";
 import { CabecalhoSecao } from "@/components/ui/CabecalhoSecao";
-import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { MOV } from "@/lib/movimento";
 import clinica1 from "@/public/fotos/clinica-1.jpg";
 import clinica2 from "@/public/fotos/clinica-2.jpg";
-import consultorio1 from "@/public/fotos/consultorio-1.jpg";
-import consultorio2 from "@/public/fotos/consultorio-2.jpg";
+import espaco4 from "@/public/fotos/espaco-4.jpg";
+import espaco5 from "@/public/fotos/espaco-5.jpg";
 
 const CLASSES_FOTO = `${MOV.zoomCapa} h-full w-full object-cover`;
 const CLASSES_MASCARA = `${MOV.mascara} ${MOV.maskCima} ${MOV.hoverZoom} rounded-card`;
@@ -23,19 +22,23 @@ const CLASSES_MASCARA = `${MOV.mascara} ${MOV.maskCima} ${MOV.hoverZoom} rounded
  * células seguem as do lote anterior: a foto que era a sala de espera
  * (célula grande) dá lugar à sala de saúde capilar.
  *
+ * Revisão v3, lote A (copy v1.4.0): a célula grande passa a `espaco-4.jpg`
+ * e a do consultório médico (mesa com computador) passa a `espaco-5.jpg`;
+ * recepção e fachada continuam. Mesma grade.
+ *
  * Fase 4: cada foto fica numa máscara (a célula da grade) que abre de baixo
  * para cima em sequência de 80ms; hover: zoom 1,04 dentro da máscara.
  */
 export function Espaco() {
   return (
     <Secao fundo="bege">
-      <Nevoa className="mx-auto mb-10 w-fit lg:mx-0">
+      <div className="mx-auto mb-10 w-fit lg:mx-0">
         <CabecalhoSecao
           titulo="O nosso espaço"
           lead="Um ambiente pensado para você se sentir em casa, em Antônio Carlos/SC."
           className={MOV.reveal}
         />
-      </Nevoa>
+      </div>
       <div
         className={`${MOV.stagger} ${MOV.stagger80} grid grid-cols-2 gap-4 lg:grid-cols-[2fr_1fr_1fr] lg:gap-5`}
       >
@@ -43,10 +46,10 @@ export function Espaco() {
           className={`${CLASSES_MASCARA} col-span-2 aspect-[16/10] lg:col-span-1 lg:row-span-2 lg:aspect-auto`}
         >
           <Image
-            src={consultorio2}
-            alt="Sala de saúde capilar da Clínica Maya"
+            src={espaco4}
+            alt="Sala de atendimento da Clínica Maya, com sofá e poltrona"
             sizes="(min-width: 1024px) 50vw, 100vw"
-            className={`${CLASSES_FOTO} object-[50%_55%]`}
+            className={`${CLASSES_FOTO} object-[50%_60%]`}
           />
         </div>
         <div className={`${CLASSES_MASCARA} aspect-square lg:aspect-[300/260]`}>
@@ -59,10 +62,10 @@ export function Espaco() {
         </div>
         <div className={`${CLASSES_MASCARA} aspect-square lg:aspect-[300/260]`}>
           <Image
-            src={consultorio1}
-            alt="Consultório médico da Clínica Maya"
+            src={espaco5}
+            alt="Sala de atendimento da Clínica Maya, com mesa e poltronas"
             sizes="(min-width: 1024px) 25vw, 50vw"
-            className={`${CLASSES_FOTO} object-[50%_55%]`}
+            className={`${CLASSES_FOTO} object-[55%_50%]`}
           />
         </div>
         <div className={`${CLASSES_MASCARA} col-span-2 aspect-[16/10] lg:aspect-[31/13]`}>

@@ -20,14 +20,14 @@ const CAMINHOS = [
  * site. Vale para `notFound()` lançado em qualquer rota de `(site)` (ex.: post
  * sem slug correspondente); para URLs sem rota, `app/not-found.tsx` compõe
  * header e footer em volta deste mesmo componente. Só `reveal` de abertura.
- * A camada de grafismos emite só o símbolo que usa (`sprite="usados"`): a
+ * A camada de grafismos emite só o símbolo que usa, como em toda página: a
  * árvore do 404 entra no payload RSC de toda página (duas vezes: 404 global e
- * do grupo), e o sprite completo ali pesaria 2 × 29 KB.
+ * do grupo).
  */
 export default function NaoEncontrado() {
   return (
     <>
-      <CamadaGrafismos pagina="nao-encontrado" sprite="usados" />
+      <CamadaGrafismos pagina="nao-encontrado" />
       <Secao fundo="bege" className="flex flex-col items-center lg:items-start">
         <Nevoa
           className={`${MOV.revealCarga} flex flex-col items-center gap-5 text-center lg:items-start lg:text-left`}

@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 import { CirculoMaya } from "@/components/ui/CirculoMaya";
-import { Grafismo } from "@/components/ui/Grafismo";
 import { CLINICA } from "@/lib/conteudo/clinica";
 import { LINKS_INSTITUCIONAIS } from "@/lib/conteudo/navegacao";
 import { MOV } from "@/lib/movimento";
@@ -24,33 +23,20 @@ function TituloColuna({ children }: { children: string }) {
 /**
  * Footer de todas as páginas (server component). Abaixo de `md` as três
  * colunas viram uma, centralizada (regra de recentralização do lote).
- * O grafismo-5 vai `inline` (sem depender do sprite da página): o footer
- * também aparece em páginas sem sprite, como a Política de privacidade. Fica
- * no canto inferior esquerdo, com a borda cortada da arte (a esquerda) fora
- * da tela, e o símbolo corpo-mente-espírito (o `CirculoMaya` estático) vai
- * para o canto direito. O footer está atrás do `<main>`, fora da camada
- * global de grafismos. Linha final (Revisão v2): razão social, inscrição da
+ * O símbolo corpo-mente-espírito (o `CirculoMaya` estático) fica no canto
+ * direito. Sem grafismo da marca (Revisão v3, lote C: grafismo só na
+ * abertura das páginas). Linha final (Revisão v2): razão social, inscrição da
  * clínica no CRM-SC e responsável técnica.
  *
  * Cortina (afinação 1, 2.8): `footer-cortina` deixa o footer `sticky` no fim
  * da viewport, atrás do `<main>` (palco opaco com sombra); ao rolar até o fim,
- * a última folha sobe e revela o footer que já estava ali. O grafismo ganha
- * um parallax inverso suave na revelação (`footer-grafismo`).
+ * a última folha sobe e revela o footer que já estava ali.
  */
 export function Footer() {
   return (
     <footer
       className={`${MOV.footerCortina} relative overflow-hidden border-t border-bege/25 bg-verde text-bege`}
     >
-      <Grafismo
-        nome="5"
-        cor="bege"
-        posicao="-bottom-30 -left-6"
-        largura="w-[300px]"
-        opacidade="opacity-18"
-        inline
-        className={MOV.footerGrafismo}
-      />
       <CirculoMaya
         id="circulo-footer"
         cor="bege"

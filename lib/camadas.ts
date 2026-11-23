@@ -7,12 +7,13 @@
  * transform, opacity, isolation, filter nem z-index; o recuo das folhas anima
  * o fundo e o Container, não a seção). Assim os fundos de todas as seções
  * (z 0) e os conteúdos de todas elas (z 20) vivem no mesmo contexto, o da
- * página, e a camada global de grafismos (z 10) fica literalmente entre os
- * dois: acima de todo fundo, abaixo de todo texto, card e foto. Exceção por
+ * página. Revisão v3: o grafismo da abertura (z 10) fica entre o fundo e o
+ * conteúdo da primeira seção, recortado no fim dela; o nome
+ * `grafismoGlobal` ficou da camada global da Revisão v2. Exceção por
  * desenho: as folhas de pilha são `sticky` (stacking context inevitável) e
- * ficam inteiras em `conteudo`, como cartas opacas à frente da camada.
- * `simbolo` tem o mesmo z da camada global e vem depois dela no DOM: o
- * Círculo Maya decorativo pinta sobre os grafismos e sob o conteúdo.
+ * ficam inteiras em `conteudo`, como cartas opacas. `simbolo` tem o mesmo z
+ * do grafismo e vem depois dele no DOM: o Círculo Maya decorativo pinta
+ * sobre o grafismo e sob o conteúdo.
  */
 export const CAMADA = {
   fundo: "z-0",

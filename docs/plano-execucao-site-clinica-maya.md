@@ -1,7 +1,16 @@
 # Plano de execução — site Clínica Maya
 
-**v1.8 · 11/11/2026** (v1.7 a v1.0 anteriores) · checklist executável · repo: `github.com/Gattiboni/clinica_maya_site`
+**v1.9 · 23/11/2026** (v1.8 a v1.0 anteriores) · checklist executável · repo: `github.com/Gattiboni/clinica_maya_site`
 Responsável entre parênteses: (Alan) (Claude) (Codinho) (Amanda) (Cliente). `[x]` = concluído. Este arquivo é o estado do projeto; quem abrir sabe em que pé estamos.
+
+## Changelog v1.9
+
+- **Revisão v3 da cliente commitada (v0.7.0)**, pelo PR #1: grafismo só na abertura (Decisão 015), página da Dra. Mayara no texto dela, FAQ com oito pares, pop-up da Beatriz, fotos novas, três artigos no blog com capa. Copy v1.4.2.
+- **Dinâmica nova para sessão remota:** quando o Alan trabalha longe da máquina (tablet ou Codinho web), o Codinho commita em branch e abre PR; o merge é do Alan. Fora disso, vale a regra de sempre (commit humano direto na `main`). A autorização é dada no início de cada sessão remota e registrada na última linha do commit.
+- **Regra de conteúdo:** exceção regulatória é da gestora, registrada; o blog tem regra própria (Decisão 016).
+- **Fase 6:** a revisão da gestora chegou como `REVISÕES SITE_V3` e foi aplicada em um lote só. Falta a aprovação final da Dra. Mayara no preview.
+- **Depois do merge, nesta ordem:** foto do hero da Home (Alan leva as opções à gestora) · upgrade do Next (alerta de vulnerabilidade bloqueia o build local uma vez a cada duas) · Lighthouse mobile e iOS Safari · Fase 7 (Vercel Pro, `noindex` fora, domínio) · Lote 3b, com config de varredura própria para o blog.
+- **Tarefas extras do Alan, sem prazo:** ajustar a dinâmica do grafo (graphify fora desta release); limpeza de `Downloads` na máquina dele (clone e arquivos usados na sessão de 19/11).
 
 ## Changelog v1.8
 
@@ -153,7 +162,7 @@ Dependências da Spinhardi: **Supabase (auth e papéis) e `@portabletext/react` 
 - [ ] (Alan) Changelog v0.3.0 + commit do Lote 2
 - [ ] (Claude) Copy v1.2: Atendimento on-line, Contato, 404, Política de privacidade, Blog (lista, post, estado vazio)
 - [ ] (Claude → Codinho) **Lote 3a:** Atendimento on-line, Contato com `wa.me` (formulário que monta a mensagem, sem backend), 404, Política de privacidade, Blog público (lista com categorias e post via Sanity, `@portabletext/react` entra aqui); seção Blog da Home passa a linkar para posts reais
-- [ ] (Amanda) Se houver os 3 posts reais antes do preview, (Claude) cria categorias e autoras pelo conector e carrega os posts; senão, lista com estado vazio "em breve" (frase exata em `permitidos`)
+- [x] (Amanda) Se houver os 3 posts reais antes do preview, (Claude) cria categorias e autoras pelo conector e carrega os posts; senão, lista com estado vazio "em breve" (frase exata em `permitidos`) (23/11)
 - [ ] (Claude) Testar lote 3a; (Alan) revisar e commitar
 - [ ] (Claude) Testar lote 3; (Alan) revisar e commitar
 - [ ] (Alan) Criar o webhook no Sanity (API → Webhooks) apontando para `/api/revalidate`, com `SANITY_REVALIDATE_SECRET` igual nos dois lados, quando houver publicação de post (Lote 3b)
@@ -187,9 +196,9 @@ Dependências da Spinhardi: **Supabase (auth e papéis) e `@portabletext/react` 
 - [x] (Claude) Prévia 1 apresentada em 30/10 com dois PDFs (Mayara e Amanda); retorno em 09 e 10/11 virou a Revisão v2 (v0.6.0)
 - [ ] (Claude) Prévia 2: dois PDFs novos (cliente e gestora) com o que mudou, o que falta decidir e o que vem depois da aprovação (go-live); preview é `https://clinica-maya-site.vercel.app`
 - [ ] (Claude) Varredura final + Lighthouse + acessibilidade sobre o preview de produção
-- [ ] (Amanda) Revisão completa do preview: estrutura, copy, bios e pop-ups, movimento, política de privacidade; decidir as pendências da Talita, da Bianca e da Beatriz Nietsche (copy v1.3.2)
+- [x] (Amanda) Revisão completa do preview: estrutura, copy, bios e pop-ups, movimento, política de privacidade; decidir as pendências da Talita, da Bianca e da Beatriz Nietsche (copy v1.3.2) (23/11)
 - [ ] (Cliente) Aprovação final da Dra. Mayara no mesmo preview
-- [ ] (Claude) Aplicar os ajustes do pacote em um lote; (Alan) revisar e commitar
+- [x] (Claude) Aplicar os ajustes do pacote em um lote; (Alan) revisar e commitar (23/11)
 
 ## Fase 7 · Domínio e go-live
 
@@ -225,7 +234,7 @@ Then compare the main implementation routes for a Next.js 16 App Router site in 
 
 ## Apêndice B · Pendências de conteúdo com dono
 
-Resolvidas na v0.6.0: avaliações do Google, fotos e registros (menos Dra. Beatriz Dalssasso), Folzke, trajetória e formação da Dra. Mayara, prova social (rota a, CFM 2.336/2023), inscrição CRM-SC PJ. **Abertas:** bio longa da Beatriz Nietsche (clínica) · decisões sobre a Talita na copy v1.3.2 (Amanda + cliente) · história da Bianca com ou sem nomes (clínica) · Dra. Beatriz Dalssasso, dados e foto (clínica) · ficha do Google "Saúde Integrativa" (Amanda) · encarregado de dados e revisão jurídica da política (jurídico) · 3 posts reais (Amanda) · geografia das campanhas (Amanda) · favicon (Amanda) · origem do nome, fora do site (cliente).
+Resolvidas na v0.6.0: avaliações do Google, fotos e registros (menos Dra. Beatriz Dalssasso), Folzke, trajetória e formação da Dra. Mayara, prova social (rota a, CFM 2.336/2023), inscrição CRM-SC PJ. **Abertas:** bio longa da Beatriz Nietsche (clínica) · decisões sobre a Talita na copy v1.3.2 (Amanda + cliente) · história da Bianca com ou sem nomes (clínica) · Dra. Beatriz Dalssasso, dados e foto (clínica) · ficha do Google "Saúde Integrativa" (Amanda) · encarregado de dados e revisão jurídica da política (jurídico) · geografia das campanhas (Amanda) · favicon (Amanda) · origem do nome, fora do site (cliente).
 
 ## Apêndice C · Identificadores (sem segredos)
 

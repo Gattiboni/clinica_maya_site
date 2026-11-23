@@ -2,6 +2,60 @@
 
 Formato: versão acima da anterior. Versões antes de v1.0.0 são fundação e desenvolvimento, sem site no ar.
 
+## v0.7.0 — 2026-11-23
+
+### Revisão v3 da cliente: grafismo só na abertura, página da Dra. Mayara no texto dela, pop-up da Beatriz, blog com os três primeiros artigos
+
+Fecha a rodada pós-prévia 2: os nove itens do `REVISÕES SITE_V3` (gestora, 16/11) e as respostas dela em 19/11. Quatro lotes do Codinho no PR #1 (`revisao-v3`), em sessão remota: A `c816885`, B `e647fe8`, C `ea90e2a` e o fecho D; fotos em `50a0765`. Primeira release por PR, com commit do agente em branch e merge humano. Zero dependência nova. Um client component a menos (`Mundo`). Copy v1.3.2 → v1.4.2.
+
+### Adicionado
+- **Pop-up da Beatriz Nietsche:** sétimo pop-up da Equipe, seis blocos e a frase, com `titulos.primeiraConsulta` = "Como são os primeiros encontros" (mesmo mecanismo da Talita). A formação cita a técnica por decisão da gestora (Decisão 016); na varredura é exceção por frase exata.
+- **`/dra-mayara-brasil` reescrita no texto da própria Dra.** (`Bio profissional`, 16/11), em primeira pessoa: O que atendo e para quem · Como é a primeira consulta · O que não faço e não prometo · Por que escolhi essa área · Formação · frase em destaque. Componentes novos em `components/dra-mayara/`: `SecaoProsa`, `Frase`, `conteudo.ts`. "1h30" continua existindo só nesta página.
+- **FAQ de `/emagrecimento` com oito pares:** retorno, plano de saúde, formas de pagamento e acompanhamento depois da primeira consulta. Primeira informação comercial do site (formas de pagamento), pedida pela cliente.
+- **Blog com conteúdo:** quatro categorias, a autora (área Medicina) e três artigos publicados no Sanity da clínica pelo conector, em 19/11, com capa: `caneta-emagrecedora-quando-faz-sentido`, `comer-emocional-e-compulsao-alimentar`, `efeito-sanfona-por-que-o-peso-volta`. Capas em gravura de traço fino, bege sobre `#3F4F4F`, 1920×1080 (padrão dos posts da gestora no Instagram). A tabela comparativa do segundo artigo virou três listas: o `body` do schema aceita bloco e imagem, não tabela. Ficha SEO de cada artigo foi para `seoTitle`, `seoDescription` e `slug`. A seção Blog da Home passou a aparecer sozinha (regra do Lote 1: sem post, não renderiza).
+- **Três fotos:** `equipe-arthur.jpg` (substituída, `posicao` "50% 12%"), `espaco-4.jpg` e `espaco-5.jpg` na grade do Espaço de `/clinica` (`object-position` 50% 60% e 55% 50%).
+- **Exceções novas em `permitidos` da varredura** (frase exata): "Não prometo resultado garantido nem emagrecimento milagroso", "ou só por estética", "com formação em Terapia Cognitivo-Comportamental (TCC)". Nenhuma regra de `proibidos` saiu.
+
+### Alterado
+- **Grafismos: um por página, só na abertura, pulsando devagar** (Decisão 015, substitui a camada global da v0.6.0). `lib/conteudo/grafismos.ts` passa a ter um grafismo por página (o que era `trecho: 0`), sem `trecho` nem `ondas`. O invólucro é `absolute` no `<main>` e termina no topo do elemento seguinte à abertura por **anchor positioning** (`anchor-name` nesse elemento), com `overflow: clip`; a `Secao` segue sem stacking context. Tokens em `app/globals.css`: `--mov-grafismo-opacidade: 0.17` (metade do 0.34 anterior), `--mov-grafismo-pulso-min: 0.7`, `--mov-grafismo-pulso-ciclo: 7s`; o pulso mexe só em `opacity`. Uma cópia só, marrom em `multiply` (as 11 aberturas têm fundo bege). **TRAP:** navegador sem anchor positioning não mostra grafismo; foi escolha (sem a âncora ele vazaria para as seções seguintes), não esquecimento.
+- **`Nevoa` só nas aberturas** (8 `Abertura.tsx`, `Hero`, `Post`, 404): saiu de 32 componentes (30 em todo o site e 2 da Dra. Mayara, que foi reescrita) e do `Faq`, sem mudança de geometria.
+- **Hover dos cards de Áreas, Manifesto, Diferenciais e Quem faz parte:** sem fragmento de grafismo; passam a mostrar a sombra do `hover-eleva`, que o `overflow: clip` do `hover-acende` recortava. Mesmo hover dos cards da Equipe e do blog.
+- **Textos da Equipe:** descrição da área Medicina e resumo do card da Dra. Mayara (itens 7 e 8 do documento).
+- **Público da Dra. Mayara é "adultos", sem faixa etária, no site inteiro** (regra global na copy v1.4.1; o texto dela trazia idade mínima).
+- **Sprite de grafismos:** cada página emite só o símbolo da própria composição; a prop `sprite` saiu (lote D).
+
+### Removido
+- **`components/layout/Mundo.tsx`** e as variáveis `--mx`/`--my`: o cursor só alimentava o drift e o tilt da camada global. O único JavaScript de movimento do site passa a ser o `AoEntrar`.
+- **Movimento da camada global:** parallax, tilt por scrub, rotação lenta, drift, tilt do cursor, janelas `sticky`, cópia bege em `screen`.
+- **Grafismo do rodapé e `hover-acende`:** `acende`, `recorte-1` a `recorte-5`, `--mov-acende-*`, `MAX_RECORTES`, `footer-grafismo`, `--mov-footer-*` (71 linhas de CSS no lote C); componente `Grafismo` e as props de cor, recorte e inline (ficam `lerSvg`, `ID_SIMBOLO` e `marcacaoSvg`; `NOMES_SVG` saiu no fecho do lote D); prop `indice` do `CardArea`.
+- **`components/dra-mayara/Sobre.tsx` e `ComoEAConsulta.tsx`.**
+
+### Validação (β)
+- **CI verde** em cada lote (Lint, build e varredura). Varredura: 141 arquivos, 0 ocorrências; `test:varredura` 2/2; lint e format:check limpos.
+- **Grafismo só na abertura:** capturas de página inteira com e sem a camada, 10 páginas a 375 e 1440 px; abaixo do limite da abertura, diferença zero nas 20 combinações. Pulso medido: 1,00 → 0,70 → 1,00 em 7 s; com `prefers-reduced-motion`, parado.
+- **Geometria dos textos:** zero diferenças contra a base de cada lote em 10 páginas a 375 e 1440 px, fora da página da Dra. Mayara, do FAQ (cresceu) e de um `<p>` do Contato (a caixa alargou sem a `Nevoa`; texto na mesma posição).
+- **Círculo Maya:** tirar o disco verde muda cerca de 400 pixels em 1/255 na borda do símbolo; o disco ficou e a captura final é idêntica à base em 375, 768 e 1440 px.
+- **Blog em produção** (`clinica-maya-site.vercel.app/blog`, conferido no navegador em 19/11): três cards, cinco chips, "Por Medicina", capas carregando; página de post com H1, autoria, listas e links internos. A lista levou cerca de cinco minutos para sair do estado vazio (ISR de 60 s sem webhook).
+- **Revisão visual do Alan** no preview do PR: sem ajuste.
+
+### Pendências reconhecidas
+- **Foto do hero da Home (item 4 do documento):** adiada pelo Alan para depois do merge; ele leva as opções à gestora.
+- **Varredura não cobre o Sanity** (mesma pendência da Decisão 002, item 5). Os três artigos têm termos que `proibidos` veta no site institucional (nomes de medicamento, "TCC", "psiquiatr", números com kg), liberados pela gestora para o blog (Decisão 016). **A varredura no publicar do Lote 3b precisa de config própria para o blog**, senão recusa os artigos que já estão no ar.
+- **Sem webhook de revalidação:** post novo leva até alguns minutos para aparecer (Lote 3b).
+- **Next com alerta de vulnerabilidade:** o build local se bloqueia uma vez a cada duas execuções (`SecurityFatalError`) e passa na repetição. Upgrade em rodada própria, antes da Fase 7.
+- **Build com credencial real do Sanity** não foi rodado pelo Codinho (sem `.env.local` no ambiente dele); a produção na Vercel é a evidência.
+- **Anchor positioning:** comportamento em Firefox não verificado; sem suporte, a página fica sem grafismo.
+- **Herdadas da v0.6.0, ainda vivas:** Lighthouse mobile no domínio da Vercel não medido; iOS Safari não conferido; encarregado de dados e revisão jurídica da política; Dra. Beatriz Dalssasso sem dados e sem foto.
+- **Fotos sem uso em `public/fotos/`:** `clinica-3.jpg`, `clinica-4.jpg`, `consultorio-1.jpg`, `consultorio-2.jpg`, `home-2.jpg` (esta aguarda a decisão do hero).
+- **Mapa de movimento:** recebeu só a nota de status; a reescrita das seções de grafismo fica para quando o movimento voltar à pauta.
+- **Grafo (`graphify-out/`) não atualizado nesta release,** por decisão do Alan; ele ajusta a dinâmica do grafo depois do merge.
+
+### Decisões relacionadas
+- Decisão 015 — Grafismo só na abertura.
+- Decisão 016 — Exceção regulatória é da gestora; blog editorial tem regra própria.
+
+---
+
 ## v0.6.0 — 2026-11-11
 
 ### Revisão v2 da cliente, grafismos originais em primeiro plano com névoa, pop-ups da Equipe

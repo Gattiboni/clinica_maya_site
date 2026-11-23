@@ -1,7 +1,6 @@
 import { CabecalhoSecao } from "@/components/ui/CabecalhoSecao";
 import { GradeAreas } from "@/components/ui/GradeAreas";
 import { LinkTexto } from "@/components/ui/LinkTexto";
-import { Nevoa } from "@/components/ui/Nevoa";
 import { Secao } from "@/components/ui/Secao";
 import { MOV } from "@/lib/movimento";
 
@@ -12,14 +11,14 @@ import { MOV } from "@/lib/movimento";
 export function Areas() {
   return (
     <Secao fundo="creme">
-      <Nevoa className="mb-12">
+      <div className="mb-12">
         <CabecalhoSecao
           titulo="Uma clínica, várias formas de cuidar de você"
           lead="Cada área tem profissionais próprias, e todas conversam entre si para que o seu cuidado seja um só."
           acao={<LinkTexto href="/equipe">Conhecer a equipe</LinkTexto>}
           className={MOV.reveal}
         />
-      </Nevoa>
+      </div>
       <GradeAreas fundoCard="bege" />
     </Secao>
   );
