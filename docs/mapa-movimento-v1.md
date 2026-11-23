@@ -2,6 +2,8 @@
 
 **11/11/2026** (v0.5: Revisão v2 e afinação 2, seção 7: camada global de grafismos, névoa em balão, pop-ups, coreografia por tempo; v0.4: afinação 1 incorporada, seção 6; v0.3: todas as páginas mapeadas e técnica fechada, CSS-first sem biblioteca, Decisão 010; v0.2: modelo "mundo + folhas", capa no hero, `stack` e `tilt3d`; pin sai da Home e vai para a página do Método). Contrato de camadas e movimento. Não é mock: diz **o que** cada elemento faz, em que camada vive e como se comporta no scroll, no cursor, no mobile e com `prefers-reduced-motion`. O Lote 2 constrói as páginas já com as camadas; a Fase 4 liga o movimento sem reabrir estrutura. Referências de gramática (não de técnica): Oryzo (oryzo.ai, Lusion) e Pradip Dhakal (awwwards, out/2026): profundidade real, objetos que respondem, navegação por descoberta. Ambas são WebGL; aqui tudo é 2D, transform e opacity, dentro do gate Lighthouse mobile ≥ 90.
 
+> **Status (23/11/2026, v0.7.0):** tudo o que este mapa descreve sobre a camada global de grafismos (parallax, tilt por scrub e por cursor, rotação lenta, drift, troca de cor por folha), sobre o grafismo do rodapé e sobre o fragmento de grafismo no hover dos cards foi **substituído pela Decisão 015**: um grafismo por página, só na abertura, com pulso de opacidade. O restante do mapa (folhas, pilhas, capa, Círculo Maya, reveals, cortina) segue em vigor.
+
 Marca manda no tom: Sábio + Cuidador. Movimento lento, contínuo, orgânico. Nada salta, nada pisca, nada persegue o cursor. A sensação é de página viva, não de página que faz truque.
 
 ---

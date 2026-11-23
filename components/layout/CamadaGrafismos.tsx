@@ -8,12 +8,6 @@ import { MOV } from "@/lib/movimento";
 type CamadaGrafismosProps = {
   /** Página cuja composição (`lib/conteudo/grafismos`) a camada desenha. */
   pagina: PaginaGrafismos;
-  /**
-   * `todos` (padrão): os três símbolos. `usados`: só o da composição (404,
-   * cuja árvore entra no payload RSC de toda página). Desde a Revisão v3,
-   * lote C, só o símbolo da composição é referenciado em qualquer página.
-   */
-  sprite?: "todos" | "usados";
 };
 
 const SVG_GRAFISMO = "block h-full w-auto max-w-none";
@@ -36,7 +30,7 @@ const SVG_GRAFISMO = "block h-full w-auto max-w-none";
  * Movimento: só o pulso de opacidade, por tempo; com `prefers-reduced-motion`,
  * parado na opacidade-base. Nada depende de scroll-driven animations.
  */
-export function CamadaGrafismos({ pagina, sprite = "todos" }: CamadaGrafismosProps) {
+export function CamadaGrafismos({ pagina }: CamadaGrafismosProps) {
   const grafismo = GRAFISMOS[pagina];
   const estilo = {
     "--gg-topo": `${grafismo.topo}svh`,
@@ -48,7 +42,7 @@ export function CamadaGrafismos({ pagina, sprite = "todos" }: CamadaGrafismosPro
 
   return (
     <>
-      <SpriteGrafismos nomes={sprite === "usados" ? [grafismo.nome] : undefined} />
+      <SpriteGrafismos nome={grafismo.nome} />
       <div
         aria-hidden="true"
         className={`${MOV.camadaGrafismo} ${CAMADA.grafismoGlobal} pointer-events-none text-marrom select-none`}

@@ -11,9 +11,11 @@ import { MOV } from "@/lib/movimento";
  *
  * Fase 4 (afinação 1, 2.4): o símbolo é o `CirculoMaya` em SVG, que se monta
  * ao entrar e se desmonta ao sair; pilares entram em sequência de 120ms.
- * Regra 9 do mapa (nenhum grafismo na região do símbolo): o símbolo leva um
- * disco verde opaco atrás, então a camada global passa por trás dele como
- * passa por trás de um card.
+ * O disco verde atrás do símbolo existia para a camada global de grafismos
+ * passar por trás dele; desde a Revisão v3 não há grafismo aqui. Fica porque
+ * o anel externo encosta na borda do disco e tirá-lo muda o antialiasing do
+ * anel (mesma construção de `components/clinica/CirculoMaya.tsx`, onde a
+ * diferença foi medida no lote C: 1/255, em 375, 768 e 1440 px).
  */
 export function Metodo() {
   return (
