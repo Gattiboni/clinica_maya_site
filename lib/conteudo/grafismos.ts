@@ -42,27 +42,33 @@ export type PaginaGrafismos =
  * Composição por página: o grafismo da abertura (o que era `trecho: 0` na camada global da
  * Revisão v2, com a mesma posição e o mesmo tamanho). Ponto de extensão: a composição continua
  * por página.
+ *
+ * O grafismo 5 não é usado em abertura (v0.7.1): confinado a uma abertura curta, só o topo da
+ * arte aparece (arcos soltos e uma linha terminando no meio da tela), e a forma não lê como
+ * grafismo da marca. Continua sendo arte da marca e nome válido de `NomeGrafismo`. Ponto de
+ * extensão: voltar a usá-lo pede composição própria (escala e posição) para a forma inteira
+ * caber na abertura. As páginas que o usavam passaram ao grafismo 3 com a composição do `blog`.
  */
 export const GRAFISMOS: Record<PaginaGrafismos, GrafismoAbertura> = {
   // O grafismo-4 do hero é o maior do site: 124svh no desktop, com o topo acima da página.
   home: { nome: "4", topo: -10, altura: 124, alturaMobile: 92, sangria: 3, opacidade: 1 },
   clinica: { nome: "3", topo: 8, altura: 88, alturaMobile: 50, sangria: 4, opacidade: 1 },
-  equipe: { nome: "5", topo: 2, altura: 104, alturaMobile: 72, sangria: 3, opacidade: 1 },
+  equipe: { nome: "3", topo: 8, altura: 88, alturaMobile: 50, sangria: 4, opacidade: 1 },
   metodo: { nome: "4", topo: -8, altura: 112, alturaMobile: 82, sangria: 3, opacidade: 1 },
   emagrecimento: { nome: "3", topo: 8, altura: 88, alturaMobile: 50, sangria: 4, opacidade: 1 },
   // Página de confiança, com prosa longa: mais leve.
   "dra-mayara": { nome: "4", topo: -8, altura: 112, alturaMobile: 80, sangria: 3, opacidade: 0.9 },
-  atendimento: { nome: "5", topo: 2, altura: 104, alturaMobile: 72, sangria: 3, opacidade: 1 },
+  atendimento: { nome: "3", topo: 8, altura: 88, alturaMobile: 50, sangria: 4, opacidade: 1 },
   blog: { nome: "3", topo: 8, altura: 88, alturaMobile: 50, sangria: 4, opacidade: 1 },
   // Leitura longa: mais leve.
-  post: { nome: "5", topo: 2, altura: 100, alturaMobile: 66, sangria: 3, opacidade: 0.7 },
+  post: { nome: "3", topo: 8, altura: 88, alturaMobile: 50, sangria: 4, opacidade: 0.7 },
   contato: { nome: "4", topo: -8, altura: 112, alturaMobile: 80, sangria: 3, opacidade: 1 },
   "nao-encontrado": {
-    nome: "5",
-    topo: 2,
-    altura: 100,
-    alturaMobile: 66,
-    sangria: 3,
+    nome: "3",
+    topo: 8,
+    altura: 88,
+    alturaMobile: 50,
+    sangria: 4,
     opacidade: 0.8,
   },
 };

@@ -9,7 +9,8 @@ Responsável entre parênteses: (Alan) (Claude) (Codinho) (Amanda) (Cliente). `[
 - **Dinâmica nova para sessão remota:** quando o Alan trabalha longe da máquina (tablet ou Codinho web), o Codinho commita em branch e abre PR; o merge é do Alan. Fora disso, vale a regra de sempre (commit humano direto na `main`). A autorização é dada no início de cada sessão remota e registrada na última linha do commit.
 - **Regra de conteúdo:** exceção regulatória é da gestora, registrada; o blog tem regra própria (Decisão 016).
 - **Fase 6:** a revisão da gestora chegou como `REVISÕES SITE_V3` e foi aplicada em um lote só. Falta a aprovação final da Dra. Mayara no preview.
-- **Depois do merge, nesta ordem:** foto do hero da Home (Alan leva as opções à gestora) · upgrade do Next (alerta de vulnerabilidade bloqueia o build local uma vez a cada duas) · Lighthouse mobile e iOS Safari · Fase 7 (Vercel Pro, `noindex` fora, domínio) · Lote 3b, com config de varredura própria para o blog.
+- **v0.7.1 (23/11, depois do merge):** o grafismo 5 saiu das aberturas; Equipe, post, Atendimento on-line e 404 usam o 3. A gestora pegou em produção; commit do Alan direto na `main`, regra normal.
+- **Depois do merge, nesta ordem:** foto do hero da Home (Alan leva as opções à gestora) · **config de varredura própria para o blog** (subiu na fila: com env, o gate já acusa 40 ocorrências nos três artigos; o CI só passa porque roda sem env) · upgrade do Next (alerta de vulnerabilidade bloqueia a primeira tentativa de cada build local) · Lighthouse mobile e iOS Safari · Fase 7 (Vercel Pro, `noindex` fora, domínio) · Lote 3b.
 - **Tarefas extras do Alan, sem prazo:** ajustar a dinâmica do grafo (graphify fora desta release); limpeza de `Downloads` na máquina dele (clone e arquivos usados na sessão de 19/11).
 
 ## Changelog v1.8

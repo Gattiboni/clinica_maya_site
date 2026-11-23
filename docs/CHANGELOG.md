@@ -2,6 +2,35 @@
 
 Formato: versão acima da anterior. Versões antes de v1.0.0 são fundação e desenvolvimento, sem site no ar.
 
+## v0.7.1 — 2026-11-23
+
+### Grafismo 5 fora das aberturas: Equipe, post, Atendimento on-line e 404 passam ao grafismo 3
+
+Correção sobre a v0.7.0, no mesmo dia do merge. A gestora viu em produção (iOS e desktop) que em `/equipe` e nos posts do blog a abertura mostrava arcos soltos e uma linha terminando no meio da tela, atrás do logo, no lugar de um grafismo da marca. Causa: o grafismo 5 tem 100 a 104svh de altura e, preso a uma abertura curta (Decisão 015), só o topo da arte cabia. Erro da instrução do lote B, que mandou herdar `topo` e `altura` da camada global sem conferir se cada arte cabia na abertura. `/atendimento-online` e o 404 tinham o mesmo defeito e entraram na correção antes de alguém ver.
+
+### Alterado
+- **`lib/conteudo/grafismos.ts`:** `equipe`, `atendimento`, `post` e `nao-encontrado` passam de `nome: "5"` para `"3"`, com os valores da abertura de `/blog` (`topo: 8, altura: 88, alturaMobile: 50, sangria: 4`), que é a que a gestora usou como exemplo. Nenhum ajuste por página foi necessário. `opacidade` de cada uma não mudou (1, 1, 0.7, 0.8). Sete das onze páginas usam agora o grafismo 3; as outras quatro (Home, Método, Dra. Mayara, Contato) seguem com o 4.
+- **Grafismo 5 sem uso em abertura.** `"5"` continua em `NomeGrafismo` e `public/marca/grafismo-5.svg` continua no repo: é arte da marca. **TRAP:** voltar a usá-lo pede composição própria (escala e posição) para a forma inteira caber na abertura; copiar os valores de outra página repete o defeito.
+
+### Validação (β)
+- **Codinho, local:** nas quatro páginas, a 375 e 1440 px, a folha do grafismo 3 aparece como em `/blog` e nada passa da abertura; a mais curta é `/atendimento-online` a 375 px, com 390 px de altura (a de `/blog` tem 525). Post conferido no artigo real `efeito-sanfona-por-que-o-peso-volta`.
+- **Sete páginas restantes:** 0 pixel diferente da `main`, tolerância zero, nas duas larguras. Geometria de texto e imagem igual nas 11 páginas; nas quatro alteradas, a diferença de pixel fica só dentro da área do grafismo.
+- Lint e format:check limpos; build sem env com varredura de 141 arquivos e 0 ocorrências; `test:varredura` nas duas etapas.
+- **Revisão visual do Alan** no navegador, local.
+
+### Pendências reconhecidas
+- **Varredura sobre o build com env falha: 40 ocorrências**, todas no HTML dos três artigos do Sanity que esse build gera (nomes de medicamento, "TCC", "psiquiatr", números com kg). Nenhuma está no código. É a pendência da v0.7.0 (Decisão 016, item 6) deixando de ser futura: o CI passa porque roda sem env; quem rodar o gate com env, localmente ou num CI que ganhe as variáveis, vê vermelho. A config própria do blog precisa entrar antes da Fase 7, não só no Lote 3b.
+- **Next com alerta de vulnerabilidade:** o `SecurityFatalError` bloqueou a primeira tentativa dos três builds desta rodada; mesma pendência da v0.7.0. Upgrade em rodada própria.
+- **Sete de onze aberturas com o mesmo grafismo:** escolha desta correção (o 3 é o único provado em abertura curta). Reavaliar o 4 nas aberturas curtas só com captura.
+- **Grafo (`graphify-out/`) não atualizado,** por decisão do Alan, como na v0.7.0.
+- Demais pendências da v0.7.0 seguem vivas (foto do hero, Lighthouse, iOS Safari, anchor positioning em Firefox, webhook de revalidação).
+
+### Decisões relacionadas
+- Decisão 015 — Grafismo só na abertura (esta release corrige a composição, não a regra).
+- Decisão 016 — a pendência da varredura com env decorre do item 6.
+
+---
+
 ## v0.7.0 — 2026-11-23
 
 ### Revisão v3 da cliente: grafismo só na abertura, página da Dra. Mayara no texto dela, pop-up da Beatriz, blog com os três primeiros artigos
